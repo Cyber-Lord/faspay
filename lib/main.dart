@@ -1,4 +1,5 @@
 import 'package:faspay/pages/homepage.dart';
+import 'package:faspay/pages/registerScreen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -11,11 +12,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        canvasColor: Colors.white,
       ),
-      home: const HomePage(),
+      home: RegisterScreen(),
     );
   }
 }
