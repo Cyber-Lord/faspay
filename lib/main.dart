@@ -1,4 +1,6 @@
 import 'package:faspay/pages/homepage.dart';
+import 'package:faspay/pages/otppage.dart';
+import 'package:faspay/pages/phonescreen.dart';
 import 'package:faspay/pages/registerScreen.dart';
 import 'package:flutter/material.dart';
 
@@ -13,9 +15,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Faspay',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        fontFamily: "Times New Roman",
+        primaryColor: Color.fromARGB(255, 18, 98, 109),
         canvasColor: Colors.white,
       ),
       home: RegisterScreen(),
