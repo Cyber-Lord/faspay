@@ -19,9 +19,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: "Times New Roman",
         primaryColor: Color.fromARGB(255, 18, 98, 109),
-        canvasColor: Colors.white,
+        canvasColor: Color.fromARGB(255, 250, 252, 251),
       ),
-      home: RegisterScreen(),
+      home: PhoneScreen(),
     );
   }
 }

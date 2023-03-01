@@ -38,8 +38,11 @@ class _PhoneScreenState extends State<PhoneScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 18, 98, 109),
+      ),
       body: Padding(
-        padding: EdgeInsets.only(top: 40, left: 15, right: 15, bottom: 10),
+        padding: EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
@@ -50,61 +53,64 @@ class _PhoneScreenState extends State<PhoneScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CircleAvatar(
-                    backgroundColor: Color.fromARGB(255, 18, 98, 109),
-                    radius: 30,
-                    child: Text(
-                      "FP",
-                      style: TextStyle(
-                        fontFamily: "Roboto",
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                  Center(
+                    child: Image.asset(
+                      'assets/images/logo.png',
+                      height: 80.0,
+                      // color: Colors.blue.shade900,
                     ),
                   ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Text(
-                    "Enter your mobile number",
-                    style: TextStyle(
-                      fontFamily: "Montserrat",
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                  Center(
+                    child: Text(
+                      "Enter your mobile number.",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 18, 98, 109),
+                      ),
                     ),
                   ),
                   SizedBox(
                     height: 5,
                   ),
-                  Text(
-                    "To use Faspay, Please enter your mobile number",
-                    style: TextStyle(
-                      fontFamily: "Times New Roman",
-                      fontSize: 14,
-                      color: Colors.grey.shade600,
+                  Center(
+                    child: Text(
+                      "To use Faspay, Please enter your mobile number",
+                      style: TextStyle(
+                        fontFamily: "Times New Roman",
+                        fontSize: 14,
+                        color: Colors.grey.shade600,
+                      ),
                     ),
                   ),
                   SizedBox(
                     height: 15,
                   ),
                   TextFormField(
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
                     controller: _textEditingController,
                     keyboardType: TextInputType.phone,
                     maxLength: 11,
                     decoration: InputDecoration(
-                      border: OutlineInputBorder(
+                      enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                          color: Colors.yellow,
+                          color: Color.fromARGB(255, 18, 98, 109),
                         ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(255, 18, 98, 109),
+                        ),
+                      ),
+                      labelStyle: TextStyle(
+                        color: Colors.black,
                       ),
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
                       prefixText: "+234 - ",
-                      labelText: '11 Digit Phone Number',
+                      prefixStyle: TextStyle(
+                        color: Colors.black,
+                      ),
+                      labelText: 'Phone Number',
                     ),
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -135,7 +141,7 @@ class _PhoneScreenState extends State<PhoneScreen> {
                     ),
                   ),
                 ),
-              ),
+              )
             ],
           ),
         ),
