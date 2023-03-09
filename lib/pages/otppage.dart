@@ -52,7 +52,7 @@ class _OtpPageState extends State<OtpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 18, 98, 109),
+        // backgroundColor: Color.fromARGB(255, 18, 98, 109),
         leading: IconButton(
           onPressed: (() {}),
           icon: Icon(Icons.arrow_back),
@@ -115,12 +115,7 @@ class _OtpPageState extends State<OtpPage> {
                           child: Text(
                             'Resend OTP',
                             style: TextStyle(
-                              color: Color.fromARGB(
-                                255,
-                                18,
-                                98,
-                                109,
-                              ),
+                              color: Colors.blue.shade900,
                             ),
                           ),
                         ),
@@ -133,9 +128,7 @@ class _OtpPageState extends State<OtpPage> {
                     height: 50,
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
-                      color: _isOtpValid()
-                          ? Color.fromARGB(255, 18, 98, 109)
-                          : Colors.grey,
+                      color: _isOtpValid() ? Colors.blue.shade900 : Colors.grey,
                     ),
                     child: TextButton(
                       onPressed: _isOtpValid()

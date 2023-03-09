@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 class PhoneScreen extends StatefulWidget {
@@ -39,8 +37,8 @@ class _PhoneScreenState extends State<PhoneScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 18, 98, 109),
-      ),
+          // backgroundColor: Color.fromARGB(255, 18, 98, 109),
+          ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Form(
@@ -56,7 +54,7 @@ class _PhoneScreenState extends State<PhoneScreen> {
                   Center(
                     child: Image.asset(
                       'assets/images/logo.png',
-                      height: 80.0,
+                      height: 200.0,
                       // color: Colors.blue.shade900,
                     ),
                   ),
@@ -66,7 +64,7 @@ class _PhoneScreenState extends State<PhoneScreen> {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 18, 98, 109),
+                        color: Colors.blue.shade900,
                       ),
                     ),
                   ),
@@ -93,12 +91,12 @@ class _PhoneScreenState extends State<PhoneScreen> {
                     decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                          color: Color.fromARGB(255, 18, 98, 109),
+                          color: Colors.blue.shade900,
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                          color: Color.fromARGB(255, 18, 98, 109),
+                          color: Colors.blue.shade900,
                         ),
                       ),
                       labelStyle: TextStyle(
@@ -126,9 +124,7 @@ class _PhoneScreenState extends State<PhoneScreen> {
                 height: 50,
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
-                  color: _isButtonEnabled
-                      ? Color.fromARGB(255, 18, 98, 109)
-                      : Colors.grey,
+                  color: _isButtonEnabled ? Colors.blue.shade900 : Colors.grey,
                 ),
                 child: TextButton(
                   onPressed:

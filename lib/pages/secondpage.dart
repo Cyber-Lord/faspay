@@ -5,7 +5,7 @@ class SecondPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Center(
-        child: Text('Second Page', style: TextStyle(fontSize: 24)),
+        child: Text('Cards', style: TextStyle(fontSize: 24)),
       ),
     );
   }

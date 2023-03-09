@@ -17,11 +17,15 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Faspay',
       theme: ThemeData(
+        appBarTheme: AppBarTheme(
+          // backgroundColor: Color.fromARGB(255, 18, 98, 109),
+          backgroundColor: Colors.blue.shade900,
+        ),
         fontFamily: "Times New Roman",
-        primaryColor: Color.fromARGB(255, 18, 98, 109),
+        primaryColor: Colors.blue.shade900,
         canvasColor: Color.fromARGB(255, 250, 252, 251),
       ),
-      home: PhoneScreen(),
+      home: HomePage(),
     );
   }
 }

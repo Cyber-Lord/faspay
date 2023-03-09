@@ -68,7 +68,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           icon: Icon(Icons.arrow_back),
           onPressed: () {},
         ),
-        backgroundColor: Color.fromARGB(255, 18, 98, 109),
+        // backgroundColor: Colors.blue.shade900,
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -116,12 +116,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               decoration: InputDecoration(
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: Color.fromARGB(255, 18, 98, 109),
+                                    color: Colors.blue.shade900,
                                   ),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: Color.fromARGB(255, 18, 98, 109),
+                                    color: Colors.blue.shade900,
                                   ),
                                 ),
                                 labelStyle: TextStyle(
@@ -140,12 +140,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               decoration: InputDecoration(
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: Color.fromARGB(255, 18, 98, 109),
+                                    color: Colors.blue.shade900,
                                   ),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: Color.fromARGB(255, 18, 98, 109),
+                                    color: Colors.blue.shade900,
                                   ),
                                 ),
                                 labelStyle: TextStyle(
@@ -167,12 +167,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                              color: Color.fromARGB(255, 18, 98, 109),
+                              color: Colors.blue.shade900,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                              color: Color.fromARGB(255, 18, 98, 109),
+                              color: Colors.blue.shade900,
                             ),
                           ),
                           labelStyle: TextStyle(
@@ -191,12 +191,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                              color: Color.fromARGB(255, 18, 98, 109),
+                              color: Colors.blue.shade900,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                              color: Color.fromARGB(255, 18, 98, 109),
+                              color: Colors.blue.shade900,
                             ),
                           ),
                           labelStyle: TextStyle(
@@ -229,12 +229,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               decoration: InputDecoration(
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: Color.fromARGB(255, 18, 98, 109),
+                                    color: Colors.blue.shade900,
                                   ),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: Color.fromARGB(255, 18, 98, 109),
+                                    color: Colors.blue.shade900,
                                   ),
                                 ),
                                 labelStyle: TextStyle(
@@ -269,12 +269,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               decoration: InputDecoration(
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: Color.fromARGB(255, 18, 98, 109),
+                                    color: Colors.blue.shade900,
                                   ),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: Color.fromARGB(255, 18, 98, 109),
+                                    color: Colors.blue.shade900,
                                   ),
                                 ),
                                 labelStyle: TextStyle(
@@ -320,7 +320,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         "By signing up, you agree to our terms of service.",
                         style: TextStyle(
                           fontSize: 14,
-                          color: Color.fromARGB(255, 18, 98, 109),
+                          color: Colors.blue.shade900,
                         ),
                       ),
                       SizedBox(
@@ -329,7 +329,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       Container(
                         alignment: Alignment.bottomCenter,
                         decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 18, 98, 109),
+                          color: Colors.blue.shade900,
                         ),
                         width: MediaQuery.of(context).size.width,
                         child: TextButton(
