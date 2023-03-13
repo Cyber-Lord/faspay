@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class AccountHistory {
   String name;
@@ -40,6 +41,10 @@ class _DashboardState extends State<Dashboard> {
             child: Container(
               height: MediaQuery.of(context).size.height / 4,
               decoration: BoxDecoration(
+                // border: Border.all(
+                //   // color: Colors.grey,
+                //   width: 1,
+                // ),
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(8.0),
                 boxShadow: [
@@ -58,23 +63,40 @@ class _DashboardState extends State<Dashboard> {
                     height: 10,
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 8.0, left: 20),
+                    padding:
+                        const EdgeInsets.only(top: 8.0, left: 20, right: 20),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.max,
                       children: [
+                        Row(
+                          children: [
+                            Text(
+                              "John Doe",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w100,
+                                // fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                            Icon(
+                              Icons.verified,
+                              color: Colors.green,
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                          ],
+                        ),
                         Text(
-                          "John Doe",
+                          "08140099331",
                           style: TextStyle(
                             fontSize: 16,
-                            // fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w100,
                             color: Colors.black,
                           ),
-                        ),
-                        Icon(
-                          Icons.verified,
-                          color: Colors.green,
-                        ),
-                        SizedBox(
-                          width: 20,
                         ),
                       ],
                     ),
@@ -102,54 +124,77 @@ class _DashboardState extends State<Dashboard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        Container(
-                          height: MediaQuery.of(context).size.height / 10,
-                          width: MediaQuery.of(context).size.width / 4,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(8.0),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.3),
-                                spreadRadius: 1,
-                                blurRadius: 3,
-                                offset: Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          // color: Colors.blue,
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.add,
-                              size: 40,
-                              color: Colors.blue.shade900,
+                        GestureDetector(
+                          onTap: () {
+                            print("Hello");
+                          },
+                          child: Container(
+                            height: MediaQuery.of(context).size.height / 10,
+                            width: MediaQuery.of(context).size.width / 4,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.3),
+                                  spreadRadius: 1,
+                                  blurRadius: 3,
+                                  offset: Offset(0, 2),
+                                ),
+                              ],
                             ),
-                            onPressed: (() {}),
+                            // color: Colors.blue,
+                            child: Column(
+                              children: [
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.add_circle,
+                                    size: 40,
+                                    color: Colors.blue.shade900,
+                                  ),
+                                  onPressed: (() {
+                                    showQRCode(
+                                        context, 'https://www.example.com');
+                                  }),
+                                ),
+                                Text("Deposit")
+                              ],
+                            ),
                           ),
                         ),
-                        Container(
-                          height: MediaQuery.of(context).size.height / 10,
-                          width: MediaQuery.of(context).size.width / 4,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(8.0),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.3),
-                                spreadRadius: 1,
-                                blurRadius: 3,
-                                offset: Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          // color: Colors.green,
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.send,
-                              size: 40,
-                              color: Colors.blue.shade900,
+                        GestureDetector(
+                          onTap: () {},
+                          child: Container(
+                            height: MediaQuery.of(context).size.height / 10,
+                            width: MediaQuery.of(context).size.width / 4,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.3),
+                                  spreadRadius: 1,
+                                  blurRadius: 3,
+                                  offset: Offset(0, 2),
+                                ),
+                              ],
                             ),
-                            onPressed: (() {}),
+                            // color: Colors.green,
+                            child: Column(
+                              children: [
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.arrow_circle_up,
+                                    size: 40,
+                                    color: Colors.blue.shade900,
+                                  ),
+                                  onPressed: (() {
+                                    print("Send Money");
+                                  }),
+                                ),
+                                Text("Transfer")
+                              ],
+                            ),
                           ),
                         ),
                         Container(
@@ -168,13 +213,18 @@ class _DashboardState extends State<Dashboard> {
                             ],
                           ),
                           // color: Colors.yellow,
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.call_received,
-                              size: 40,
-                              color: Colors.blue.shade900,
-                            ),
-                            onPressed: (() {}),
+                          child: Column(
+                            children: [
+                              IconButton(
+                                icon: Icon(
+                                  Icons.arrow_circle_right,
+                                  size: 40,
+                                  color: Colors.blue.shade900,
+                                ),
+                                onPressed: (() {}),
+                              ),
+                              Text("Pay")
+                            ],
                           ),
                         ),
                       ],
@@ -190,7 +240,7 @@ class _DashboardState extends State<Dashboard> {
               "Financial Records",
               style: TextStyle(
                 fontSize: 16,
-                // fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
@@ -237,7 +287,7 @@ class _DashboardState extends State<Dashboard> {
                                 Text(
                                   account.name,
                                   style: TextStyle(
-                                    fontSize: 16.0,
+                                    fontSize: 14.0,
                                   ),
                                 ),
                                 SizedBox(height: 8.0),
@@ -248,7 +298,7 @@ class _DashboardState extends State<Dashboard> {
                                     Text(
                                       account.type,
                                       style: TextStyle(
-                                        fontSize: 16.0,
+                                        fontSize: 14.0,
                                         color: Colors.grey[600],
                                       ),
                                     ),
@@ -257,7 +307,7 @@ class _DashboardState extends State<Dashboard> {
                                       child: Text(
                                         account.amount.toStringAsFixed(2),
                                         style: TextStyle(
-                                          fontSize: 16.0,
+                                          fontSize: 14.0,
                                           fontWeight: FontWeight.bold,
                                           color: account.amount >= 0
                                               ? Colors.green
@@ -295,4 +345,67 @@ class _DashboardState extends State<Dashboard> {
       ),
     );
   }
+}
+
+void showQRCode(BuildContext context, String data) {
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext context) {
+      return AnimatedContainer(
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        height: MediaQuery.of(context).size.height - 150,
+        padding: EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(16),
+            topRight: Radius.circular(16),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              'Scan this to Receive payment',
+              style: TextStyle(
+                fontSize: 18,
+                // fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 10),
+            Expanded(
+              child: Center(
+                child: QrImage(
+                  // embeddedImage: AssetImage('assets/images/logo.png'),
+                  data: data,
+                  version: QrVersions.auto,
+                  size: 200.0,
+                  foregroundColor: Colors.blue.shade900,
+                ),
+              ),
+            ),
+            SizedBox(height: 10),
+            Row(
+              children: [
+                Text("You can also transer to: "),
+                SizedBox(
+                  width: 10,
+                ),
+                Text("8140099331")
+              ],
+            ),
+          ],
+        ),
+      );
+    },
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(16),
+        topRight: Radius.circular(16),
+      ),
+    ),
+    backgroundColor: Colors.transparent,
+    isScrollControlled: true,
+  );
 }

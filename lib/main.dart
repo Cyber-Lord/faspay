@@ -1,6 +1,7 @@
 import 'package:faspay/pages/homepage.dart';
 import 'package:faspay/pages/otppage.dart';
 import 'package:faspay/pages/phonescreen.dart';
+import 'package:faspay/pages/qrcodescannerscreen.dart';
 import 'package:faspay/pages/registerScreen.dart';
 import 'package:flutter/material.dart';
 
@@ -21,11 +22,11 @@ class MyApp extends StatelessWidget {
           // backgroundColor: Color.fromARGB(255, 18, 98, 109),
           backgroundColor: Colors.blue.shade900,
         ),
-        fontFamily: "Times New Roman",
+        fontFamily: "Poppins",
         primaryColor: Colors.blue.shade900,
         canvasColor: Color.fromARGB(255, 250, 252, 251),
       ),
-      home: HomePage(),
+      home: QRCodeScannerScreen(),
     );
   }
 }

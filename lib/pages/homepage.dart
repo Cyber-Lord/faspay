@@ -1,5 +1,6 @@
 import 'package:faspay/pages/accountscreen.dart';
 import 'package:faspay/pages/billscreen.dart';
+import 'package:faspay/pages/qrcodescannerscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:faspay/pages/dashboard.dart';
 import 'package:faspay/pages/secondpage.dart';
@@ -29,7 +30,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // backgroundColor: Colors.blue.shade900,
+        elevation: 10,
         leading: IconButton(
           icon: Icon(Icons.person),
           color: Colors.white,
@@ -40,7 +41,12 @@ class _HomePageState extends State<HomePage> {
             width: 10,
           ),
           IconButton(
-            onPressed: (() {}),
+            onPressed: (() {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => QRCodeScannerScreen()),
+              );
+            }),
             icon: Icon(
               Icons.qr_code_2,
             ),
@@ -89,12 +95,6 @@ class _HomePageState extends State<HomePage> {
             label: 'Bills',
             backgroundColor: Colors.white,
           ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(
-          //     Icons.person,
-          //   ),
-          //   label: 'Account',
-          // ),
         ],
       ),
     );
