@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.blue.shade900,
         canvasColor: Color.fromARGB(255, 250, 252, 251),
       ),
-      home: DepositMoneyPage(),
+      home: HomePage(),
     );
   }
 }

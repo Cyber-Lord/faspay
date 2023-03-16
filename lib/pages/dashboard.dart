@@ -1,3 +1,4 @@
+import 'package:faspay/pages/depositpage.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -5,6 +6,7 @@ class AccountHistory {
   String name;
   double amount;
   String type;
+
   bool isHidden;
 
   AccountHistory({
@@ -30,6 +32,8 @@ class _DashboardState extends State<Dashboard> {
     AccountHistory(name: 'Techie Abba', amount: 5000.0, type: 'Credit'),
     AccountHistory(name: 'Musa Yola', amount: -1000.0, type: 'Debit'),
   ];
+  String accNo = "8140099331";
+  double balance = 75000;
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +95,7 @@ class _DashboardState extends State<Dashboard> {
                           ],
                         ),
                         Text(
-                          "08140099331",
+                          accNo,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w100,
@@ -104,7 +108,7 @@ class _DashboardState extends State<Dashboard> {
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0, left: 20),
                     child: Text(
-                      "N5,250.00",
+                      "N" + balance.toString(),
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -153,8 +157,9 @@ class _DashboardState extends State<Dashboard> {
                                     color: Colors.blue.shade900,
                                   ),
                                   onPressed: (() {
-                                    showQRCode(
-                                        context, 'https://www.example.com');
+                                    _showDialog(context);
+                                    // showQRCode(
+                                    //     context, 'https://www.example.com');
                                   }),
                                 ),
                                 Text("Deposit")
@@ -345,6 +350,59 @@ class _DashboardState extends State<Dashboard> {
       ),
     );
   }
+}
+
+void _showDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Center(
+          child: Text(
+            'Choose Deposit Method',
+            style: TextStyle(
+              fontSize: 14,
+            ),
+          ),
+        ),
+        actions: [
+          Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                TextButton(
+                  child: Text('Bank'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.pushNamed(context, '/page1');
+                  },
+                ),
+                TextButton(
+                  child: Text('Card'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => DepositMoneyPage()),
+                    );
+                  },
+                ),
+                TextButton(
+                  child: Text('QR Code'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    showQRCode(context, context.toString());
+                  },
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
+    },
+  );
 }
 
 void showQRCode(BuildContext context, String data) {
