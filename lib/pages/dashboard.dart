@@ -366,13 +366,16 @@ void showQRCode(BuildContext context, String data) {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              'Scan this to Receive payment',
-              style: TextStyle(
-                fontSize: 18,
-                // fontWeight: FontWeight.bold,
+            Center(
+              child: Text(
+                'Scan this to Receive payment',
+                style: TextStyle(
+                  fontSize: 18,
+                  // fontWeight: FontWeight.bold,
+                ),
               ),
             ),
+            Divider(),
             SizedBox(height: 10),
             Expanded(
               child: Center(

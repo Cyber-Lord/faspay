@@ -163,6 +163,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0"
+  mobile_scanner:
+    dependency: "direct main"
+    description:
+      name: mobile_scanner
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.0"
   path:
     dependency: transitive
     description:
@@ -219,6 +226,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
+  qr_bar_code_scanner_dialog:
+    dependency: "direct main"
+    description:
+      name: qr_bar_code_scanner_dialog
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.5"
   qr_code_scanner:
     dependency: "direct main"
     description:

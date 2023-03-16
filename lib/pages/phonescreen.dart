@@ -1,3 +1,5 @@
+import 'package:faspay/pages/otppage.dart';
+import 'package:faspay/pages/registerScreen.dart';
 import 'package:flutter/material.dart';
 
 class PhoneScreen extends StatefulWidget {
@@ -127,8 +129,12 @@ class _PhoneScreenState extends State<PhoneScreen> {
                   color: _isButtonEnabled ? Colors.blue.shade900 : Colors.grey,
                 ),
                 child: TextButton(
-                  onPressed:
-                      _isButtonEnabled ? () => print(_phoneNumber) : null,
+                  onPressed: _isButtonEnabled
+                      ? () => Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => OtpPage()),
+                          )
+                      : null,
                   child: Text(
                     'PROCEED',
                     style: TextStyle(

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:faspay/pages/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -20,6 +22,27 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen>
     WidgetsBinding.instance.addObserver(this);
   }
 
+  // void reassemble() {
+  //   super.reassemble();
+  //   if (Platform.isAndroid) {
+  //     controller!.pauseCamera();
+  //   }
+  //   controller!.resumeCamera();
+  // }
+  @override
+  void reassemble() async {
+    super.reassemble();
+
+    if (controller != null) {
+      debugPrint('reassemble : $controller');
+      if (Platform.isAndroid) {
+        await controller!.pauseCamera();
+      } else if (Platform.isIOS) {
+        await controller!.resumeCamera();
+      }
+    }
+  }
+
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
@@ -40,6 +63,11 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen>
 
   @override
   Widget build(BuildContext context) {
+    if (controller != null && mounted) {
+      setState(() {
+        controller!.resumeCamera();
+      });
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text('Scan QR Code'),
@@ -88,11 +116,10 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen>
                     isScanned = false;
                     controller.resumeCamera();
 
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomePage()),
-                    );
-                    initState();
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => HomePage()),
+                    // );
                   },
                 ),
               ],

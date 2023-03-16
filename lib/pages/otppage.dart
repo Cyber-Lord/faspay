@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:faspay/pages/registerScreen.dart';
 import 'package:flutter/material.dart';
 
 class OtpPage extends StatefulWidget {
@@ -133,7 +134,12 @@ class _OtpPageState extends State<OtpPage> {
                     child: TextButton(
                       onPressed: _isOtpValid()
                           ? () {
-                              print(_controllers);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => RegisterScreen()),
+                              );
+                              // print(_controllers);
                             }
                           : null,
                       child: Text(

@@ -1,3 +1,4 @@
+import 'package:faspay/pages/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -337,10 +338,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             if (_formKey.currentState!.validate()) {
                               _formKey.currentState!.save();
 
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(builder: (context) => OTPPage()),
-                              // );
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomePage()),
+                              );
                             }
                           },
                           child: Text(
