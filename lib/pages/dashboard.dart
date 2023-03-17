@@ -1,5 +1,6 @@
 import 'package:faspay/pages/depositpage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class AccountHistory {
@@ -32,8 +33,16 @@ class _DashboardState extends State<Dashboard> {
     AccountHistory(name: 'Techie Abba', amount: 5000.0, type: 'Credit'),
     AccountHistory(name: 'Musa Yola', amount: -1000.0, type: 'Debit'),
   ];
-  String accNo = "8140099331";
+  String _accNo = "8140099331";
   double balance = 75000;
+  TextEditingController _amountController = TextEditingController();
+  late double depositAmount;
+
+  @override
+  void dispose() {
+    _amountController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,18 +54,14 @@ class _DashboardState extends State<Dashboard> {
             child: Container(
               height: MediaQuery.of(context).size.height / 4,
               decoration: BoxDecoration(
-                // border: Border.all(
-                //   // color: Colors.grey,
-                //   width: 1,
-                // ),
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(8.0),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.3),
-                    spreadRadius: 1,
-                    blurRadius: 3,
-                    offset: Offset(0, 4),
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: Offset(0, 3), // changes position of shadow
                   ),
                 ],
               ),
@@ -81,7 +86,6 @@ class _DashboardState extends State<Dashboard> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w100,
-                                // fontWeight: FontWeight.bold,
                                 color: Colors.black,
                               ),
                             ),
@@ -95,7 +99,7 @@ class _DashboardState extends State<Dashboard> {
                           ],
                         ),
                         Text(
-                          accNo,
+                          _accNo,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w100,
@@ -158,8 +162,6 @@ class _DashboardState extends State<Dashboard> {
                                   ),
                                   onPressed: (() {
                                     _showDialog(context);
-                                    // showQRCode(
-                                    //     context, 'https://www.example.com');
                                   }),
                                 ),
                                 Text("Deposit")
@@ -217,7 +219,6 @@ class _DashboardState extends State<Dashboard> {
                               ),
                             ],
                           ),
-                          // color: Colors.yellow,
                           child: Column(
                             children: [
                               IconButton(
@@ -350,59 +351,127 @@ class _DashboardState extends State<Dashboard> {
       ),
     );
   }
-}
 
-void _showDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Center(
-          child: Text(
-            'Choose Deposit Method',
-            style: TextStyle(
-              fontSize: 14,
+  void _showDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Center(
+            child: Text(
+              'Enter Amount',
+              style: TextStyle(
+                color: Colors.blue.shade900,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
-        ),
-        actions: [
-          Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                TextButton(
-                  child: Text('Bank'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    Navigator.pushNamed(context, '/page1');
-                  },
+          content: TextFormField(
+            controller: _amountController,
+            keyboardType: TextInputType.number,
+            onChanged: (value) {
+              setState(() {
+                depositAmount = double.tryParse(value)!;
+              });
+            },
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(10),
+            ],
+            decoration: InputDecoration(
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.blue.shade900,
                 ),
-                TextButton(
-                  child: Text('Card'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DepositMoneyPage()),
-                    );
-                  },
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.blue.shade900,
                 ),
-                TextButton(
-                  child: Text('QR Code'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    showQRCode(context, context.toString());
-                  },
-                ),
-              ],
+              ),
+              labelStyle: TextStyle(
+                color: Colors.grey,
+                fontSize: 14,
+              ),
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
+              labelText: 'Amount',
+              hintText: 'Enter amount',
             ),
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Please enter amount';
+              }
+              final amount = double.tryParse(value);
+              if (amount == null || amount <= 0) {
+                return 'Please enter a valid amount';
+              }
+              return null;
+            },
           ),
-        ],
-      );
-    },
-  );
+          actions: [
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  TextButton(
+                    child: Text(
+                      'Bank',
+                      style: TextStyle(
+                        color: Colors.blue.shade900,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.pushNamed(
+                        context,
+                        '/page1',
+                        arguments: depositAmount,
+                      );
+                    },
+                  ),
+                  TextButton(
+                    child: Text(
+                      'Card',
+                      style: TextStyle(
+                        color: Colors.blue.shade900,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DepositMoneyPage(depositAmount),
+                        ),
+                      );
+                    },
+                  ),
+                  TextButton(
+                    child: Text(
+                      'QR Code',
+                      style: TextStyle(
+                        color: Colors.blue.shade900,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      showQRCode(
+                          context, depositAmount.toString() + "\n" + _accNo);
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
 
 void showQRCode(BuildContext context, String data) {
@@ -426,15 +495,17 @@ void showQRCode(BuildContext context, String data) {
           children: [
             Center(
               child: Text(
-                'Scan this to Receive payment',
+                'Scan the QR Code below',
                 style: TextStyle(
                   fontSize: 18,
-                  // fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            Divider(),
             SizedBox(height: 10),
+            Divider(
+              height: 2,
+              color: Colors.blue.shade900,
+            ),
             Expanded(
               child: Center(
                 child: QrImage(
@@ -447,14 +518,23 @@ void showQRCode(BuildContext context, String data) {
               ),
             ),
             SizedBox(height: 10),
-            Row(
-              children: [
-                Text("You can also transer to: "),
-                SizedBox(
-                  width: 10,
+            Container(
+              height: 50,
+              color: Colors.blue.shade900,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Center(
+                  child: Text(
+                    "DONE",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
-                Text("8140099331")
-              ],
+              ),
             ),
           ],
         ),

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class DepositMoneyPage extends StatefulWidget {
+  final double amount;
+  DepositMoneyPage(this.amount);
+
   @override
   _DepositMoneyPageState createState() => _DepositMoneyPageState();
 }
@@ -13,6 +16,14 @@ class _DepositMoneyPageState extends State<DepositMoneyPage> {
   final _expiryDateController = TextEditingController();
   final _cvvController = TextEditingController();
   final _amountController = TextEditingController();
+
+  late double _amount;
+
+  @override
+  void initState() {
+    super.initState();
+    _amount = widget.amount;
+  }
 
   @override
   void dispose() {
@@ -53,6 +64,19 @@ class _DepositMoneyPageState extends State<DepositMoneyPage> {
         child: ListView(
           padding: EdgeInsets.all(16),
           children: [
+            Text(
+              "You are about to deposit the sum of " +
+                  _amount.toString() +
+                  " to your wallet, kindly enter your card details to continue.",
+              style: TextStyle(
+                fontStyle: FontStyle.normal,
+                color: Colors.black,
+                fontSize: 16,
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
             TextFormField(
               controller: _cardNumberController,
               keyboardType: TextInputType.number,
@@ -237,44 +261,6 @@ class _DepositMoneyPageState extends State<DepositMoneyPage> {
               ],
             ),
             SizedBox(height: 16),
-            TextFormField(
-              controller: _amountController,
-              keyboardType: TextInputType.number,
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,
-                LengthLimitingTextInputFormatter(10),
-              ],
-              decoration: InputDecoration(
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.blue.shade900,
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.blue.shade900,
-                  ),
-                ),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 14,
-                ),
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
-                labelText: 'Amount',
-                hintText: 'Enter amount to deposit',
-              ),
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return 'Please enter amount';
-                }
-                final amount = double.tryParse(value);
-                if (amount == null || amount <= 0) {
-                  return 'Please enter a valid amount';
-                }
-                return null;
-              },
-            ),
             SizedBox(height: 32),
             GestureDetector(
               onTap: () {
