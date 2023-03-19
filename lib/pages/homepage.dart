@@ -3,7 +3,7 @@ import 'package:faspay/pages/billscreen.dart';
 import 'package:faspay/pages/qrcodescannerscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:faspay/pages/dashboard.dart';
-import 'package:faspay/pages/secondpage.dart';
+import 'package:faspay/pages/cardpage.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -15,7 +15,7 @@ class _HomePageState extends State<HomePage> {
 
   final List<Widget> _children = [
     Dashboard(),
-    SecondPage(),
+    CardPage(),
     BillScreen(),
     AccountScreen(),
   ];
@@ -92,7 +92,7 @@ class _HomePageState extends State<HomePage> {
               Icons.payments,
               color: Colors.white,
             ),
-            label: 'Bills',
+            label: 'Business',
             backgroundColor: Colors.white,
           ),
         ],

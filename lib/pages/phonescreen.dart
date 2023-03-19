@@ -39,8 +39,9 @@ class _PhoneScreenState extends State<PhoneScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          // backgroundColor: Color.fromARGB(255, 18, 98, 109),
-          ),
+        title: Center(child: Text("Welcome")),
+        // backgroundColor: Color.fromARGB(255, 18, 98, 109),
+      ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Form(

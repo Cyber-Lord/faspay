@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class SecondPage extends StatelessWidget {
+class CardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(

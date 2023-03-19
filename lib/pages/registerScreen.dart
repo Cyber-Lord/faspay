@@ -65,6 +65,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text("Create account"),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {},
