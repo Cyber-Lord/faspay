@@ -1,5 +1,3 @@
-import 'package:faspay/pages/cardpage.dart';
-import 'package:faspay/pages/dashboard.dart';
 import 'package:faspay/pages/depositpage.dart';
 import 'package:faspay/pages/homepage.dart';
 import 'package:faspay/pages/otppage.dart';
@@ -29,7 +27,9 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.blue.shade900,
         canvasColor: Color.fromARGB(255, 250, 252, 251),
       ),
-      home: CardPage(),
+      home: PhoneScreen(),
     );
   }
+//xxx bbc
+
 }
