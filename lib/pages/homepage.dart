@@ -1,12 +1,15 @@
 import 'package:faspay/pages/accountscreen.dart';
 import 'package:faspay/pages/billscreen.dart';
+import 'package:faspay/pages/cardpage.dart';
 import 'package:faspay/pages/qrcodescannerscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:faspay/pages/dashboard.dart';
 import 'package:faspay/pages/secondpage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key, required this.phoneNumber,required this.token}) : super(key: key);
+  const HomePage({Key? key, required this.phoneNumber, required this.token})
+      : super(key: key);
   final String phoneNumber;
   final String token;
 
@@ -16,28 +19,27 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
-  String my_num="",my_token="";
+  String my_num = "", my_token = "";
   void initState() {
     my_session();
     super.initState();
   }
+
   final List<Widget> _children = [
     Dashboard(),
-    SecondPage(),
+    CardPage(),
     BillScreen(),
     AccountScreen(),
   ];
 
   void onTabTapped(int index) {
     setState(() {
-
       _currentIndex = index;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         elevation: 10,
@@ -65,7 +67,9 @@ class _HomePageState extends State<HomePage> {
             width: 15,
           ),
           IconButton(
-            onPressed: (() {my_session();}),
+            onPressed: (() {
+              my_session();
+            }),
             icon: Icon(
               Icons.support_agent_sharp,
             ),
@@ -109,13 +113,12 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-  Future<void> my_session() async{
+
+  Future<void> my_session() async {
     WidgetsFlutterBinding.ensureInitialized();
-    SharedPreferences prefs =await SharedPreferences.getInstance();
-    var email=prefs.getString("phone");
-    my_num=email!;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var email = prefs.getString("phone");
+    my_num = email!;
     print(my_num);
-
   }
-
 }

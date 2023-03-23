@@ -1,3 +1,4 @@
+import 'package:faspay/pages/dashboard.dart';
 import 'package:faspay/pages/depositpage.dart';
 import 'package:faspay/pages/homepage.dart';
 import 'package:faspay/pages/otppage.dart';
@@ -27,7 +28,10 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.blue.shade900,
         canvasColor: Color.fromARGB(255, 250, 252, 251),
       ),
-      home: PhoneScreen(),
+      home: HomePage(
+        phoneNumber: '1222222',
+        token: '347858hdfjdhj',
+      ),
     );
   }
 //xxx bbc
