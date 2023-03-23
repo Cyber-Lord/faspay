@@ -1,10 +1,13 @@
+import 'dart:convert';
+
 import 'package:faspay/pages/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
+import 'package:http/http.dart' as http;
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
-
+  // const RegisterScreen({super.key});
+  const RegisterScreen({Key? key, required this.phoneNumber}) : super(key: key);
+  final String phoneNumber;
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
@@ -16,9 +19,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController _firstname = TextEditingController();
   TextEditingController _surname = TextEditingController();
   TextEditingController _othername = TextEditingController();
+  TextEditingController _my_nin = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-
+  bool    show_preogress = false;
   String? _validateConfirmPassword(String value) {
     if (value != _passwordController.text) {
       return 'Passwords do not match';
@@ -65,7 +69,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Create account"),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {},
@@ -190,6 +193,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         height: 10,
                       ),
                       TextFormField(
+                        controller: _my_nin,
                         decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
@@ -338,12 +342,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
                               _formKey.currentState!.save();
+                              otp_verification();
 
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => HomePage()),
-                              );
                             }
                           },
                           child: Text(
@@ -363,6 +363,50 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+  Future otp_verification()async {
+    var url = "https://a2ctech.net/api/faspay/new_user.php";
+    var response;
+    response = await http.post(Uri.parse(url), body: {
+      // 	phone 	f_name 	s_name 	o_name 	nin 	pass
+      "phone": widget.phoneNumber,
+      "f_name": _firstname.text,
+      "s_name": _surname.text,
+      "o_name": _othername.text,
+      "nin": _my_nin.text,
+      "pass": _passwordController.text,
+    });
+
+    var data = json.decode(response.body);
+    if (response.statusCode == 200) {
+      print(response.body);
+      print(data["status"]);
+      if(data["status"]=="true"){
+
+      }else if(data["status"]=="01"){
+        _showToast(context,"NIN Number Already Exit");
+      }else if(data["status"]=="02"){
+        _showToast(context,"Phone Number Already Exit");
+      }else{
+
+        _showToast(context,"Invalid OTP");
+      }
+      setState(() {
+        show_preogress = false;
+      });
+    }else{
+      print(response.statusCode);
+    }
+  }
+  void _showToast(BuildContext context,String msg) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.red,
+        content:  Text(msg,style: TextStyle(fontWeight: FontWeight.bold,),),
+        action: SnackBarAction(label: '', onPressed: scaffold.hideCurrentSnackBar),
       ),
     );
   }
@@ -418,22 +462,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
 
 
- // TextFormField(
-                      //   controller: _dateController,
-                      //   decoration: InputDecoration(
-                      //     contentPadding: EdgeInsets.symmetric(vertical: 15.0),
-                      //     hintText: "Date of Birth",
-                      //     border: OutlineInputBorder(
-                      //       borderSide: BorderSide(color: Colors.green),
-                      //     ),
-                      //     prefixIcon: IconButton(
-                      //       onPressed: () => _selectDate(context),
-                      //       icon: Icon(Icons.calendar_month),
-                      //     ),
-                      //   ),
-                      //   readOnly: true,
-                      //   onTap: () => _selectDate(context),
-                      // ),
-                      // SizedBox(
-                      //   height: 10,
-                      // ),
+// TextFormField(
+//   controller: _dateController,
+//   decoration: InputDecoration(
+//     contentPadding: EdgeInsets.symmetric(vertical: 15.0),
+//     hintText: "Date of Birth",
+//     border: OutlineInputBorder(
+//       borderSide: BorderSide(color: Colors.green),
+//     ),
+//     prefixIcon: IconButton(
+//       onPressed: () => _selectDate(context),
+//       icon: Icon(Icons.calendar_month),
+//     ),
+//   ),
+//   readOnly: true,
+//   onTap: () => _selectDate(context),
+// ),
+// SizedBox(
+//   height: 10,
+// ),

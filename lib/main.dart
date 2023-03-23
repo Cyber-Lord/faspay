@@ -1,3 +1,4 @@
+import 'package:faspay/pages/Splshscreen.dart';
 import 'package:faspay/pages/dashboard.dart';
 import 'package:faspay/pages/depositpage.dart';
 import 'package:faspay/pages/homepage.dart';
@@ -28,7 +29,9 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.blue.shade900,
         canvasColor: Color.fromARGB(255, 250, 252, 251),
       ),
-      home: HomePage(),
-    );
+      home: Splshscreen(),
+    ); //,,
   }
+//xxx bbc
+
 }

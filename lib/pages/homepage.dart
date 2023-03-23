@@ -3,31 +3,41 @@ import 'package:faspay/pages/billscreen.dart';
 import 'package:faspay/pages/qrcodescannerscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:faspay/pages/dashboard.dart';
-import 'package:faspay/pages/cardpage.dart';
-
+import 'package:faspay/pages/secondpage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 class HomePage extends StatefulWidget {
+  const HomePage({Key? key, required this.phoneNumber,required this.token}) : super(key: key);
+  final String phoneNumber;
+  final String token;
+
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
-
+  String my_num="",my_token="";
+  void initState() {
+    my_session();
+    super.initState();
+  }
   final List<Widget> _children = [
     Dashboard(),
-    CardPage(),
+    SecondPage(),
     BillScreen(),
     AccountScreen(),
   ];
 
   void onTabTapped(int index) {
     setState(() {
+
       _currentIndex = index;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         elevation: 10,
@@ -55,7 +65,7 @@ class _HomePageState extends State<HomePage> {
             width: 15,
           ),
           IconButton(
-            onPressed: (() {}),
+            onPressed: (() {my_session();}),
             icon: Icon(
               Icons.support_agent_sharp,
             ),
@@ -92,11 +102,20 @@ class _HomePageState extends State<HomePage> {
               Icons.payments,
               color: Colors.white,
             ),
-            label: 'Business',
+            label: 'Bills',
             backgroundColor: Colors.white,
           ),
         ],
       ),
     );
   }
+  Future<void> my_session() async{
+    WidgetsFlutterBinding.ensureInitialized();
+    SharedPreferences prefs =await SharedPreferences.getInstance();
+    var email=prefs.getString("phone");
+    my_num=email!;
+    print(my_num);
+
+  }
+
 }

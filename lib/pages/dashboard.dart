@@ -1,6 +1,5 @@
 import 'package:faspay/pages/depositpage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class AccountHistory {
@@ -19,7 +18,8 @@ class AccountHistory {
 }
 
 class Dashboard extends StatefulWidget {
-  const Dashboard({super.key});
+  //const Dashboard({super.key});
+  const Dashboard({Key? key}) : super(key: key);
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -32,36 +32,37 @@ class _DashboardState extends State<Dashboard> {
     AccountHistory(name: 'Musa Yola', amount: -1000.0, type: 'Debit'),
     AccountHistory(name: 'Techie Abba', amount: 5000.0, type: 'Credit'),
     AccountHistory(name: 'Musa Yola', amount: -1000.0, type: 'Debit'),
+    AccountHistory(name: 'Oga Master', amount: 1200.0, type: 'Credit'),
+    AccountHistory(name: 'Techie Abba', amount: 5000.0, type: 'Credit'),
+    AccountHistory(name: 'Musa Yola', amount: -1000.0, type: 'Debit'),
+    AccountHistory(name: 'Techie Abba', amount: 5000.0, type: 'Credit'),
+    AccountHistory(name: 'Musa Yola', amount: -1000.0, type: 'Debit'),
   ];
-  String _accNo = "8140099331";
+  String accNo = "";
   double balance = 75000;
-  TextEditingController _amountController = TextEditingController();
-  late double depositAmount;
-
-  @override
-  void dispose() {
-    _amountController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: ListView(
+    return Scaffold(
+      body: ListView(
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 12.0, right: 12, top: 6),
             child: Container(
               height: MediaQuery.of(context).size.height / 4,
               decoration: BoxDecoration(
+                // border: Border.all(
+                //   // color: Colors.grey,
+                //   width: 1,
+                // ),
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(8.0),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 5,
-                    blurRadius: 7,
-                    offset: Offset(0, 3), // changes position of shadow
+                    color: Colors.grey.withOpacity(0.3),
+                    spreadRadius: 1,
+                    blurRadius: 3,
+                    offset: Offset(0, 4),
                   ),
                 ],
               ),
@@ -86,6 +87,7 @@ class _DashboardState extends State<Dashboard> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w100,
+                                // fontWeight: FontWeight.bold,
                                 color: Colors.black,
                               ),
                             ),
@@ -99,7 +101,7 @@ class _DashboardState extends State<Dashboard> {
                           ],
                         ),
                         Text(
-                          _accNo,
+                          accNo,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w100,
@@ -153,18 +155,11 @@ class _DashboardState extends State<Dashboard> {
                             ),
                             // color: Colors.blue,
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center, //Center Row contents horizontally,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                IconButton(
-                                  icon: Icon(
-                                    Icons.add_circle,
-                                    size: 40,
-                                    color: Colors.blue.shade900,
-                                  ),
-                                  onPressed: (() {
-                                    _showDialog(context);
-                                  }),
-                                ),
-                                Text("Deposit")
+                                Icon(Icons.add_circle,size: 35,color: Colors.blue.shade900,),
+                                Text("Deposit",style: TextStyle(fontSize: 12,color: Colors.blue.shade900,),)
                               ],
                             ),
                           ),
@@ -188,18 +183,11 @@ class _DashboardState extends State<Dashboard> {
                             ),
                             // color: Colors.green,
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center, //Center Row contents horizontally,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                IconButton(
-                                  icon: Icon(
-                                    Icons.arrow_circle_up,
-                                    size: 40,
-                                    color: Colors.blue.shade900,
-                                  ),
-                                  onPressed: (() {
-                                    print("Send Money");
-                                  }),
-                                ),
-                                Text("Transfer")
+                                Icon(Icons.arrow_circle_up,size: 35,color: Colors.blue.shade900,),
+                                Text("Transfer",style: TextStyle(fontSize: 12,color: Colors.blue.shade900,),)
                               ],
                             ),
                           ),
@@ -219,17 +207,14 @@ class _DashboardState extends State<Dashboard> {
                               ),
                             ],
                           ),
+                          // color: Colors.yellow,
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center, //Center Row contents horizontally,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              IconButton(
-                                icon: Icon(
-                                  Icons.arrow_circle_right,
-                                  size: 40,
-                                  color: Colors.blue.shade900,
-                                ),
-                                onPressed: (() {}),
-                              ),
-                              Text("Pay")
+                              Icon(Icons.arrow_circle_right,size: 35,color: Colors.blue.shade900,),
+                              Text("Pay",style: TextStyle(fontSize: 12,color: Colors.blue.shade900,),)
+
                             ],
                           ),
                         ),
@@ -351,128 +336,54 @@ class _DashboardState extends State<Dashboard> {
       ),
     );
   }
+}
 
-  void _showDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Center(
-            child: Text(
-              'Enter Amount',
-              style: TextStyle(
-                color: Colors.blue.shade900,
-                fontWeight: FontWeight.bold,
-              ),
+void _showDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Center(
+          child: Text(
+            'Choose Deposit Method',
+            style: TextStyle(
+              fontSize: 14,
             ),
           ),
-          content: TextFormField(
-            controller: _amountController,
-            keyboardType: TextInputType.number,
-            onChanged: (value) {
-              setState(() {
-                depositAmount = double.tryParse(value)!;
-              });
-            },
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(10),
-            ],
-            decoration: InputDecoration(
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.blue.shade900,
+        ),
+        actions: [
+          Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                TextButton(
+                  child: Text('Bank'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.pushNamed(context, '/page1');
+                  },
                 ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.blue.shade900,
+                TextButton(
+                  child: Text('Card'),
+                  onPressed: () {
+
+                  },
                 ),
-              ),
-              labelStyle: TextStyle(
-                color: Colors.grey,
-                fontSize: 14,
-              ),
-              contentPadding:
-                  EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
-              labelText: 'Amount',
-              hintText: 'Enter amount',
+                TextButton(
+                  child: Text('QR Code'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    showQRCode(context, context.toString());
+                  },
+                ),
+              ],
             ),
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Please enter amount';
-              }
-              final amount = double.tryParse(value);
-              if (amount == null || amount <= 0) {
-                return 'Please enter a valid amount';
-              }
-              return null;
-            },
           ),
-          actions: [
-            Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  TextButton(
-                    child: Text(
-                      'Bank',
-                      style: TextStyle(
-                        color: Colors.blue.shade900,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.pushNamed(
-                        context,
-                        '/page1',
-                        arguments: depositAmount,
-                      );
-                    },
-                  ),
-                  TextButton(
-                    child: Text(
-                      'Card',
-                      style: TextStyle(
-                        color: Colors.blue.shade900,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DepositMoneyPage(depositAmount),
-                        ),
-                      );
-                      _amountController.text="";
-                    },
-                  ),
-                  TextButton(
-                    child: Text(
-                      'QR Code',
-                      style: TextStyle(
-                        color: Colors.blue.shade900,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      showQRCode(
-                          context, depositAmount.toString() + "\n" + _accNo);
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
+        ],
+      );
+    },
+  );
 }
 
 void showQRCode(BuildContext context, String data) {
@@ -496,17 +407,15 @@ void showQRCode(BuildContext context, String data) {
           children: [
             Center(
               child: Text(
-                'Scan the QR Code below',
+                'Scan this to Receive payment',
                 style: TextStyle(
                   fontSize: 18,
+                  // fontWeight: FontWeight.bold,
                 ),
               ),
             ),
+            Divider(),
             SizedBox(height: 10),
-            Divider(
-              height: 2,
-              color: Colors.blue.shade900,
-            ),
             Expanded(
               child: Center(
                 child: QrImage(
@@ -519,23 +428,14 @@ void showQRCode(BuildContext context, String data) {
               ),
             ),
             SizedBox(height: 10),
-            Container(
-              height: 50,
-              color: Colors.blue.shade900,
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-                child: Center(
-                  child: Text(
-                    "DONE",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+            Row(
+              children: [
+                Text("You can also transer to: "),
+                SizedBox(
+                  width: 10,
                 ),
-              ),
+                Text("8140099331")
+              ],
             ),
           ],
         ),
