@@ -448,6 +448,7 @@ class _DashboardState extends State<Dashboard> {
                           builder: (context) => DepositMoneyPage(depositAmount),
                         ),
                       );
+                      _amountController.text="";
                     },
                   ),
                   TextButton(
