@@ -5,7 +5,6 @@ import 'package:faspay/pages/phonescreen.dart';
 import 'package:faspay/pages/qrcodescannerscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:faspay/pages/dashboard.dart';
-import 'package:faspay/pages/secondpage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
@@ -121,23 +120,22 @@ class _HomePageState extends State<HomePage> {
     var phone = prefs.getString("phone");
 
     print(my_num);
-    if(phone==null){
+    if (phone == null) {
       logout();
-    }else{
-      my_num = phone!;
+    } else {
+      my_num = phone;
     }
   }
+
   Future<void> logout() async {
     WidgetsFlutterBinding.ensureInitialized();
     SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.remove("phone");
+    prefs.remove("phone");
 
-    goto_phone_screen( context);
-
-
-
+    goto_phone_screen(context);
   }
-  void goto_phone_screen(BuildContext context){
+
+  void goto_phone_screen(BuildContext context) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => PhoneScreen()),

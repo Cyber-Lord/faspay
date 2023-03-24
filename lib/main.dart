@@ -1,4 +1,5 @@
 import 'package:faspay/pages/Splshscreen.dart';
+import 'package:faspay/pages/cardpage.dart';
 import 'package:faspay/pages/dashboard.dart';
 import 'package:faspay/pages/depositpage.dart';
 import 'package:faspay/pages/homepage.dart';
@@ -29,9 +30,10 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.blue.shade900,
         canvasColor: Color.fromARGB(255, 250, 252, 251),
       ),
-      home: Splshscreen(
-      //  phoneNumber: '1222222',
-     //   token: '347858hdfjdhj',
+      // home: CardPage(),
+      home: HomePage(
+        phoneNumber: '1222222',
+        token: '347858hdfjdhj',
       ),
     );
   }

@@ -1,3 +1,6 @@
+import 'package:faspay/pages/cardrequestpage.dart';
+import 'package:faspay/pages/resetpinpage.dart';
+import 'package:faspay/pages/setpinpage.dart';
 import 'package:flutter/material.dart';
 
 class CardPage extends StatelessWidget {
@@ -124,11 +127,103 @@ class CardPage extends StatelessWidget {
                                 height: 50,
                                 width: MediaQuery.of(context).size.width * 0.42,
                                 color: Colors.blue.shade900,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    _showDialog(context);
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(13.0),
+                                    child: Text(
+                                      "Fund Card",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
                               Container(
                                 height: 50,
                                 width: MediaQuery.of(context).size.width * 0.42,
                                 color: Colors.blue.shade900,
+                                child: GestureDetector(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(13.0),
+                                    child: Text(
+                                      "Request Card",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    Navigator.of(context).pop();
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            DebitCardRequestPage(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                height: 50,
+                                width: MediaQuery.of(context).size.width * 0.42,
+                                color: Colors.blue.shade900,
+                                child: GestureDetector(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(13.0),
+                                    child: Text(
+                                      "Manage PIN",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    Navigator.of(context).pop();
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ResetPinPage(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                              Container(
+                                height: 50,
+                                width: MediaQuery.of(context).size.width * 0.42,
+                                color: Colors.blue.shade900,
+                                child: GestureDetector(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(13.0),
+                                    child: Text(
+                                      "Card Limit",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ],
                           ),
@@ -151,22 +246,27 @@ class CardPage extends StatelessWidget {
                             ],
                           ),
                           SizedBox(
-                            height: 10,
+                            height: 40,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                height: 50,
-                                width: MediaQuery.of(context).size.width * 0.42,
-                                color: Colors.blue.shade900,
+                          Container(
+                            color: Colors.blue.shade900,
+                            height: 50,
+                            width: MediaQuery.of(context).size.width,
+                            child: GestureDetector(
+                              onTap: () {
+                                print("Deactivate");
+                              },
+                              child: Center(
+                                child: Text(
+                                  "Deactivate Card",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
                               ),
-                              Container(
-                                height: 50,
-                                width: MediaQuery.of(context).size.width * 0.42,
-                                color: Colors.blue.shade900,
-                              ),
-                            ],
+                            ),
                           ),
                         ],
                       ),
@@ -178,6 +278,39 @@ class CardPage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  _showDialog(BuildContext context) {
+    double amount = 0.0;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Enter an amount'),
+          content: TextFormField(
+            keyboardType: TextInputType.number,
+            onChanged: (value) {
+              amount = double.tryParse(value) ?? 0.0;
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                // onAmountSelected(amount);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
