@@ -277,12 +277,12 @@ class _PhoneScreenState extends State<PhoneScreen> {
         show_preogress = false;
       }
       setState(() {
-        //show_preogress = false;
+        //show_preogress = false;.
       });
     }
   }
   void goto_login(BuildContext context){
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => Login(phoneNumber: _textEditingController.text,name: name,)),
     );

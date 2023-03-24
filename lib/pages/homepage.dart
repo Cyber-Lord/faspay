@@ -1,6 +1,7 @@
 import 'package:faspay/pages/accountscreen.dart';
 import 'package:faspay/pages/billscreen.dart';
 import 'package:faspay/pages/cardpage.dart';
+import 'package:faspay/pages/phonescreen.dart';
 import 'package:faspay/pages/qrcodescannerscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:faspay/pages/dashboard.dart';
@@ -121,7 +122,7 @@ class _HomePageState extends State<HomePage> {
 
     print(my_num);
     if(phone==null){
-
+      logout();
     }else{
       my_num = phone!;
     }
@@ -129,14 +130,17 @@ class _HomePageState extends State<HomePage> {
   Future<void> logout() async {
     WidgetsFlutterBinding.ensureInitialized();
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var phone = prefs.remove("phone");
+  prefs.remove("phone");
 
-    print(my_num);
-    if(phone==null){
+    goto_phone_screen( context);
 
-    }else{
-      //my_num = phone!;//
-    }
+
+
   }
-
+  void goto_phone_screen(BuildContext context){
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => PhoneScreen()),
+    );
+  }
 }

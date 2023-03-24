@@ -178,7 +178,7 @@ body: Stack(
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   void goto_dashboard(BuildContext context){
 
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => HomePage(phoneNumber: widget.phoneNumber,token:token)),
     );
@@ -202,7 +202,7 @@ body: Stack(
         pref.setString("phone", widget.phoneNumber);
         pref.setString("token", token);
         goto_dashboard( context);
-       // _showToast(context,"Invalid Login Details");
+       // _showToast(context,"Invalid Login Details");/
       }
     }else{
       print(response.statusCode);
