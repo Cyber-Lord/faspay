@@ -20,18 +20,9 @@ String? my_num,token;
     // TODO: implement initState
     super.initState();
     my_session();
-    if(my_num==null){
-      Timer(
-        const Duration(seconds: 5),
-            () => Navigator.pushReplacement(
-          context,
 
-          MaterialPageRoute(
-            builder: (context) => const PhoneScreen(),
-          ),
-        ),
-      );
-    }
+
+
 
   }
 
@@ -66,10 +57,29 @@ String? my_num,token;
    // prefs.remove("phone");
    // print(my_num);
     if(phone==null){
+      Timer(
+        const Duration(seconds: 5),
+            () => Navigator.pushReplacement(
+          context,
 
+          MaterialPageRoute(
+            builder: (context) => const PhoneScreen(),
+          ),
+        ),
+      );
     }else{
       my_num=phone!;
       token=tokn!;
+      Timer(
+        const Duration(seconds: 5),
+            () => Navigator.pushReplacement(
+          context,
+
+          MaterialPageRoute(
+            builder: (context) =>  HomePage(phoneNumber: my_num.toString(), token: token.toString()),
+          ),
+        ),
+      );
     }
 
     print(my_num.toString()+token.toString());

@@ -68,7 +68,7 @@ class _HomePageState extends State<HomePage> {
           ),
           IconButton(
             onPressed: (() {
-              my_session();
+              logout();
             }),
             icon: Icon(
               Icons.support_agent_sharp,
@@ -117,8 +117,26 @@ class _HomePageState extends State<HomePage> {
   Future<void> my_session() async {
     WidgetsFlutterBinding.ensureInitialized();
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var email = prefs.getString("phone");
-    my_num = email!;
+    var phone = prefs.getString("phone");
+
     print(my_num);
+    if(phone==null){
+
+    }else{
+      my_num = phone!;
+    }
   }
+  Future<void> logout() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var phone = prefs.remove("phone");
+
+    print(my_num);
+    if(phone==null){
+
+    }else{
+      //my_num = phone!;//
+    }
+  }
+
 }
