@@ -539,33 +539,7 @@ class _DashboardState extends State<Dashboard> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(primary: Colors.blue.shade900,
-                    ),
-                    child: Row(
-                      children: [
-                        Icon( // <-- Icon
-                          Icons.account_balance,
-                          size: 24.0,
-                        ),
-                        Text(
-                          'Bank',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                      ],
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.pushNamed(
-                        context,
-                        '/page1',
-                        arguments: depositAmount,
-                      );
-                    },
-                  ),
+
                   SizedBox(width: height/300,),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(primary: Colors.blue.shade900,
@@ -603,7 +577,9 @@ class _DashboardState extends State<Dashboard> {
                   ),
                   SizedBox(width: height/300,),
                   ElevatedButton(
+
                     style: ElevatedButton.styleFrom(primary: Colors.blue.shade900,
+
                       ),
                     child: Row(
                     children: [
