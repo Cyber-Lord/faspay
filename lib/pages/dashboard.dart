@@ -54,7 +54,7 @@ class _DashboardState extends State<Dashboard> {
   // String _accNo = "8140099331";
   // double balance = 75000;
   TextEditingController _amountController = TextEditingController();
-  late double depositAmount;
+  late double depositAmount=0;
 
   bool show_preogress = true;
   final currencyFormatter = NumberFormat('#,##0.00');
@@ -621,9 +621,15 @@ class _DashboardState extends State<Dashboard> {
                     ],
                     ),
                     onPressed: () {
-                      Navigator.of(context).pop();
-                      showQRCode(
-                          context, depositAmount.toString() + "\n" + accNo);
+                      if(depositAmount<1){
+                        _showToast(context, "Invalid Amount");
+                      }else{
+                        Navigator.of(context).pop();
+                        showQRCode(
+
+                            context, depositAmount.toString() + "\n" + accNo);
+                      }
+
                     },
                   ),
                 ],
@@ -635,7 +641,18 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 }
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
+void _showToast(BuildContext context,String msg) {
+  final scaffold = ScaffoldMessenger.of(context);
+  scaffold.showSnackBar(
+    SnackBar(
+      backgroundColor: Colors.red,
+      content:  Text(msg,style: TextStyle(fontWeight: FontWeight.bold,),),
+      action: SnackBarAction(label: '', onPressed: scaffold.hideCurrentSnackBar),
+    ),
+  );
+}
 void showQRCode(BuildContext context, String data) {
   showModalBottomSheet(
     context: context,
