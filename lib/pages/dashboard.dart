@@ -475,6 +475,12 @@ class _DashboardState extends State<Dashboard> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(15.0))
+          ),
+          insetPadding: EdgeInsets.zero,
+          contentPadding: EdgeInsets.all(10),
+          clipBehavior: Clip.antiAliasWithSaveLayer,
           title: Center(
             child: Text(
               'Enter Amount',
@@ -533,13 +539,23 @@ class _DashboardState extends State<Dashboard> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  TextButton(
-                    child: Text(
-                      'Bank',
-                      style: TextStyle(
-                        color: Colors.blue.shade900,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(primary: Colors.blue.shade900,
+                    ),
+                    child: Row(
+                      children: [
+                        Icon( // <-- Icon
+                          Icons.account_balance,
+                          size: 24.0,
+                        ),
+                        Text(
+                          'Bank',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                      ],
                     ),
                     onPressed: () {
                       Navigator.of(context).pop();
@@ -550,31 +566,59 @@ class _DashboardState extends State<Dashboard> {
                       );
                     },
                   ),
-                  TextButton(
-                    child: Text(
-                      'Card',
-                      style: TextStyle(
-                        color: Colors.blue.shade900,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DepositMoneyPage(depositAmount),
+                  SizedBox(width: height/300,),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(primary: Colors.blue.shade900,
+                       ),
+        onPressed: () {
+        Navigator.of(context).pop();
+        Navigator.push(
+        context,
+        MaterialPageRoute(
+        builder: (context) => DepositMoneyPage(depositAmount),
+        ),
+        );
+        },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon( // <-- Icon
+                          Icons.credit_card,
+                          size: 24.0,
                         ),
-                      );
-                    },
+                        Text(
+                          'Card',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ), // <-- Text
+                        SizedBox(
+                          width: 5,
+                        ),
+
+                      ],
+                    ),
+
                   ),
-                  TextButton(
-                    child: Text(
-                      'QR Code',
-                      style: TextStyle(
-                        color: Colors.blue.shade900,
-                        fontWeight: FontWeight.bold,
+                  SizedBox(width: height/300,),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(primary: Colors.blue.shade900,
                       ),
+                    child: Row(
+                    children: [
+                      Icon( // <-- Icon
+                        Icons.qr_code,
+                        size: 24.0,
+                      ),
+                      Text(
+                        'QR Code',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ],
                     ),
                     onPressed: () {
                       Navigator.of(context).pop();
