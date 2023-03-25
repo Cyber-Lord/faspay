@@ -4,6 +4,7 @@ import 'package:faspay/pages/setpinpage.dart';
 import 'package:flutter/material.dart';
 
 class CardPage extends StatelessWidget {
+  double balance = 100;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,7 +100,7 @@ class CardPage extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      "N52,000",
+                      balance.toString(),
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -124,12 +125,28 @@ class CardPage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.grey,
+                                    width: 1,
+                                  ),
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      spreadRadius: 1,
+                                      blurRadius: 3,
+                                      offset: Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
                                 height: 50,
                                 width: MediaQuery.of(context).size.width * 0.42,
-                                color: Colors.blue.shade900,
+                                // color: Colors.blue.shade900,
                                 child: GestureDetector(
                                   onTap: () {
-                                    _showDialog(context);
+                                    _showDialog(context, balance);
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.all(13.0),
@@ -138,16 +155,31 @@ class CardPage extends StatelessWidget {
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.white,
+                                        color: Colors.blue.shade900,
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
                               Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.grey,
+                                    width: 1,
+                                  ),
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      spreadRadius: 1,
+                                      blurRadius: 3,
+                                      offset: Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
                                 height: 50,
                                 width: MediaQuery.of(context).size.width * 0.42,
-                                color: Colors.blue.shade900,
                                 child: GestureDetector(
                                   child: Padding(
                                     padding: const EdgeInsets.all(13.0),
@@ -156,7 +188,7 @@ class CardPage extends StatelessWidget {
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.white,
+                                        color: Colors.blue.shade900,
                                       ),
                                     ),
                                   ),
@@ -181,9 +213,24 @@ class CardPage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.grey,
+                                    width: 1,
+                                  ),
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      spreadRadius: 1,
+                                      blurRadius: 3,
+                                      offset: Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
                                 height: 50,
                                 width: MediaQuery.of(context).size.width * 0.42,
-                                color: Colors.blue.shade900,
                                 child: GestureDetector(
                                   child: Padding(
                                     padding: const EdgeInsets.all(13.0),
@@ -192,7 +239,7 @@ class CardPage extends StatelessWidget {
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.white,
+                                        color: Colors.blue.shade900,
                                       ),
                                     ),
                                   ),
@@ -208,9 +255,24 @@ class CardPage extends StatelessWidget {
                                 ),
                               ),
                               Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.grey,
+                                    width: 1,
+                                  ),
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      spreadRadius: 1,
+                                      blurRadius: 3,
+                                      offset: Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
                                 height: 50,
                                 width: MediaQuery.of(context).size.width * 0.42,
-                                color: Colors.blue.shade900,
                                 child: GestureDetector(
                                   child: Padding(
                                     padding: const EdgeInsets.all(13.0),
@@ -219,7 +281,7 @@ class CardPage extends StatelessWidget {
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.white,
+                                        color: Colors.blue.shade900,
                                       ),
                                     ),
                                   ),
@@ -229,21 +291,6 @@ class CardPage extends StatelessWidget {
                           ),
                           SizedBox(
                             height: 10,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                height: 50,
-                                width: MediaQuery.of(context).size.width * 0.42,
-                                color: Colors.blue.shade900,
-                              ),
-                              Container(
-                                height: 50,
-                                width: MediaQuery.of(context).size.width * 0.42,
-                                color: Colors.blue.shade900,
-                              ),
-                            ],
                           ),
                           SizedBox(
                             height: 40,
@@ -281,31 +328,79 @@ class CardPage extends StatelessWidget {
     );
   }
 
-  _showDialog(BuildContext context) {
+  _showDialog(BuildContext context, double balance) {
     double amount = 0.0;
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Enter an amount'),
+          title: Text(
+            'Enter an amount',
+            style: TextStyle(
+              color: Colors.blue.shade900,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           content: TextFormField(
             keyboardType: TextInputType.number,
             onChanged: (value) {
               amount = double.tryParse(value) ?? 0.0;
             },
+            decoration: InputDecoration(
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.blue.shade900,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.blue.shade900,
+                ),
+              ),
+              labelStyle: TextStyle(
+                color: Colors.grey,
+                fontSize: 14,
+              ),
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
+              labelText: 'Amount',
+              hintText: 'Enter amount',
+            ),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancel'),
+              child: Text(
+                'Discard',
+                style: TextStyle(
+                  color: Colors.blue.shade900,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('OK'),
+              child: Text(
+                'Proceed',
+                style: TextStyle(
+                  color: Colors.blue.shade900,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               onPressed: () {
-                Navigator.of(context).pop();
-                // onAmountSelected(amount);
+                if (amount > balance) {
+                  // Show error message
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Error: Amount is greater than balance'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                } else {
+                  Navigator.of(context).pop();
+                  // onAmountSelected(amount);
+                }
               },
             ),
           ],

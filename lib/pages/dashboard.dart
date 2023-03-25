@@ -445,7 +445,7 @@ class _DashboardState extends State<Dashboard> {
     if (phone == null) {
       logout();
     } else {
-      my_num = phone!;
+      my_num = phone;
       my_token = tokn!;
       get_customer_details(phone, my_token);
     }
@@ -533,23 +533,23 @@ class _DashboardState extends State<Dashboard> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  TextButton(
-                    child: Text(
-                      'Bank',
-                      style: TextStyle(
-                        color: Colors.blue.shade900,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.pushNamed(
-                        context,
-                        '/page1',
-                        arguments: depositAmount,
-                      );
-                    },
-                  ),
+                  // TextButton(
+                  //   child: Text(
+                  //     'Bank',
+                  //     style: TextStyle(
+                  //       color: Colors.blue.shade900,
+                  //       fontWeight: FontWeight.bold,
+                  //     ),
+                  //   ),
+                  //   onPressed: () {
+                  //     Navigator.of(context).pop();
+                  //     Navigator.pushNamed(
+                  //       context,
+                  //       '/page1',
+                  //       arguments: depositAmount,
+                  //     );
+                  //   },
+                  // ),
                   TextButton(
                     child: Text(
                       'Card',
@@ -580,6 +580,7 @@ class _DashboardState extends State<Dashboard> {
                       Navigator.of(context).pop();
                       showQRCode(
                           context, depositAmount.toString() + "\n" + accNo);
+                      _amountController.text = "";
                     },
                   ),
                 ],
