@@ -3,6 +3,7 @@ import 'package:faspay/pages/resetpinpage.dart';
 import 'package:faspay/pages/setpinpage.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class CardPage extends StatelessWidget {
   double balance = 100;
   @override
@@ -11,11 +12,8 @@ class CardPage extends StatelessWidget {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
+          child: ListView(
             children: [
-              SizedBox(
-                height: 10,
-              ),
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height * 0.3,
@@ -88,238 +86,252 @@ class CardPage extends StatelessWidget {
                   ],
                 ),
               ),
-              Divider(),
-              Center(
-                child: Row(
-                  children: [
-                    Text(
-                      "\t \tBalance on Card: ",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+              Column(
+                children: [
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Divider(),
+                  Center(
+                    child: Row(
+                      children: [
+                        Text(
+                          "Balance on Card: ",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          balance.toString(),
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.green,
+                          ),
+                        ),
+                      ],
                     ),
-                    Text(
-                      balance.toString(),
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green,
-                      ),
+                  ),
+                  Divider(),
+                  Padding(
+                    padding: EdgeInsets.all(
+                      8.0,
                     ),
-                  ],
-                ),
-              ),
-              Divider(),
-              Padding(
-                padding: EdgeInsets.all(
-                  8.0,
-                ),
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  child: SizedBox(
-                    child: Expanded(
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: SizedBox(
+                        child: Expanded(
+                          child: Column(
                             children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.grey,
-                                    width: 1,
-                                  ),
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.3),
-                                      spreadRadius: 1,
-                                      blurRadius: 3,
-                                      offset: Offset(0, 4),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Colors.grey,
+                                        width: 1,
+                                      ),
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.3),
+                                          spreadRadius: 1,
+                                          blurRadius: 3,
+                                          offset: Offset(0, 4),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                                height: 50,
-                                width: MediaQuery.of(context).size.width * 0.42,
-                                // color: Colors.blue.shade900,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    _showDialog(context, balance);
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(13.0),
-                                    child: Text(
-                                      "Fund Card",
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.blue.shade900,
+                                    height: 50,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.42,
+                                    // color: Colors.blue.shade900,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        _showDialog(context, balance);
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(13.0),
+                                        child: Text(
+                                          "Fund Card",
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.blue.shade900,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Colors.grey,
+                                        width: 1,
+                                      ),
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.3),
+                                          spreadRadius: 1,
+                                          blurRadius: 3,
+                                          offset: Offset(0, 4),
+                                        ),
+                                      ],
+                                    ),
+                                    height: 50,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.42,
+                                    child: GestureDetector(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(13.0),
+                                        child: Text(
+                                          "Request Card",
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.blue.shade900,
+                                          ),
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        Navigator.of(context).pop();
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                DebitCardRequestPage(),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Colors.grey,
+                                        width: 1,
+                                      ),
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.3),
+                                          spreadRadius: 1,
+                                          blurRadius: 3,
+                                          offset: Offset(0, 4),
+                                        ),
+                                      ],
+                                    ),
+                                    height: 50,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.42,
+                                    child: GestureDetector(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(13.0),
+                                        child: Text(
+                                          "Manage PIN",
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.blue.shade900,
+                                          ),
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        Navigator.of(context).pop();
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ResetPinPage(),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Colors.grey,
+                                        width: 1,
+                                      ),
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.3),
+                                          spreadRadius: 1,
+                                          blurRadius: 3,
+                                          offset: Offset(0, 4),
+                                        ),
+                                      ],
+                                    ),
+                                    height: 50,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.42,
+                                    child: GestureDetector(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(13.0),
+                                        child: Text(
+                                          "Card Limit",
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.blue.shade900,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              SizedBox(
+                                height: 40,
                               ),
                               Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.grey,
-                                    width: 1,
-                                  ),
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.3),
-                                      spreadRadius: 1,
-                                      blurRadius: 3,
-                                      offset: Offset(0, 4),
-                                    ),
-                                  ],
-                                ),
+                                color: Colors.blue.shade900,
                                 height: 50,
-                                width: MediaQuery.of(context).size.width * 0.42,
+                                width: MediaQuery.of(context).size.width,
                                 child: GestureDetector(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(13.0),
+                                  onTap: () {
+                                    print("Deactivate");
+                                  },
+                                  child: Center(
                                     child: Text(
-                                      "Request Card",
+                                      "Deactivate Card",
                                       style: TextStyle(
-                                        fontSize: 14,
+                                        fontSize: 18,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.blue.shade900,
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ),
-                                  onTap: () {
-                                    Navigator.of(context).pop();
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            DebitCardRequestPage(),
-                                      ),
-                                    );
-                                  },
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.grey,
-                                    width: 1,
-                                  ),
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.3),
-                                      spreadRadius: 1,
-                                      blurRadius: 3,
-                                      offset: Offset(0, 4),
-                                    ),
-                                  ],
-                                ),
-                                height: 50,
-                                width: MediaQuery.of(context).size.width * 0.42,
-                                child: GestureDetector(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(13.0),
-                                    child: Text(
-                                      "Manage PIN",
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.blue.shade900,
-                                      ),
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    Navigator.of(context).pop();
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ResetPinPage(),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.grey,
-                                    width: 1,
-                                  ),
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.3),
-                                      spreadRadius: 1,
-                                      blurRadius: 3,
-                                      offset: Offset(0, 4),
-                                    ),
-                                  ],
-                                ),
-                                height: 50,
-                                width: MediaQuery.of(context).size.width * 0.42,
-                                child: GestureDetector(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(13.0),
-                                    child: Text(
-                                      "Card Limit",
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.blue.shade900,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          SizedBox(
-                            height: 40,
-                          ),
-                          Container(
-                            color: Colors.blue.shade900,
-                            height: 50,
-                            width: MediaQuery.of(context).size.width,
-                            child: GestureDetector(
-                              onTap: () {
-                                print("Deactivate");
-                              },
-                              child: Center(
-                                child: Text(
-                                  "Deactivate Card",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
             ],
           ),

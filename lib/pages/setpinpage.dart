@@ -1,3 +1,5 @@
+import 'package:faspay/pages/dashboard.dart';
+import 'package:faspay/pages/homepage.dart';
 import 'package:flutter/material.dart';
 
 class SetPinPage extends StatefulWidget {
@@ -128,6 +130,16 @@ class _SetPinPageState extends State<SetPinPage> {
               child: GestureDetector(
                 onTap: () {
                   // _onSaveButtonPressed();
+                  Navigator.of(context).pop();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HomePage(
+                        phoneNumber: "",
+                        token: "",
+                      ),
+                    ),
+                  );
                 },
                 child: Center(
                   child: Text(
