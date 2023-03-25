@@ -645,7 +645,7 @@ void showQRCode(BuildContext context, String data) {
                 },
                 child: Center(
                   child: Text(
-                    "DONE",
+                    "DONE!",
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
