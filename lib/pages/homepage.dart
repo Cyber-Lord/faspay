@@ -2,7 +2,7 @@ import 'package:faspay/pages/accountscreen.dart';
 import 'package:faspay/pages/billscreen.dart';
 import 'package:faspay/pages/cardpage.dart';
 import 'package:faspay/pages/phonescreen.dart';
-import 'package:faspay/pages/qrcodescannerscreen.dart';
+import 'package:faspay/pages/qrscan.dart';
 import 'package:flutter/material.dart';
 import 'package:faspay/pages/dashboard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> {
             onPressed: (() {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => QRCodeScannerScreen()),
+                MaterialPageRoute(builder: (context) => QRScanner()),
               );
             }),
             icon: Icon(

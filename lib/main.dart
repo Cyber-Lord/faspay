@@ -1,12 +1,5 @@
-import 'package:faspay/pages/Splshscreen.dart';
-import 'package:faspay/pages/cardpage.dart';
-import 'package:faspay/pages/dashboard.dart';
-import 'package:faspay/pages/depositpage.dart';
 import 'package:faspay/pages/homepage.dart';
-import 'package:faspay/pages/otppage.dart';
-import 'package:faspay/pages/phonescreen.dart';
-import 'package:faspay/pages/qrcodescannerscreen.dart';
-import 'package:faspay/pages/registerScreen.dart';
+
 import 'package:flutter/material.dart';
 
 void main() {
