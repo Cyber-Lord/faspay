@@ -196,6 +196,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       TextFormField(
                         controller: _my_nin,
+                        keyboardType: TextInputType.number,
+                        maxLength: 11,
                         decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(

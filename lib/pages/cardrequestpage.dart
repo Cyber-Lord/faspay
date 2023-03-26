@@ -1,5 +1,3 @@
-
-
 import 'package:faspay/pages/cardpage.dart';
 import 'package:flutter/material.dart';
 
@@ -108,6 +106,8 @@ class _DebitCardRequestPageState extends State<DebitCardRequestPage> {
                   ),
                   SizedBox(height: 16),
                   TextFormField(
+                    keyboardType: TextInputType.number,
+                    maxLength: 11,
                     decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
