@@ -60,7 +60,7 @@ class _HomePageState extends State<HomePage> {
               );
             }),
             icon: Icon(
-              Icons.qr_code_2,
+              Icons.qr_code_scanner_sharp,
             ),
           ),
           SizedBox(

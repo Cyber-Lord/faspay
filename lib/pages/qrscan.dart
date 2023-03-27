@@ -75,15 +75,15 @@ class _QRScannerState extends State<QRScanner> {
                 TextButton(
                   child: Text('OK'),
                   onPressed: () async {
-                    await controller.pauseCamera();
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => HomePage(
-                                phoneNumber: "",
-                                token: "",
-                              )),
+                            phoneNumber: "",
+                            token: "",
+                          )),
                     );
+                    await controller.pauseCamera();
                   },
                 ),
               ],
