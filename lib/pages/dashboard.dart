@@ -1,15 +1,22 @@
 import 'dart:convert';
-
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 import 'package:faspay/pages/depositpage.dart';
 import 'package:faspay/pages/phonescreen.dart';
 import 'package:faspay/pages/transferpage.dart';
-import 'package:faspay/pages/utils/mediaqury.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:share/share.dart';
 import 'package:http/http.dart' as http;
+
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 
 class AccountHistory {
   String name;
@@ -41,21 +48,64 @@ class _DashboardState extends State<Dashboard> {
     AccountHistory(name: 'Musa Yola', amount: -1000.0, type: 'Debit'),
     AccountHistory(name: 'Techie Abba', amount: 5000.0, type: 'Credit'),
     AccountHistory(name: 'Musa Yola', amount: -1000.0, type: 'Debit'),
-    AccountHistory(name: 'Oga Master', amount: 1200.0, type: 'Credit'),
-    AccountHistory(name: 'Techie Abba', amount: 5000.0, type: 'Credit'),
-    AccountHistory(name: 'Musa Yola', amount: -1000.0, type: 'Debit'),
-    AccountHistory(name: 'Techie Abba', amount: 5000.0, type: 'Credit'),
-    AccountHistory(name: 'Musa Yola', amount: -1000.0, type: 'Debit'),
   ];
   String accNo = "";
   double balance = 0;
   String my_num = "", my_token = "";
   String name = "";
 
-  // String _accNo = "8140099331";
-  // double balance = 75000;
   TextEditingController _amountController = TextEditingController();
   late double depositAmount = 0;
+
+  Future<void> generatePDF(BuildContext context, AccountHistory account) async {
+    final pdf = pw.Document();
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.Center(
+            child: pw.Text(
+              'Name: ${account.name}\nTransaction Type: ${account.type}\nAmount:${account.amount}',
+              style: pw.TextStyle(
+                fontSize: 40.0,
+                fontWeight: pw.FontWeight.bold,
+              ),
+            ),
+          );
+        },
+      ),
+    );
+    await Printing.layoutPdf(
+      onLayout: (PdfPageFormat format) async => pdf.save(),
+    );
+  }
+
+  Future<void> share(BuildContext context, AccountHistory account) async {
+    final RenderBox box = context.findRenderObject() as RenderBox;
+    await Printing.layoutPdf(
+      onLayout: (PdfPageFormat format) async {
+        final pdf = pw.Document();
+        pdf.addPage(
+          pw.Page(
+            build: (pw.Context context) {
+              return pw.Center(
+                child: pw.Text(
+                  '${account.name}\n${account.type}\n${account.amount}',
+                  style: pw.TextStyle(
+                    fontSize: 40.0,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+        return pdf.save();
+      },
+    );
+    await Share.shareFiles(['${account.name}.pdf'],
+        text: 'Transaction History for ${account.name}',
+        subject: 'Transaction Details');
+  }
 
   bool show_preogress = true;
   final currencyFormatter = NumberFormat('#,##0.00');
@@ -72,216 +122,172 @@ class _DashboardState extends State<Dashboard> {
     width = size.width;
     return Scaffold(
         body: Stack(
+      children: [
+        ListView(
           children: [
-            ListView(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 12.0, right: 12, top: 6),
-                  child: Container(
-                    height: MediaQuery.of(context).size.height / 4,
-                    decoration: BoxDecoration(
-                      // border: Border.all(
-                      //   // color: Colors.grey,
-                      //   width: 1,
-                      // ),
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.3),
-                          spreadRadius: 1,
-                          blurRadius: 3,
-                          offset: Offset(0, 4),
-                        ),
-                      ],
+            Padding(
+              padding: const EdgeInsets.only(left: 12.0, right: 12, top: 6),
+              child: Container(
+                height: MediaQuery.of(context).size.height / 4,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      spreadRadius: 1,
+                      blurRadius: 3,
+                      offset: Offset(0, 4),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: height / 200,
-                        ),
-                        Padding(
-                          padding:
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: height / 200,
+                    ),
+                    Padding(
+                      padding:
                           const EdgeInsets.only(top: 8.0, left: 20, right: 20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.max,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Row(
                             children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    name,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w100,
-                                      // fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  Icon(
-                                    Icons.verified,
-                                    color: Colors.green,
-                                  ),
-                                  SizedBox(
-                                    width: 20,
-                                  ),
-                                ],
-                              ),
                               Text(
-                                accNo,
+                                name,
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w100,
                                   color: Colors.black,
                                 ),
                               ),
+                              Icon(
+                                Icons.verified,
+                                color: Colors.green,
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
                             ],
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0, left: 20),
-                          child: Text(
-                            "N" + currencyFormatter.format(balance),
+                          Text(
+                            accNo,
                             style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.green,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w100,
+                              color: Colors.black,
                             ),
                           ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0, left: 20),
+                      child: Text(
+                        "N" + currencyFormatter.format(balance),
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green,
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                            left: 20,
-                            right: 20,
-                            top: 20,
-                            bottom: 10,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: 20,
+                        right: 20,
+                        top: 20,
+                        bottom: 10,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              _showDialog(context);
+                            },
+                            child: Container(
+                              height: MediaQuery.of(context).size.height / 10,
+                              width: MediaQuery.of(context).size.width / 4,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.3),
+                                    spreadRadius: 1,
+                                    blurRadius: 3,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              // color: Colors.blue,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment
+                                    .center, //Center Row contents horizontally,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.add_circle,
+                                    size: height / 25,
+                                    color: Colors.blue.shade900,
+                                  ),
+                                  Text(
+                                    "Deposit",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.blue.shade900,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  _showDialog(context);
-                                },
-                                child: Container(
-                                  height: MediaQuery.of(context).size.height / 10,
-                                  width: MediaQuery.of(context).size.width / 4,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.3),
-                                        spreadRadius: 1,
-                                        blurRadius: 3,
-                                        offset: Offset(0, 2),
-                                      ),
-                                    ],
-                                  ),
-                                  // color: Colors.blue,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment
-                                        .center, //Center Row contents horizontally,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.add_circle,
-                                        size: height / 25,
-                                        color: Colors.blue.shade900,
-                                      ),
-                                      Text(
-                                        "Deposit",
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.blue.shade900,
-                                        ),
-                                      )
-                                    ],
-                                  ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pop();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BankTransferPage(),
                                 ),
+                              );
+                            },
+                            child: Container(
+                              height: MediaQuery.of(context).size.height / 10,
+                              width: MediaQuery.of(context).size.width / 4,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.3),
+                                    spreadRadius: 1,
+                                    blurRadius: 3,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
                               ),
-                              GestureDetector(
-                                onTap: () {},
-                                child: Container(
-                                  height: MediaQuery.of(context).size.height / 10,
-                                  width: MediaQuery.of(context).size.width / 4,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.3),
-                                        spreadRadius: 1,
-                                        blurRadius: 3,
-                                        offset: Offset(0, 2),
-                                      ),
-                                    ],
-                                  ),
-                                  // color: Colors.green,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.of(context).pop();
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => BankTransferPage(),
-                                        ),
-                                      );
-                                    },
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment
-                                          .center, //Center Row contents horizontally,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.arrow_circle_up,
-                                          size: height / 25,
-                                          color: Colors.blue.shade900,
-                                        ),
-                                        Text(
-                                          "Transfer",
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.blue.shade900,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                height: MediaQuery.of(context).size.height / 10,
-                                width: MediaQuery.of(context).size.width / 4,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.3),
-                                      spreadRadius: 1,
-                                      blurRadius: 3,
-                                      offset: Offset(0, 2),
-                                    ),
-                                  ],
-                                ),
-                                // color: Colors.yellow,
+                              // color: Colors.green,
+                              child: GestureDetector(
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment
                                       .center, //Center Row contents horizontally,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Icon(
-                                      Icons.arrow_circle_right,
-                                      size: 35,
+                                      Icons.arrow_circle_up,
+                                      size: height / 25,
                                       color: Colors.blue.shade900,
                                     ),
                                     Text(
-                                      "Pay",
+                                      "Transfer",
                                       style: TextStyle(
                                         fontSize: 12,
                                         color: Colors.blue.shade900,
@@ -290,135 +296,218 @@ class _DashboardState extends State<Dashboard> {
                                   ],
                                 ),
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Divider(),
-                Center(
-                  child: Text(
-                    "Financial Records",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                Divider(),
-                SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            left: 12.0,
-                            right: 12.0,
-                            bottom: 12.0,
-                          ),
-                          child: ListView.builder(
-                            itemCount: _accountData.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              final AccountHistory account = _accountData[index];
-                              return GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    account.isHidden = !account.isHidden;
-                                  });
-                                },
-                                child: Container(
-                                  margin: EdgeInsets.only(bottom: 8.0),
-                                  padding: EdgeInsets.all(16.0),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.3),
-                                        spreadRadius: 1,
-                                        blurRadius: 3,
-                                        offset: Offset(0, 2),
-                                      ),
-                                    ],
+                          Container(
+                            height: MediaQuery.of(context).size.height / 10,
+                            width: MediaQuery.of(context).size.width / 4,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.3),
+                                  spreadRadius: 1,
+                                  blurRadius: 3,
+                                  offset: Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            // color: Colors.yellow,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment
+                                  .center, //Center Row contents horizontally,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.arrow_circle_right,
+                                  size: 35,
+                                  color: Colors.blue.shade900,
+                                ),
+                                Text(
+                                  "Pay",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.blue.shade900,
                                   ),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Divider(),
+            Center(
+              child: Text(
+                "Financial Records",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            Divider(),
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height,
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        left: 12.0,
+                        right: 12.0,
+                        bottom: 12.0,
+                      ),
+                      child: ListView.builder(
+                        itemCount: _accountData.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final AccountHistory account = _accountData[index];
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                account.isHidden = !account.isHidden;
+                              });
+                            },
+                            child: Container(
+                              margin: EdgeInsets.only(bottom: 8.0),
+                              padding: EdgeInsets.all(16.0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.3),
+                                    spreadRadius: 1,
+                                    blurRadius: 3,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         account.name,
                                         style: TextStyle(
                                           fontSize: 14.0,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      SizedBox(height: 8.0),
-                                      Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            account.type,
-                                            style: TextStyle(
-                                              fontSize: 14.0,
-                                              color: Colors.grey[600],
-                                            ),
-                                          ),
-                                          Visibility(
-                                            visible: account.isHidden,
-                                            child: Text(
-                                              account.amount.toStringAsFixed(2),
-                                              style: TextStyle(
-                                                fontSize: 14.0,
-                                                fontWeight: FontWeight.bold,
-                                                color: account.amount >= 0
-                                                    ? Colors.green
-                                                    : Colors.red,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                                      Text(
+                                        account.type,
+                                        style: TextStyle(
+                                          fontSize: 14.0,
+                                          color: Colors.grey[600],
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                      Visibility(
-                                        visible: !account.isHidden,
-                                        child: Text(
-                                          '**** **** **** ${account.amount.toStringAsFixed(2).split('.')[0].substring(0, 4)}',
-                                          style: TextStyle(
-                                            fontSize: 16.0,
-                                            fontWeight: FontWeight.bold,
-                                            color: account.amount >= 0
-                                                ? Colors.green
-                                                : Colors.red,
-                                          ),
+                                      Text(
+                                        account.amount.toStringAsFixed(2),
+                                        style: TextStyle(
+                                          fontSize: 14.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: account.amount >= 0
+                                              ? Colors.green
+                                              : Colors.red,
                                         ),
                                       ),
                                     ],
                                   ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
+                                  SizedBox(height: 8.0),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Processed on:",
+                                            style: TextStyle(
+                                              fontSize: 12.0,
+                                              color: Colors.grey[600],
+                                            ),
+                                          ),
+                                          SizedBox(width: 4.0),
+                                          Text(
+                                            "${DateFormat.yMMMd().add_jm().format(DateTime.now())}",
+                                            style: TextStyle(
+                                              fontSize: 12.0,
+                                              color: Colors.grey[600],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Reference No: FASPAY/${DateFormat.YEAR_NUM_MONTH_WEEKDAY_DAY}${index + 1}",
+                                        style: TextStyle(
+                                          fontSize: 12.0,
+                                          color: Colors.grey[600],
+                                        ),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          IconButton(
+                                            icon: Icon(
+                                              Icons.picture_as_pdf,
+                                              color: Colors.red,
+                                            ),
+                                            onPressed: () =>
+                                                generatePDF(context, account),
+                                          ),
+                                          // IconButton(
+                                          //   onPressed: () {
+                                          //     Share.share(
+                                          //         'Here is my account history: ${account.name}, ${account.amount}');
+                                          //   },
+                                          //   icon: Icon(Icons.share),
+                                          // ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                    ],
+                    ),
                   ),
-                )
-              ],
-            ),
-            Visibility(
-                visible: show_preogress,
-                child: Container(
-                    color: Colors.black.withOpacity(0.5),
-                    child: ListView(
-                      children: const [
-                        LinearProgressIndicator(
-                          semanticsLabel: 'Linear progress indicator',
-                        )
-                      ],
-                    ))),
+                ],
+              ),
+            )
           ],
-        ));
+        ),
+        Visibility(
+            visible: show_preogress,
+            child: Container(
+                color: Colors.black.withOpacity(0.5),
+                child: ListView(
+                  children: const [
+                    LinearProgressIndicator(
+                      semanticsLabel: 'Linear progress indicator',
+                    )
+                  ],
+                ))),
+      ],
+    ));
   }
 
   Future get_customer_details(phone, token) async {
@@ -438,7 +527,7 @@ class _DashboardState extends State<Dashboard> {
         name = data["f_name"];
         String bal = data["balance"];
         balance = double.parse(bal);
-        accNo=phone;
+        accNo = phone;
         show_preogress = false;
       } else {
         show_preogress = false;
@@ -532,7 +621,7 @@ class _DashboardState extends State<Dashboard> {
                 fontSize: 14,
               ),
               contentPadding:
-              EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
+                  EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
               labelText: 'Amount',
               hintText: 'Enter amount',
             ),
@@ -618,7 +707,6 @@ class _DashboardState extends State<Dashboard> {
                         _showToast(context, "Invalid Amount");
                       } else {
                         qr_payment_request();
-
                       }
                     },
                   ),
@@ -630,7 +718,8 @@ class _DashboardState extends State<Dashboard> {
       },
     );
   }
-  Future qr_payment_request()async {
+
+  Future qr_payment_request() async {
     var url = "https://a2ctech.net/api/faspay/request_payment_qr.php";
     var response;
     response = await http.post(Uri.parse(url), body: {
@@ -643,17 +732,14 @@ class _DashboardState extends State<Dashboard> {
     if (response.statusCode == 200) {
       print(response.body);
       print(data["status"]);
-      if(data["status"]=="true"){
+      if (data["status"] == "true") {
         Navigator.of(context).pop();
-        showQRCode(
-            context, data["code"]);
-      }else{
-
-      }
+        showQRCode(context, data["code"]);
+      } else {}
       setState(() {
         show_preogress = false;
       });
-    }else{
+    } else {
       print(response.statusCode);
     }
   }
@@ -672,7 +758,7 @@ void _showToast(BuildContext context, String msg) {
         ),
       ),
       action:
-      SnackBarAction(label: '', onPressed: scaffold.hideCurrentSnackBar),
+          SnackBarAction(label: '', onPressed: scaffold.hideCurrentSnackBar),
     ),
   );
 }
@@ -753,4 +839,3 @@ void showQRCode(BuildContext context, String data) {
     isScrollControlled: true,
   );
 }
-

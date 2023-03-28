@@ -29,10 +29,10 @@ class _SetPinPageState extends State<SetPinPage> {
     String pin = _pinController.text.trim();
     String confirmPin = _confirmPinController.text.trim();
 
-    if (pin.length != 6) {
+    if (pin.length != 4) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Pin must be 6 digits.'),
+          content: Text('Pin must be 4 digits.'),
           duration: Duration(seconds: 2),
         ),
       );
@@ -77,7 +77,7 @@ class _SetPinPageState extends State<SetPinPage> {
             TextField(
               controller: _pinController,
               keyboardType: TextInputType.number,
-              maxLength: 6,
+              maxLength: 4,
               obscureText: true,
               decoration: InputDecoration(
                 enabledBorder: OutlineInputBorder(
@@ -95,14 +95,14 @@ class _SetPinPageState extends State<SetPinPage> {
                 ),
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
-                labelText: 'Enter 6-digit PIN',
+                labelText: 'Enter 4-digit PIN',
               ),
             ),
             SizedBox(height: 16.0),
             TextField(
               controller: _confirmPinController,
               keyboardType: TextInputType.number,
-              maxLength: 6,
+              maxLength: 4,
               obscureText: true,
               decoration: InputDecoration(
                 enabledBorder: OutlineInputBorder(
@@ -120,7 +120,7 @@ class _SetPinPageState extends State<SetPinPage> {
                 ),
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
-                labelText: 'Confirm 6-digit PIN',
+                labelText: 'Confirm 4-digit PIN',
               ),
             ),
             SizedBox(height: 16.0),

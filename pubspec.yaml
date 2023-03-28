@@ -47,6 +47,10 @@ dependencies:
   qr_bar_code_scanner_dialog: ^0.0.5
   pin_code_text_field: ^1.8.0
   contacts_service: ^0.6.2
+  share: ^2.0.4
+  pdf: ^3.6.0
+  path_provider: ^2.0.14
+  printing: ^5.6.5
 
 
 dev_dependencies:

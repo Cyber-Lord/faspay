@@ -302,6 +302,50 @@ class CardPage extends StatelessWidget {
                               SizedBox(
                                 height: 10,
                               ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Colors.grey,
+                                        width: 1,
+                                      ),
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.3),
+                                          spreadRadius: 1,
+                                          blurRadius: 3,
+                                          offset: Offset(0, 4),
+                                        ),
+                                      ],
+                                    ),
+                                    height: 50,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.42,
+                                    // color: Colors.blue.shade900,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        print("Voucher");
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(13.0),
+                                        child: Text(
+                                          "Generate Voucher",
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.blue.shade900,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                               SizedBox(
                                 height: 40,
                               ),
