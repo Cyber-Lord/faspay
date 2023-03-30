@@ -149,26 +149,42 @@ class _UserProfilePageState extends State<UserProfilePage> {
     switch (widget.tier) {
       case VerificationTier.basic:
         return Badge(
-          icon: "Icons.verified_user",
-          color: Colors.yellow,
+          icon: Icon(
+            Icons.verified_user,
+            color: Colors.yellow,
+            size: 20,
+          ),
+          // color: Colors.yellow,
           text: 'Tier 1',
         );
       case VerificationTier.intermediate:
         return Badge(
-          icon: "Icons.verified_user",
-          color: Colors.orange,
+          icon: Icon(
+            Icons.verified_user,
+            color: Colors.orange,
+            size: 20,
+          ),
+          // color: Colors.orange,
           text: 'Tier 2',
         );
       case VerificationTier.advanced:
         return Badge(
-          icon: "Icons.verified_user",
-          color: Colors.green,
+          icon: Icon(
+            Icons.verified_user,
+            color: Colors.green,
+            size: 20,
+          ),
+          // color: Colors.green,
           text: 'Tier 3',
         );
       default:
         return Badge(
-          color: Colors.grey,
-          icon: "Icons.verified_user",
+          // color: Colors.grey,
+          icon: Icon(
+            Icons.pending,
+            color: Colors.red,
+            size: 20,
+          ),
           text: 'Unverified',
         );
     }
@@ -176,12 +192,11 @@ class _UserProfilePageState extends State<UserProfilePage> {
 }
 
 class Badge extends StatelessWidget {
-  final Color color;
+  // final Color color;
   final String text;
-  final String icon;
+  final Icon icon;
 
-  const Badge(
-      {Key? key, required this.color, required this.text, required this.icon})
+  const Badge({Key? key, required this.text, required this.icon})
       : super(key: key);
 
   @override
@@ -189,21 +204,10 @@ class Badge extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       decoration: BoxDecoration(
-        color: color,
+        // color: color,
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Icon(
-        Icons.verified_user,
-        size: 20,
-        color: Colors.white,
-      ),
-      // child: Text(
-      //   text,
-      //   style: TextStyle(
-      //     color: Colors.white,
-      //     fontSize: 16,
-      //   ),
-      // ),
+      child: icon,
     );
   }
 }
