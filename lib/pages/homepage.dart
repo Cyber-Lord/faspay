@@ -3,6 +3,7 @@ import 'package:faspay/pages/billscreen.dart';
 import 'package:faspay/pages/cardpage.dart';
 import 'package:faspay/pages/phonescreen.dart';
 import 'package:faspay/pages/qrscan.dart';
+import 'package:faspay/pages/userprofile.dart';
 import 'package:flutter/material.dart';
 import 'package:faspay/pages/dashboard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -46,7 +47,18 @@ class _HomePageState extends State<HomePage> {
         leading: IconButton(
           icon: Icon(Icons.person),
           color: Colors.white,
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => UserProfilePage(
+                  email: "John@doe.com",
+                  name: "John Doe",
+                  tier: VerificationTier.basic,
+                ),
+              ),
+            );
+          },
         ),
         actions: [
           SizedBox(

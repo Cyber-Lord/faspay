@@ -31,17 +31,17 @@ class _ResetPinPageState extends State<ResetPinPage> {
     String newPin = _newPinController.text.trim();
     String confirmPin = _confirmPinController.text.trim();
 
-    if (oldPin.length != 6) {
+    if (oldPin.length != 4) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Old pin must be 6 digits.'),
+          content: Text('Old pin must be 4 digits.'),
           duration: Duration(seconds: 2),
         ),
       );
-    } else if (newPin.length != 6) {
+    } else if (newPin.length != 4) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('New pin must be 6 digits.'),
+          content: Text('New pin must be 4 digits.'),
           duration: Duration(seconds: 2),
         ),
       );
@@ -104,7 +104,7 @@ class _ResetPinPageState extends State<ResetPinPage> {
                 ),
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
-                labelText: 'Enter old 6-digit PIN',
+                labelText: 'Enter old 4-digit PIN',
               ),
             ),
             SizedBox(height: 16.0),
@@ -129,7 +129,7 @@ class _ResetPinPageState extends State<ResetPinPage> {
                 ),
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
-                labelText: 'Enter new 6-digit PIN',
+                labelText: 'Enter new 4-digit PIN',
               ),
             ),
             SizedBox(height: 16.0),
@@ -154,7 +154,7 @@ class _ResetPinPageState extends State<ResetPinPage> {
                 ),
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
-                labelText: 'Enter new 6-digit confirm PIN',
+                labelText: 'Enter new 4-digit confirm PIN',
               ),
             ),
             SizedBox(height: 16.0),
