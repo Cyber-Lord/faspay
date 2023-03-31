@@ -122,7 +122,7 @@ class _HomePageState extends State<HomePage> {
               Icons.payments,
               color: Colors.white,
             ),
-            label: 'Bills',
+            label: 'Business',
             backgroundColor: Colors.white,
           ),
         ],

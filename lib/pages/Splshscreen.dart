@@ -36,9 +36,10 @@ class _SplshscreenState extends State<Splshscreen> {
               MainAxisAlignment.center, //Center Row contents horizontally,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SvgPicture.asset(
-              'assets/logo.svg',
-              height: height / 4.5,
+            Image.asset(
+              'assets/images/logo.png',
+              height: 200.0,
+              // color: Colors.blue.shade900,
             ),
           ],
         ),
