@@ -716,14 +716,14 @@ void showQRCode(BuildContext context, String data) {
                   data: data,
                   version: QrVersions.auto,
                   size: 200.0,
-                  foregroundColor: Colors.blue.shade900,
+                  foregroundColor: Colors.black,
                 ),
               ),
             ),
             SizedBox(height: 10),
             Container(
               height: 50,
-              color: Colors.blue.shade900,
+              color: Colors.black,
               child: GestureDetector(
                 onTap: () {
                   Navigator.of(context).pop();

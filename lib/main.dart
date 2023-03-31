@@ -1,6 +1,10 @@
+import 'package:faspay/pages/Splshscreen.dart';
 import 'package:faspay/pages/homepage.dart';
+import 'package:faspay/pages/qr_result.dart';
+import 'package:faspay/pages/test.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,6 +15,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.portraitUp,
+    ]);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Faspay',
@@ -24,9 +32,8 @@ class MyApp extends StatelessWidget {
         canvasColor: Color.fromARGB(255, 250, 252, 251),
       ),
       // home: CardPage(),
-      home: HomePage(
-        phoneNumber: '1222222',
-        token: '347858hdfjdhj',
+      home: Splshscreen(
+        //qr_coder: "qqqqqq",
       ),
     );
   }
