@@ -74,7 +74,7 @@ class _BankTransferPageState extends State<BankTransferPage> {
             );
           },
         ),
-        title: Text('Bank Transfer'),
+        title: Text('Faspay Transfer'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -85,54 +85,54 @@ class _BankTransferPageState extends State<BankTransferPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.08,
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                      width: 1.0,
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: DropdownButton<String>(
-                      value: selectedBank,
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.black87,
-                      ),
-                      items: banks.map((bank) {
-                        return DropdownMenuItem<String>(
-                          value: bank,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.8,
-                            child: Text(
-                              bank,
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                color: Colors.blue.shade900,
-                              ),
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                      hint: Text(
-                        'Select a Bank',
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          selectedBank = value!;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-                SizedBox(height: 16.0),
+                // Container(
+                //   height: MediaQuery.of(context).size.height * 0.08,
+                //   width: MediaQuery.of(context).size.width * 0.8,
+                //   decoration: BoxDecoration(
+                //     border: Border.all(
+                //       color: Colors.grey,
+                //       width: 1.0,
+                //     ),
+                //   ),
+                //   child: Padding(
+                //     padding: const EdgeInsets.all(8.0),
+                //     child: DropdownButton<String>(
+                //       value: selectedBank,
+                //       style: TextStyle(
+                //         fontSize: 16.0,
+                //         color: Colors.black87,
+                //       ),
+                //       items: banks.map((bank) {
+                //         return DropdownMenuItem<String>(
+                //           value: bank,
+                //           child: Container(
+                //             width: MediaQuery.of(context).size.width * 0.8,
+                //             child: Text(
+                //               bank,
+                //               style: TextStyle(
+                //                 fontSize: 16.0,
+                //                 color: Colors.blue.shade900,
+                //               ),
+                //             ),
+                //           ),
+                //         );
+                //       }).toList(),
+                //       hint: Text(
+                //         'Select a Bank',
+                //         style: TextStyle(
+                //           fontSize: 16.0,
+                //           color: Colors.grey,
+                //         ),
+                //       ),
+                //       onChanged: (value) {
+                //         setState(() {
+                //           selectedBank = value!;
+                //         });
+                //       },
+                //     ),
+                //   ),
+                // ),
+                // SizedBox(height: 16.0),
                 Padding(
                   padding: EdgeInsets.all(0),
                   child: Column(
