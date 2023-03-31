@@ -3,7 +3,8 @@ import 'package:faspay/pages/billscreen.dart';
 import 'package:faspay/pages/cardpage.dart';
 import 'package:faspay/pages/phonescreen.dart';
 import 'package:faspay/pages/qrscan.dart';
-import 'package:faspay/pages/userprofile.dart';
+import 'package:faspay/pages/tiertwouserprofile.dart';
+// import 'package:faspay/pages/userprofile.dart';
 import 'package:flutter/material.dart';
 import 'package:faspay/pages/dashboard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -51,10 +52,13 @@ class _HomePageState extends State<HomePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => UserProfilePage(
+                builder: (context) => TierTwoUserProfile(
                   email: "John@doe.com",
                   name: "John Doe",
-                  tier: VerificationTier.basic,
+                  tier: VerificationTier.advanced,
+                  bvn: "1234567890",
+                  dob: "01/01/2000",
+                  phoneNumber: my_num,
                 ),
               ),
             );

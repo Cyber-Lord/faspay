@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:faspay/pages/withdrawalpage.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -293,40 +294,51 @@ class _DashboardState extends State<Dashboard> {
                               ),
                             ),
                           ),
-                          Container(
-                            height: MediaQuery.of(context).size.height / 10,
-                            width: MediaQuery.of(context).size.width / 4,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8.0),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.3),
-                                  spreadRadius: 1,
-                                  blurRadius: 3,
-                                  offset: Offset(0, 2),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pop();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => WithdrawalForm(),
                                 ),
-                              ],
-                            ),
-                            // color: Colors.yellow,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment
-                                  .center, //Center Row contents horizontally,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.arrow_circle_right,
-                                  size: 35,
-                                  color: Colors.blue.shade900,
-                                ),
-                                Text(
-                                  "Pay",
-                                  style: TextStyle(
-                                    fontSize: 12,
+                              );
+                            },
+                            child: Container(
+                              height: MediaQuery.of(context).size.height / 10,
+                              width: MediaQuery.of(context).size.width / 4,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.3),
+                                    spreadRadius: 1,
+                                    blurRadius: 3,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              // color: Colors.yellow,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment
+                                    .center, //Center Row contents horizontally,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.arrow_circle_down,
+                                    size: 35,
                                     color: Colors.blue.shade900,
                                   ),
-                                )
-                              ],
+                                  Text(
+                                    "Withdraw",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.blue.shade900,
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ],

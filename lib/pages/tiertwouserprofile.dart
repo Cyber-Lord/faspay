@@ -1,3 +1,4 @@
+import 'package:faspay/pages/upgradetierthreeform.dart';
 import 'package:faspay/pages/upgradetiertwoform.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -9,23 +10,27 @@ enum VerificationTier {
   advanced,
 }
 
-class UserProfilePage extends StatefulWidget {
+class TierTwoUserProfile extends StatefulWidget {
   final String name;
   final String email;
+  final String bvn;
+  final String dob;
   final VerificationTier tier;
   final String phoneNumber;
 
-  UserProfilePage(
+  TierTwoUserProfile(
       {required this.name,
       required this.email,
+      required this.bvn,
+      required this.dob,
       required this.tier,
       required this.phoneNumber});
 
   @override
-  _UserProfilePageState createState() => _UserProfilePageState();
+  _TierTwoUserProfileState createState() => _TierTwoUserProfileState();
 }
 
-class _UserProfilePageState extends State<UserProfilePage> {
+class _TierTwoUserProfileState extends State<TierTwoUserProfile> {
   final _formKey = GlobalKey<FormState>();
   File _image = File('');
   bool _editing = true;
@@ -142,45 +147,39 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 ),
                 TextFormField(
                   decoration: InputDecoration(
-                    labelText: 'Address',
-                    prefixIcon: Icon(Icons.location_on),
+                    labelText: 'Date of Birth',
+                    prefixIcon: Icon(Icons.calendar_today),
                   ),
-                  keyboardType: TextInputType.streetAddress,
-                  enabled: _editing,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Please enter your address';
-                    }
-                    return null;
-                  },
+                  keyboardType: TextInputType.datetime,
+                  enabled: false,
+                  initialValue: widget.dob,
+                ),
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'BVN',
+                    prefixIcon: Icon(Icons.credit_card),
+                  ),
+                  keyboardType: TextInputType.number,
+                  enabled: false,
+                  initialValue: widget.bvn,
                 ),
                 SizedBox(
                   height: 16,
                 ),
-                // TextFormField(
-                //   decoration: InputDecoration(
-                //     labelText: 'City',
-                //     prefixIcon: Icon(Icons.location_city),
-                //   ),
-                //   keyboardType: TextInputType.streetAddress,
-                //   enabled: _editing,
-                //   validator: (value) {
-                //     if (value!.isEmpty) {
-                //       return 'Please enter your city';
-                //     }
-                //     return null;
-                //   },
-                // ),
+                SizedBox(
+                  height: 16,
+                ),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: TextButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => UpgradePage()),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //       builder: (context) => TierThreeUpgradePage()),
+                      // );
                     },
-                    child: Text("Upgrade to Tier 2"),
+                    child: Text("Upgrade to Tier 3"),
                   ),
                 ),
                 SizedBox(
