@@ -22,13 +22,16 @@ class AccountHistory {
   String name;
   double amount;
   String type;
-
+String dte;
+String trnx_id;
   bool isHidden;
 
   AccountHistory({
     required this.name,
     required this.amount,
     required this.type,
+    required this.dte,
+    required this.trnx_id,
     this.isHidden = true,
   });
 }
@@ -42,6 +45,8 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  final List<AccountHistory> _accountData =[];
+  /*
   final List<AccountHistory> _accountData = [
     AccountHistory(name: 'Oga Master', amount: 1200.0, type: 'Credit'),
     AccountHistory(name: 'Techie Abba', amount: 5000.0, type: 'Credit'),
@@ -49,6 +54,7 @@ class _DashboardState extends State<Dashboard> {
     AccountHistory(name: 'Techie Abba', amount: 5000.0, type: 'Credit'),
     AccountHistory(name: 'Musa Yola', amount: -1000.0, type: 'Debit'),
   ];
+  */
   String accNo = "";
   double balance = 0;
   String my_num = "", my_token = "";
@@ -438,7 +444,7 @@ class _DashboardState extends State<Dashboard> {
                                           ),
                                           SizedBox(width: 4.0),
                                           Text(
-                                            "${DateFormat.yMMMd().add_jm().format(DateTime.now())}",
+                                            account.dte,
                                             style: TextStyle(
                                               fontSize: 12.0,
                                               color: Colors.grey[600],
@@ -453,7 +459,7 @@ class _DashboardState extends State<Dashboard> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        "Reference No: FASPAY/${DateFormat.YEAR_NUM_MONTH_WEEKDAY_DAY}${index + 1}",
+                                        "Reference No: FASPAY/${account.trnx_id}",
                                         style: TextStyle(
                                           fontSize: 12.0,
                                           color: Colors.grey[600],
@@ -527,8 +533,9 @@ class _DashboardState extends State<Dashboard> {
         name = data["f_name"];
         String bal = data["balance"];
         balance = double.parse(bal);
-        accNo = phone;
+        accNo =  data["phone"];;
         show_preogress = false;
+        fetch_transaction();
       } else {
         show_preogress = false;
         logout();
@@ -736,6 +743,33 @@ class _DashboardState extends State<Dashboard> {
         Navigator.of(context).pop();
         showQRCode(context, data["code"]);
       } else {}
+      setState(() {
+        show_preogress = false;
+      });
+    } else {
+      print(response.statusCode);
+    }
+  }
+
+  Future fetch_transaction() async {
+    var url = "https://a2ctech.net/api/faspay/fetch_transaction.php";
+    var response;
+    response = await http.post(Uri.parse(url), body: {
+      "phone": my_num,
+      "token": my_token,
+
+    });
+
+    var data = json.decode(response.body);
+    if (response.statusCode == 200) {
+      print(response.body);
+    // print(data["x"]);
+
+for(var data in data){
+ //print(data["rcver"][0]["f_name"]);
+ _accountData.add(new AccountHistory(name: data["sender"][0]["f_name"],amount: double.parse(data["amount"]),type: data["trnx_type"],dte: data["dte"],trnx_id: data["tranx_id"]));
+}
+
       setState(() {
         show_preogress = false;
       });

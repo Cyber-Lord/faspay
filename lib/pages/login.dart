@@ -184,7 +184,8 @@ class _LoginState extends State<Login> {
     var url = "https://a2ctech.net/api/faspay/login.php";
     var response;
     response =
-        await http.post(Uri.parse(url), body: {"mail": mail, "pass": pass});
+        await http.post(Uri.parse(url),
+            body: {"mail": mail, "pass": pass});
 
     var data = json.decode(response.body);
     if (response.statusCode == 200) {

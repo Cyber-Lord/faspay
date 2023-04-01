@@ -22,8 +22,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Faspay',
+
       theme: ThemeData(
         appBarTheme: AppBarTheme(
+
           // backgroundColor: Color.fromARGB(255, 18, 98, 109),
           backgroundColor: Colors.blue.shade900,
         ),
