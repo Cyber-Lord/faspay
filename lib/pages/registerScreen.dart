@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:faspay/pages/homepage.dart';
 import 'package:faspay/pages/setpinpage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
@@ -135,7 +136,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   color: Colors.black,
                                 ),
                                 contentPadding: EdgeInsets.symmetric(
-                                    vertical: 15.0, horizontal: 15),
+                                  vertical: 15.0,
+                                  horizontal: 15,
+                                ),
                                 labelText: 'First Name',
                               ),
                             ),

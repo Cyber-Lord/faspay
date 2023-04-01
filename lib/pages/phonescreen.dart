@@ -18,12 +18,12 @@ class PhoneScreen extends StatefulWidget {
 class _PhoneScreenState extends State<PhoneScreen> {
   final TextEditingController _textEditingController = TextEditingController();
   bool _isButtonEnabled = false;
-  bool show_preogress =false;
-  bool surgest_login=false;
-  bool correct_pass_checker=false ;
+  bool show_preogress = false;
+  bool surgest_login = false;
+  bool correct_pass_checker = false;
   final _formKey = GlobalKey<FormState>();
   String? _phoneNumber;
-  String name="";
+  String name = "";
   @override
   void initState() {
     super.initState();
@@ -47,19 +47,18 @@ class _PhoneScreenState extends State<PhoneScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-
-          title: Text("Welcome to faspay",textAlign: TextAlign.center,),
-
+          title: Text(
+            "Welcome to faspay",
+            textAlign: TextAlign.center,
+          ),
         ),
         body: Stack(
           children: [
-
             ListView(
               children: [
-
                 Padding(
                   padding: EdgeInsets.all(16.0),
-                  child:    Form(
+                  child: Form(
                     key: _formKey,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -120,8 +119,8 @@ class _PhoneScreenState extends State<PhoneScreen> {
                                 labelStyle: TextStyle(
                                   color: Colors.black,
                                 ),
-                                contentPadding:
-                                EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 15.0, horizontal: 15),
                                 prefixText: "+234 - ",
                                 prefixStyle: TextStyle(
                                   color: Colors.black,
@@ -142,12 +141,14 @@ class _PhoneScreenState extends State<PhoneScreen> {
                           height: 50,
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
-                            color: _isButtonEnabled ? Colors.blue.shade900 : Colors.grey,
+                            color: _isButtonEnabled
+                                ? Colors.blue.shade900
+                                : Colors.grey,
                           ),
                           child: TextButton(
-                            onPressed:(){
+                            onPressed: () {
                               setState(() {
-                                show_preogress=true;
+                                show_preogress = true;
                               });
                               login(_textEditingController.text);
                             },
@@ -164,15 +165,11 @@ class _PhoneScreenState extends State<PhoneScreen> {
                     ),
                   ),
                 ),
-
               ],
             ),
-
-
             Visibility(
                 visible: show_preogress,
-                child:    Container(
-
+                child: Container(
                     color: Colors.black.withOpacity(0.5),
                     child: ListView(
                       children: const [
@@ -180,99 +177,89 @@ class _PhoneScreenState extends State<PhoneScreen> {
                           semanticsLabel: 'Linear progress indicator',
                         )
                       ],
-                    )
-                )
-
-            ),
+                    ))),
             SafeArea(
               child: Center(
-                child:  Visibility(
-
+                child: Visibility(
                     visible: surgest_login,
-                    child:    GestureDetector(
-                      onTap: (){
+                    child: GestureDetector(
+                      onTap: () {
                         setState(() {
-                          surgest_login=false;
+                          surgest_login = false;
                         });
                       },
                       child: Container(
-
                           color: Colors.black.withOpacity(0.5),
                           child: Center(
                               child: Container(
+                            padding: EdgeInsets.all(15),
+                            child: Material(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0)),
+                              elevation: 18.0,
+                              color: Colors.white,
+                              clipBehavior: Clip.antiAlias, // Add This
+                              child: Container(
                                 padding: EdgeInsets.all(15),
-                                child:  Material(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.0)),
-                                  elevation: 18.0,
-                                  color: Colors.white,
-                                  clipBehavior: Clip.antiAlias, // Add This
-                                  child: Container(
-                                    padding: EdgeInsets.all(15),
-                                    height: 140,
-                                    child: ListView(
-                                      children: [
-
-                                        Text("Your mobile number is already registered \n faspay",textAlign: TextAlign.center,),
-                                        SizedBox(height: 10,),
-                                        MaterialButton(
-
-                                          color: Colors.blue.shade900,
-                                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                          height: 50.0,
-                                          child: new Text('Login Now',
-                                              style:
-                                              new TextStyle(fontSize: 16.0, color: Colors.white)),
-                                          onPressed: () {
-
-                                            goto_login(context);
-                                          },
-                                        ),
-                                      ],
+                                height: 140,
+                                child: ListView(
+                                  children: [
+                                    Text(
+                                      "Your mobile number is already registered \n faspay",
+                                      textAlign: TextAlign.center,
                                     ),
-                                  ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    MaterialButton(
+                                      color: Colors.blue.shade900,
+                                      materialTapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                      height: 50.0,
+                                      child: new Text('Login Now',
+                                          style: new TextStyle(
+                                              fontSize: 16.0,
+                                              color: Colors.white)),
+                                      onPressed: () {
+                                        goto_login(context);
+                                      },
+                                    ),
+                                  ],
                                 ),
-                              )
-
-                          )
-                      ),
-                    )
-
-                ),),
+                              ),
+                            ),
+                          ))),
+                    )),
+              ),
             ),
-
-
           ],
-        )
-
-
-    );
+        ));
   }
+
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-  void hide_ww(){
+  void hide_ww() {
     setState(() {
-      surgest_login=false;
+      surgest_login = false;
     });
   }
-  Future login(phone)async {
+
+  Future login(phone) async {
     show_preogress = true;
     FocusScope.of(context).requestFocus(new FocusNode());
     var url = "https://a2ctech.net/api/faspay/otp.php";
     var response;
     response = await http.post(Uri.parse(url), body: {
       "phone": phone,
-
     });
 
     var data = json.decode(response.body);
     if (response.statusCode == 200) {
       print(response.body);
-      if(data["phone"]=="true"){
-        name =data["name"];
+      if (data["phone"] == "true") {
+        name = data["name"];
         show_preogress = false;
-        surgest_login=true;
-      }else{
-
+        surgest_login = true;
+      } else {
         goto_otp(context);
         show_preogress = false;
       }
@@ -281,24 +268,35 @@ class _PhoneScreenState extends State<PhoneScreen> {
       });
     }
   }
-  void goto_login(BuildContext context){
+
+  void goto_login(BuildContext context) {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => Login(phoneNumber: _textEditingController.text,name: name,)),
+      MaterialPageRoute(
+          builder: (context) => Login(
+                phoneNumber: _textEditingController.text,
+                name: name,
+              )),
     );
   }
-  void goto_otp(BuildContext context){
+
+  void goto_otp(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => OtpPage(phoneNumber: _textEditingController.text,)),
+      MaterialPageRoute(
+          builder: (context) => OtpPage(
+                phoneNumber: _textEditingController.text,
+              )),
     );
   }
-  void _showToast(BuildContext context,String msg) {
+
+  void _showToast(BuildContext context, String msg) {
     final scaffold = ScaffoldMessenger.of(context);
     scaffold.showSnackBar(
       SnackBar(
-        content:  Text(msg),
-        action: SnackBarAction(label: '', onPressed: scaffold.hideCurrentSnackBar),
+        content: Text(msg),
+        action:
+            SnackBarAction(label: '', onPressed: scaffold.hideCurrentSnackBar),
       ),
     );
   }
