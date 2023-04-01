@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'homepage.dart';
+
 class WithdrawalForm extends StatefulWidget {
   @override
   _WithdrawalFormState createState() => _WithdrawalFormState();
@@ -27,7 +29,15 @@ class _WithdrawalFormState extends State<WithdrawalForm> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomePage(
+                  phoneNumber: "",
+                  token: "",
+                ),
+              ),
+            );
           },
         ),
       ),

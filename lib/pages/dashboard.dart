@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:faspay/pages/homepage.dart';
+import 'package:faspay/pages/withdrawalpage.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -22,8 +24,8 @@ class AccountHistory {
   String name;
   double amount;
   String type;
-String dte;
-String trnx_id;
+  String dte;
+  String trnx_id;
   bool isHidden;
 
   AccountHistory({
@@ -45,7 +47,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  final List<AccountHistory> _accountData =[];
+  final List<AccountHistory> _accountData = [];
   /*
   final List<AccountHistory> _accountData = [
     AccountHistory(name: 'Oga Master', amount: 1200.0, type: 'Credit'),
@@ -129,171 +131,129 @@ class _DashboardState extends State<Dashboard> {
     return Scaffold(
         body: Stack(
       children: [
-        ListView(
+        Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 12.0, right: 12, top: 6),
-              child: Container(
-                height: MediaQuery.of(context).size.height / 4,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.3),
-                      spreadRadius: 1,
-                      blurRadius: 3,
-                      offset: Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: height / 200,
-                    ),
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(top: 8.0, left: 20, right: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                name,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w100,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              Icon(
-                                Icons.verified,
-                                color: Colors.green,
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                            ],
-                          ),
-                          Text(
-                            accNo,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w100,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ],
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              height: height * 0.25,
+              width: MediaQuery.of(context).size.width,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 12.0, right: 12, top: 6),
+                child: Container(
+                  // height: MediaQuery.of(context).size.height / 4,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.3),
+                        spreadRadius: 1,
+                        blurRadius: 3,
+                        offset: Offset(0, 4),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0, left: 20),
-                      child: Text(
-                        "N" + currencyFormatter.format(balance),
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.green,
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: height / 200,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 8.0, left: 20, right: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  name,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w100,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.verified,
+                                  color: Colors.green,
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                              ],
+                            ),
+                            Text(
+                              accNo,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w100,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: 20,
-                        right: 20,
-                        top: 20,
-                        bottom: 10,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              _showDialog(context);
-                            },
-                            child: Container(
-                              height: MediaQuery.of(context).size.height / 10,
-                              width: MediaQuery.of(context).size.width / 4,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8.0),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.3),
-                                    spreadRadius: 1,
-                                    blurRadius: 3,
-                                    offset: Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              // color: Colors.blue,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment
-                                    .center, //Center Row contents horizontally,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.add_circle,
-                                    size: height / 25,
-                                    color: Colors.blue.shade900,
-                                  ),
-                                  Text(
-                                    "Deposit",
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.blue.shade900,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0, left: 20),
+                        child: Text(
+                          "N" + currencyFormatter.format(balance),
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.green,
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).pop();
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => BankTransferPage(),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: 20,
+                          right: 20,
+                          top: 20,
+                          bottom: 10,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                _showDialog(context);
+                              },
+                              child: Container(
+                                height: MediaQuery.of(context).size.height / 10,
+                                width: MediaQuery.of(context).size.width / 4,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      spreadRadius: 1,
+                                      blurRadius: 3,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ],
                                 ),
-                              );
-                            },
-                            child: Container(
-                              height: MediaQuery.of(context).size.height / 10,
-                              width: MediaQuery.of(context).size.width / 4,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8.0),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.3),
-                                    spreadRadius: 1,
-                                    blurRadius: 3,
-                                    offset: Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              // color: Colors.green,
-                              child: GestureDetector(
+                                // color: Colors.blue,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment
                                       .center, //Center Row contents horizontally,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Icon(
-                                      Icons.arrow_circle_up,
+                                      Icons.add_circle,
                                       size: height / 25,
                                       color: Colors.blue.shade900,
                                     ),
                                     Text(
-                                      "Transfer",
+                                      "Deposit",
                                       style: TextStyle(
                                         fontSize: 12,
                                         color: Colors.blue.shade900,
@@ -303,47 +263,108 @@ class _DashboardState extends State<Dashboard> {
                                 ),
                               ),
                             ),
-                          ),
-                          Container(
-                            height: MediaQuery.of(context).size.height / 10,
-                            width: MediaQuery.of(context).size.width / 4,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8.0),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.3),
-                                  spreadRadius: 1,
-                                  blurRadius: 3,
-                                  offset: Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            // color: Colors.yellow,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment
-                                  .center, //Center Row contents horizontally,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.arrow_circle_right,
-                                  size: 35,
-                                  color: Colors.blue.shade900,
-                                ),
-                                Text(
-                                  "Pay",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.blue.shade900,
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).pop();
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => BankTransferPage(),
                                   ),
-                                )
-                              ],
+                                );
+                              },
+                              child: Container(
+                                height: MediaQuery.of(context).size.height / 10,
+                                width: MediaQuery.of(context).size.width / 4,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      spreadRadius: 1,
+                                      blurRadius: 3,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                // color: Colors.green,
+                                child: GestureDetector(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment
+                                        .center, //Center Row contents horizontally,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.arrow_circle_up,
+                                        size: height / 25,
+                                        color: Colors.blue.shade900,
+                                      ),
+                                      Text(
+                                        "Transfer",
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.blue.shade900,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ],
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).pop();
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => WithdrawalForm(),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                height: MediaQuery.of(context).size.height / 10,
+                                width: MediaQuery.of(context).size.width / 4,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      spreadRadius: 1,
+                                      blurRadius: 3,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                // color: Colors.yellow,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment
+                                      .center, //Center Row contents horizontally,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.arrow_circle_down,
+                                      size: 35,
+                                      color: Colors.blue.shade900,
+                                    ),
+                                    Text(
+                                      "Withdraw",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.blue.shade900,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -358,147 +379,133 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
             Divider(),
-            SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height,
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        left: 12.0,
-                        right: 12.0,
-                        bottom: 12.0,
-                      ),
-                      child: ListView.builder(
-                        itemCount: _accountData.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          final AccountHistory account = _accountData[index];
-                          return GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                account.isHidden = !account.isHidden;
-                              });
-                            },
-                            child: Container(
-                              margin: EdgeInsets.only(bottom: 8.0),
-                              padding: EdgeInsets.all(16.0),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8.0),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.3),
-                                    spreadRadius: 1,
-                                    blurRadius: 3,
-                                    offset: Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        account.name,
-                                        style: TextStyle(
-                                          fontSize: 14.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        account.type,
-                                        style: TextStyle(
-                                          fontSize: 14.0,
-                                          color: Colors.grey[600],
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        account.amount.toStringAsFixed(2),
-                                        style: TextStyle(
-                                          fontSize: 14.0,
-                                          fontWeight: FontWeight.bold,
-                                          color: account.amount >= 0
-                                              ? Colors.green
-                                              : Colors.red,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 8.0),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Processed on:",
-                                            style: TextStyle(
-                                              fontSize: 12.0,
-                                              color: Colors.grey[600],
-                                            ),
-                                          ),
-                                          SizedBox(width: 4.0),
-                                          Text(
-                                            account.dte,
-                                            style: TextStyle(
-                                              fontSize: 12.0,
-                                              color: Colors.grey[600],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "Reference No: FASPAY/${account.trnx_id}",
-                                        style: TextStyle(
-                                          fontSize: 12.0,
-                                          color: Colors.grey[600],
-                                        ),
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          IconButton(
-                                            icon: Icon(
-                                              Icons.picture_as_pdf,
-                                              color: Colors.red,
-                                            ),
-                                            onPressed: () =>
-                                                generatePDF(context, account),
-                                          ),
-                                          // IconButton(
-                                          //   onPressed: () {
-                                          //     Share.share(
-                                          //         'Here is my account history: ${account.name}, ${account.amount}');
-                                          //   },
-                                          //   icon: Icon(Icons.share),
-                                          // ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: ListView.builder(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  itemCount: _accountData.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final AccountHistory account = _accountData[index];
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          account.isHidden = !account.isHidden;
+                        });
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 8.0),
+                        padding: EdgeInsets.all(16.0),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.3),
+                              spreadRadius: 1,
+                              blurRadius: 3,
+                              offset: Offset(0, 2),
                             ),
-                          );
-                        },
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  account.name,
+                                  style: TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  account.type,
+                                  style: TextStyle(
+                                    fontSize: 14.0,
+                                    color: Colors.grey[600],
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  account.amount.toStringAsFixed(2),
+                                  style: TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: account.amount >= 0
+                                        ? Colors.green
+                                        : Colors.red,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 8.0),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      "Processed on:",
+                                      style: TextStyle(
+                                        fontSize: 12.0,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                    SizedBox(width: 4.0),
+                                    Text(
+                                      account.dte,
+                                      style: TextStyle(
+                                        fontSize: 12.0,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Reference No: FASPAY/${account.trnx_id}",
+                                  style: TextStyle(
+                                    fontSize: 12.0,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(
+                                        Icons.picture_as_pdf,
+                                        color: Colors.red,
+                                      ),
+                                      onPressed: () =>
+                                          generatePDF(context, account),
+                                    ),
+                                    // IconButton(
+                                    //   onPressed: () {
+                                    //     Share.share(
+                                    //         'Here is my account history: ${account.name}, ${account.amount}');
+                                    //   },
+                                    //   icon: Icon(Icons.share),
+                                    // ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ),
-                ],
+                    );
+                  },
+                ),
               ),
-            )
+            ),
           ],
         ),
         Visibility(
@@ -533,7 +540,8 @@ class _DashboardState extends State<Dashboard> {
         name = data["f_name"];
         String bal = data["balance"];
         balance = double.parse(bal);
-        accNo =  data["phone"];;
+        accNo = data["phone"];
+        ;
         show_preogress = false;
         fetch_transaction();
       } else {
@@ -757,18 +765,22 @@ class _DashboardState extends State<Dashboard> {
     response = await http.post(Uri.parse(url), body: {
       "phone": my_num,
       "token": my_token,
-
     });
 
     var data = json.decode(response.body);
     if (response.statusCode == 200) {
       print(response.body);
-    // print(data["x"]);
+      // print(data["x"]);
 
-for(var data in data){
- //print(data["rcver"][0]["f_name"]);
- _accountData.add(new AccountHistory(name: data["sender"][0]["f_name"],amount: double.parse(data["amount"]),type: data["trnx_type"],dte: data["dte"],trnx_id: data["tranx_id"]));
-}
+      for (var data in data) {
+        //print(data["rcver"][0]["f_name"]);
+        _accountData.add(new AccountHistory(
+            name: data["sender"][0]["f_name"],
+            amount: double.parse(data["amount"]),
+            type: data["trnx_type"],
+            dte: data["dte"],
+            trnx_id: data["tranx_id"]));
+      }
 
       setState(() {
         show_preogress = false;
@@ -836,21 +848,30 @@ void showQRCode(BuildContext context, String data) {
                   data: data,
                   version: QrVersions.auto,
                   size: 200.0,
-                  foregroundColor: Colors.black,
+                  foregroundColor: Colors.blue.shade900,
                 ),
               ),
             ),
             SizedBox(height: 10),
             Container(
               height: 50,
-              color: Colors.black,
+              color: Colors.blue.shade900,
               child: GestureDetector(
                 onTap: () {
-                  Navigator.of(context).pop();
+                  // Navigator.of(context).pop();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HomePage(
+                        phoneNumber: "",
+                        token: "",
+                      ),
+                    ),
+                  );
                 },
                 child: Center(
                   child: Text(
-                    "DONE!",
+                    "DONE",
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,

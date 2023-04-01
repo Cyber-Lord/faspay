@@ -74,7 +74,7 @@ class _BankTransferPageState extends State<BankTransferPage> {
             );
           },
         ),
-        title: Text('Faspay Transfer'),
+        title: Text('F2F Transfer'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -173,7 +173,7 @@ class _BankTransferPageState extends State<BankTransferPage> {
                     labelText: 'Account Name',
                     border: OutlineInputBorder(),
                   ),
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.text,
                 ),
                 SizedBox(height: 16.0),
                 TextFormField(
