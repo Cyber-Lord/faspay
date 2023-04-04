@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:faspay/pages/homepage.dart';
+import 'package:faspay/pages/transfer.dart';
 import 'package:faspay/pages/withdrawalpage.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -265,11 +266,11 @@ class _DashboardState extends State<Dashboard> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                Navigator.of(context).pop();
+                               // Navigator.of(context).pop();
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => BankTransferPage(),
+                                    builder: (context) => Transfer(),
                                   ),
                                 );
                               },

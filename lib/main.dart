@@ -2,6 +2,7 @@ import 'package:faspay/pages/Splshscreen.dart';
 import 'package:faspay/pages/homepage.dart';
 import 'package:faspay/pages/qr_result.dart';
 import 'package:faspay/pages/test.dart';
+import 'package:faspay/pages/transfer.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,6 +16,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          //color set to transperent or set your own color
+          statusBarIconBrightness: Brightness.dark,
+          //set brightness for icons, like dark background light icons
+        )
+    );
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitDown,
       DeviceOrientation.portraitUp,
