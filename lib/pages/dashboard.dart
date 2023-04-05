@@ -72,17 +72,18 @@ class _DashboardState extends State<Dashboard> {
     // Add page
     pdf.addPage(pw.MultiPage(
         pageFormat: PdfPageFormat.a4,
-        margin: pw.EdgeInsets.all(32),
+        margin: pw.EdgeInsets.all(40),
         header: (pw.Context context) {
           return pw.Container(
             alignment: pw.Alignment.center,
             margin: const pw.EdgeInsets.only(bottom: 20.0, top: 20.0),
             child: pw.Text(
-              'FasPay',
+              'Dear ${name}',
               style: pw.TextStyle(
-                  color: PdfColors.blue900,
-                  fontSize: 32.0,
-                  fontWeight: pw.FontWeight.bold),
+                color: PdfColors.blue900,
+                fontSize: 32.0,
+                fontWeight: pw.FontWeight.bold,
+              ),
             ),
           );
         },
@@ -147,6 +148,15 @@ class _DashboardState extends State<Dashboard> {
               pw.SizedBox(height: 20),
               pw.Text(
                 'Transaction Type: ${account.type}',
+                style: pw.TextStyle(
+                  color: PdfColors.black,
+                  fontSize: 20.0,
+                  fontWeight: pw.FontWeight.bold,
+                ),
+              ),
+              pw.SizedBox(height: 20),
+              pw.Text(
+                'Description: Description',
                 style: pw.TextStyle(
                   color: PdfColors.black,
                   fontSize: 20.0,
