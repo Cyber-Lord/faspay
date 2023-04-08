@@ -17,8 +17,11 @@ class _CardPageState extends State<CardPage> {
     Card('Credit Card', '5678', '03/26', 1000.0),
   ];
 
+  int currentCardIndex = 0;
+
   @override
   Widget build(BuildContext context) {
+    int myindex = 0;
     return Scaffold(
       body: Stack(
         children: [
@@ -34,110 +37,118 @@ class _CardPageState extends State<CardPage> {
                       scrollDirection: Axis.horizontal,
                       itemCount: cardList.length,
                       itemBuilder: (context, index) {
-                        return Container(
-                          width: MediaQuery.of(context).size.width * 0.9,
-                          height: MediaQuery.of(context).size.height * 0.3,
-                          margin: EdgeInsets.symmetric(horizontal: 10),
-                          decoration: BoxDecoration(
-                            color: Colors.blue.shade900,
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.3),
-                                blurRadius: 10,
-                                offset: Offset(0, 5),
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.all(16.0),
-                                // padding: const EdgeInsets.symmetric(horizontal: 20),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Debit Card',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Icon(
-                                      Icons.wifi,
-                                      color: Colors.white,
-                                    )
-                                  ],
+                        return GestureDetector(
+                          // set the current card index on tap
+                          onTap: () {
+                            setState(() {
+                              currentCardIndex = index;
+                              myindex = currentCardIndex;
+                              print(currentCardIndex);
+                            });
+                          },
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.9,
+                            height: MediaQuery.of(context).size.height * 0.3,
+                            margin: EdgeInsets.symmetric(horizontal: 10),
+                            decoration: BoxDecoration(
+                              color: Colors.blue.shade900,
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.3),
+                                  blurRadius: 10,
+                                  offset: Offset(0, 5),
                                 ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 20),
-                                child: Text(
-                                  '**** **** **** 1234',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 20),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'VALID THRU',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Text(
-                                      '02/25',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 16),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              // SizedBox(height: 10),
-                              Divider(),
-                              Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Center(
+                              ],
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.all(16.0),
                                   child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        "Balance: ",
+                                        'Debit Card',
                                         style: TextStyle(
-                                          fontSize: 18,
                                           color: Colors.white,
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Icon(
+                                        Icons.wifi,
+                                        color: Colors.white,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20),
+                                  child: Text(
+                                    '**** **** **** 1234',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'VALID THRU',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                       Text(
-                                        cardList[index].balance.toString(),
+                                        '02/25',
                                         style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                        ),
+                                            color: Colors.white, fontSize: 16),
                                       ),
                                     ],
                                   ),
                                 ),
-                              ),
-                            ],
+                                Divider(),
+                                Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Center(
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          "Balance: ",
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          cardList[index].balance.toString(),
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },
@@ -183,10 +194,15 @@ class _CardPageState extends State<CardPage> {
                                         width:
                                             MediaQuery.of(context).size.width *
                                                 0.42,
-                                        // color: Colors.blue.shade900,
                                         child: GestureDetector(
                                           onTap: () {
-                                            _showDialog(context, balance);
+                                            setState(() {
+                                              myindex = currentCardIndex;
+                                            });
+                                            if (currentCardIndex == myindex) {
+                                              print(myindex);
+                                              _showDialog(context, balance);
+                                            }
                                           },
                                           child: Padding(
                                             padding: const EdgeInsets.all(13.0),
@@ -225,6 +241,18 @@ class _CardPageState extends State<CardPage> {
                                             MediaQuery.of(context).size.width *
                                                 0.42,
                                         child: GestureDetector(
+                                          onTap: () {
+                                            if (currentCardIndex == myindex) {
+                                              Navigator.of(context).pop();
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      DebitCardRequestPage(),
+                                                ),
+                                              );
+                                            }
+                                          },
                                           child: Padding(
                                             padding: const EdgeInsets.all(13.0),
                                             child: Text(
@@ -236,16 +264,6 @@ class _CardPageState extends State<CardPage> {
                                               ),
                                             ),
                                           ),
-                                          onTap: () {
-                                            Navigator.of(context).pop();
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    DebitCardRequestPage(),
-                                              ),
-                                            );
-                                          },
                                         ),
                                       ),
                                     ],

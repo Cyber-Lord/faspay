@@ -15,7 +15,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:share/share.dart';
 import 'package:http/http.dart' as http;
-
+import 'dart:typed_data';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -68,52 +68,139 @@ class _DashboardState extends State<Dashboard> {
 
   Future<void> generatePDF(BuildContext context, AccountHistory account) async {
     final pdf = pw.Document();
-    pdf.addPage(
-      pw.Page(
-        build: (pw.Context context) {
-          return pw.Center(
+
+    // Add page
+    pdf.addPage(pw.MultiPage(
+        pageFormat: PdfPageFormat.a4,
+        margin: pw.EdgeInsets.all(40),
+        header: (pw.Context context) {
+          return pw.Container(
+            alignment: pw.Alignment.center,
+            margin: const pw.EdgeInsets.only(bottom: 20.0, top: 20.0),
             child: pw.Text(
-              'Name: ${account.name}\nTransaction Type: ${account.type}\nAmount:${account.amount}',
+              'Dear ${name}',
               style: pw.TextStyle(
-                fontSize: 40.0,
+                color: PdfColors.blue900,
+                fontSize: 32.0,
                 fontWeight: pw.FontWeight.bold,
               ),
             ),
           );
         },
-      ),
-    );
-    await Printing.layoutPdf(
-      onLayout: (PdfPageFormat format) async => pdf.save(),
-    );
-  }
-
-  Future<void> share(BuildContext context, AccountHistory account) async {
-    final RenderBox box = context.findRenderObject() as RenderBox;
-    await Printing.layoutPdf(
-      onLayout: (PdfPageFormat format) async {
-        final pdf = pw.Document();
-        pdf.addPage(
-          pw.Page(
-            build: (pw.Context context) {
-              return pw.Center(
-                child: pw.Text(
-                  '${account.name}\n${account.type}\n${account.amount}',
-                  style: pw.TextStyle(
-                    fontSize: 40.0,
-                    fontWeight: pw.FontWeight.bold,
-                  ),
+        footer: (pw.Context context) {
+          return pw.Container(
+            alignment: pw.Alignment.centerRight,
+            margin: const pw.EdgeInsets.only(top: 30.0),
+            child: pw.Text(
+              'Date & Time Generated: ${DateTime.now().toLocal().toString()}',
+              style: pw.TextStyle(
+                fontSize: 20.0,
+                color: PdfColors.blue900,
+              ),
+            ),
+          );
+        },
+        build: (pw.Context context) => <pw.Widget>[
+              // Add logo
+              pw.Center(
+                child: pw.Column(
+                  children: [
+                    pw.SizedBox(height: 30),
+                    pw.Text(
+                      'Transaction Receipt',
+                      style: pw.TextStyle(
+                        color: PdfColors.blue900,
+                        fontSize: 32.0,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
-              );
-            },
-          ),
-        );
-        return pdf.save();
-      },
+              ),
+
+              pw.SizedBox(height: 80),
+              pw.Text(
+                'Sender: ${account.name}',
+                style: pw.TextStyle(
+                  color: PdfColors.black,
+                  fontSize: 20.0,
+                  fontWeight: pw.FontWeight.bold,
+                ),
+              ),
+              pw.SizedBox(height: 20),
+              pw.Text(
+                'Beneficiary Name: ${name}',
+                style: pw.TextStyle(
+                  color: PdfColors.black,
+                  fontSize: 20.0,
+                  fontWeight: pw.FontWeight.bold,
+                ),
+              ),
+              pw.SizedBox(height: 20),
+              pw.Text(
+                'Account Number: ${accNo}',
+                style: pw.TextStyle(
+                  color: PdfColors.black,
+                  fontSize: 20.0,
+                  fontWeight: pw.FontWeight.bold,
+                ),
+              ),
+              pw.SizedBox(height: 20),
+              pw.Text(
+                'Transaction Type: ${account.type}',
+                style: pw.TextStyle(
+                  color: PdfColors.black,
+                  fontSize: 20.0,
+                  fontWeight: pw.FontWeight.bold,
+                ),
+              ),
+              pw.SizedBox(height: 20),
+              pw.Text(
+                'Description: Description',
+                style: pw.TextStyle(
+                  color: PdfColors.black,
+                  fontSize: 20.0,
+                  fontWeight: pw.FontWeight.bold,
+                ),
+              ),
+              pw.SizedBox(height: 20),
+              pw.Text(
+                'Transaction Reference: ${account.trnx_id}',
+                style: pw.TextStyle(
+                  color: PdfColors.black,
+                  fontSize: 20.0,
+                  fontWeight: pw.FontWeight.bold,
+                ),
+              ),
+              pw.SizedBox(height: 20),
+              pw.Text(
+                'Amount: ${account.amount}',
+                style: pw.TextStyle(
+                  color: PdfColors.black,
+                  fontSize: 20.0,
+                  fontWeight: pw.FontWeight.bold,
+                ),
+              ),
+              pw.SizedBox(height: 20),
+              pw.Text(
+                'Effective On: ${account.dte}',
+                style: pw.TextStyle(
+                  color: PdfColors.black,
+                  fontSize: 20.0,
+                  fontWeight: pw.FontWeight.bold,
+                ),
+              ),
+            ]));
+
+    // Save PDF to file
+    final Uint8List bytes = await pdf.save();
+
+    // Share PDF
+    await Printing.sharePdf(
+      bytes: bytes,
+      filename: account.name + '.pdf',
+      subject: 'Transaction Receipt',
     );
-    await Share.shareFiles(['${account.name}.pdf'],
-        text: 'Transaction History for ${account.name}',
-        subject: 'Transaction Details');
   }
 
   bool show_preogress = true;
@@ -266,7 +353,7 @@ class _DashboardState extends State<Dashboard> {
                             ),
                             GestureDetector(
                               onTap: () {
-                               // Navigator.of(context).pop();
+                                // Navigator.of(context).pop();
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
