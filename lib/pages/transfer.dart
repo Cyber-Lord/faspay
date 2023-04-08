@@ -51,75 +51,62 @@ class _TransferState extends State<Transfer> {
     my_session();
     super.initState();
   }
-
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
     height = size.height;
     width = size.width;
     return Scaffold(
+
+
       backgroundColor: Color(0xFFf1f1f9),
-      appBar: AppBar(
-        title: Text("To FasPay"),
-      ),
+appBar: AppBar(
+  title: Text("To FasPay"),
+),
       body: Stack(
         children: [
-          SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Material(
-                    elevation: 5,
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    child: Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Row(
+    Padding(
+            padding: EdgeInsets.all(10),
+            child: Column(
+
+              children: [
+                SizedBox(height: 10,),
+                Material(
+                  elevation: 5,
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Row(
                         children: <Widget>[
-                          Icon(
-                            Icons.search,
-                            size: 30,
-                          ),
+                          Icon(Icons.search,size: 30,),
                           new Flexible(
 
                             child: new TextField(
                               controller: txt_in_account_n0,
                               maxLength: 10,
                               keyboardType: TextInputType.phone,
-                              decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.symmetric(
-                                      vertical: 15.0, horizontal: 15),
-                                  hintText: "E.g 8012345678",
-                                  labelText: "Account number",
-                                  border: InputBorder.none,
-                                  counterText: ""),
-                              onTap: () {
-                                size_transaction_container = true;
+                              decoration: InputDecoration(hintText: "Account number E.g 8012345678"
+                              ,border: InputBorder.none,counterText: ""),
+                              onTap: (){
+                                size_transaction_container=true;
                               },
-                              // onTapOutside: (e) {
-                              //   FocusScope.of(context)
-                              //       .requestFocus(new FocusNode());
-                              //   _timer = new Timer(
-                              //       const Duration(milliseconds: 400), () {
-                              //     setState(() {
-                              //       size_transaction_container = false;
-                              //     });
-                              //   });
-                              // },
-                              onChanged: (e) {
-                                if (e.length == 10) {
-                                  FocusScope.of(context)
-                                      .requestFocus(new FocusNode());
-                                  show_preogress = true;
-                                  account_no = e;
+                              onTapOutside: (e){
+                                FocusScope.of(context).requestFocus(new FocusNode());
+                                _timer = new Timer(const Duration(milliseconds: 400), () {
+                                 setState(() {
+                                   size_transaction_container=false;
+                                 });
+                                });
+                              },
+                              onChanged: (e){
+                                if(e.length==10){
+                                  FocusScope.of(context).requestFocus(new FocusNode());
+                                  show_preogress=true;
+                                  account_no=e;
                                   verify_account_no(my_num, my_token);
-                                  _timer = new Timer(
-                                      const Duration(milliseconds: 400), () {
+                                  _timer = new Timer(const Duration(milliseconds: 400), () {
                                     setState(() {
-                                      size_transaction_container = false;
+                                      size_transaction_container=false;
                                     });
                                   });
                                 }
@@ -127,27 +114,21 @@ class _TransferState extends State<Transfer> {
                             ),
                           ),
                           GestureDetector(
-                              onTap: () {
+                              onTap: (){
                                 _selectContact();
                               },
-                              child: Icon(
-                                Icons.contacts,
-                                size: 30,
-                              )),
+                              child: Icon(Icons.contacts,size: 30,)),
                         ],
-                      ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.all(15),
-                    child: Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Recents",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 14),
-                      ),
-                    ),
+                )
+                ,
+              Padding(
+                padding: EdgeInsets.all(15),
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Recently",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14),),
+                ),
                   ),
        Material(
          elevation: 10,
@@ -324,7 +305,8 @@ class _TransferState extends State<Transfer> {
                       )
                     ],
                   ))),
-          Visibility(child: _verify_account()),
+        Visibility(
+             child:  _verify_account()),
           Visibility(
             visible: show_account_not_found,
             child: Container(
@@ -338,30 +320,35 @@ class _TransferState extends State<Transfer> {
                 title: Center(
                   child: Row(
                     children: [
+
                       Text(
-                        'Confirm Account Owner',
+                        'Information Confirmed',
                         style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 14),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14
+                        ),
                       )
                     ],
                   ),
                 ),
-                content: Container(
+                content:  Container(
                   height: 40,
                   child: Column(
                     children: [
                       Divider(),
                       Container(
+
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment
                               .center, //Center Row contents horizontally,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                          crossAxisAlignment:
+                          CrossAxisAlignment.center,
                           children: [
                             Icon(
-                              Icons.error,
-                              color: Colors.red,
+                              Icons.error,color: Colors.red,
                             ),
-                            Text('Contact Not on FasPay'),
+                            Text('Account Not found'),
+
                           ],
                         ),
                       ),
@@ -369,15 +356,12 @@ class _TransferState extends State<Transfer> {
                   ),
                 ),
                 actions: [
+
                   TextButton(
-                    onPressed: () {
-                      show_account_not_found = false;
+                    onPressed: (){
+                      show_account_not_found=false;
                     },
-                    child: const Text(
-                      'Close',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                    ),
+                    child: const Text('Close',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
                   ),
                 ],
               ),
@@ -551,6 +535,7 @@ alignment: Alignment.bottomCenter,
 
         )
         ],
+
       ),
     );
   }
@@ -620,16 +605,11 @@ alignment: Alignment.bottomCenter,
       for (var data in data) {
         //print(data["rcver"][0]["f_name"]);
         _accountData.add(new AccountHistory(
-            name: data["sender"][0]["f_name"] +
-                " " +
-                data["sender"][0]["s_name"] +
-                " " +
-                data["sender"][0]["o_name"],
+            name: data["sender"][0]["f_name"]+" "+data["sender"][0]["s_name"]+" "+data["sender"][0]["o_name"],
             amount: double.parse(data["amount"]),
             type: data["trnx_type"],
             dte: data["dte"],
-            trnx_id: data["tranx_id"],
-            account_no_his: data["sender"][0]["phone"]));
+            trnx_id: data["tranx_id"],account_no_his: data["sender"][0]["phone"]));
       }
 
       setState(() {
@@ -639,7 +619,6 @@ alignment: Alignment.bottomCenter,
       print(response.statusCode);
     }
   }
-
   Future<void> logout() async {
     WidgetsFlutterBinding.ensureInitialized();
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -647,14 +626,12 @@ alignment: Alignment.bottomCenter,
 
     goto_phone_screen(context);
   }
-
   void goto_phone_screen(BuildContext context) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => PhoneScreen()),
     );
   }
-
   Future<void> my_session() async {
     WidgetsFlutterBinding.ensureInitialized();
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -664,16 +641,17 @@ alignment: Alignment.bottomCenter,
     if (phone == null) {
       logout();
     } else {
+
       // get_payment_request(phone, tokn);
       //get_customer_details(phone, my_token);
       setState(() {
         my_num = phone!;
         my_token = tokn!;
         fetch_transaction();
+
       });
     }
   }
-
   Future verify_account_no(phone, token) async {
     show_preogress = true;
     FocusScope.of(context).requestFocus(new FocusNode());
@@ -682,7 +660,7 @@ alignment: Alignment.bottomCenter,
     response = await http.post(Uri.parse(url), body: {
       "phone": phone,
       "token": token,
-      "account": account_no,
+      "account":account_no,
     });
 
     var data = json.decode(response.body);
@@ -694,17 +672,20 @@ alignment: Alignment.bottomCenter,
         balance= double.parse(data["my_account"]["balance"]);
         trnx_pin=data["my_account"]["my_pin"];
         show_preogress = false;
-        show_confirm_info = true;
+        show_confirm_info=true;
+
       } else {
-        txt_in_account_n0.text = "";
-        show_account_not_found = true;
+        txt_in_account_n0.text="";
+        show_account_not_found=true;
         show_preogress = false;
         // logout();
       }
       setState(() {
+
         //show_preogress = false;.
       });
     }
+
   }
   Widget  _verify_account(){
     return
@@ -824,24 +805,23 @@ alignment: Alignment.bottomCenter,
        ),
      );
   }
-
   Future<void> _selectContact() async {
     PermissionStatus permissionStatus = await Permission.contacts.request();
     if (permissionStatus == PermissionStatus.granted) {
       Contact? contact = await ContactsService.openDeviceContactPicker();
       if (contact != null && contact.phones!.isNotEmpty) {
         _accountNumberController.text = contact.phones!.first.value!;
-        account_no = contact.phones!.first.value!;
+        account_no=contact.phones!.first.value!;
         print(_accountNumberController.text);
-        if (_accountNumberController.text.length < 10) {
-          _showToast(context, "Invalid phone number");
-        } else {
+        if(_accountNumberController.text.length<10){
+          _showToast( context,"Invalid phone number");
+        }else{
           setState(() {
-            account_no = account_no.replaceAll(" ", "");
-            if (account_no.length == "14") {
-              account_no = account_no.substring(4);
-            } else {
-              account_no = account_no.substring(1);
+            account_no=account_no.replaceAll(" ", "");
+            if(account_no.length=="14"){
+              account_no=account_no.substring(4);
+            }else{
+              account_no=account_no.substring(1);
             }
 
             verify_account_no(my_num, my_token);
@@ -850,20 +830,13 @@ alignment: Alignment.bottomCenter,
       }
     }
   }
-
-  void _showToast(BuildContext context, String msg) {
+  void _showToast(BuildContext context,String msg) {
     final scaffold = ScaffoldMessenger.of(context);
     scaffold.showSnackBar(
       SnackBar(
         backgroundColor: Colors.red.shade900,
-        content: Text(
-          msg,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        action:
-            SnackBarAction(label: '', onPressed: scaffold.hideCurrentSnackBar),
+        content:  Text(msg,style: TextStyle(fontWeight: FontWeight.bold,),),
+        action: SnackBarAction(label: '', onPressed: scaffold.hideCurrentSnackBar),
       ),
     );
   }
@@ -899,7 +872,6 @@ alignment: Alignment.bottomCenter,
 
   }
 }
-
 class AccountHistory {
   String name;
   double amount;
