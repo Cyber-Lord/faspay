@@ -66,232 +66,240 @@ appBar: AppBar(
         children: [
     Padding(
             padding: EdgeInsets.all(10),
-            child: Column(
+            child: SingleChildScrollView(
+              child: Column(
 
-              children: [
-                SizedBox(height: 10,),
-                Material(
-                  elevation: 5,
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Row(
-                        children: <Widget>[
-                          Icon(Icons.search,size: 30,),
-                          new Flexible(
+                children: [
+                  SizedBox(height: 10,),
+                  Material(
+                    elevation: 5,
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Row(
+                          children: <Widget>[
+                            Icon(Icons.search,size: 30,),
+                            new Flexible(
 
-                            child: new TextField(
-                              controller: txt_in_account_n0,
-                              maxLength: 10,
-                              keyboardType: TextInputType.phone,
-                              decoration: InputDecoration(hintText: "Account number E.g 8012345678"
-                              ,border: InputBorder.none,counterText: ""),
-                              onTap: (){
-                                size_transaction_container=true;
-                              },
-                              onTapOutside: (e){
-                                FocusScope.of(context).requestFocus(new FocusNode());
-                                _timer = new Timer(const Duration(milliseconds: 400), () {
-                                 setState(() {
-                                   size_transaction_container=false;
-                                 });
-                                });
-                              },
-                              onChanged: (e){
-                                if(e.length==10){
+                              child: new TextField(
+                                controller: txt_in_account_n0,
+                                maxLength: 10,
+                                keyboardType: TextInputType.phone,
+
+                                onTap: (){
+                                  size_transaction_container=true;
+                                },
+                                decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 15.0, horizontal: 15),
+                                    hintText: "E.g 8012345678",
+                                    labelText: "Account number",
+                                    border: InputBorder.none,
+                                    counterText: ""),
+                                onTapOutside: (e){
                                   FocusScope.of(context).requestFocus(new FocusNode());
-                                  show_preogress=true;
-                                  account_no=e;
-                                  verify_account_no(my_num, my_token);
                                   _timer = new Timer(const Duration(milliseconds: 400), () {
-                                    setState(() {
-                                      size_transaction_container=false;
-                                    });
+                                   setState(() {
+                                     size_transaction_container=false;
+                                   });
                                   });
-                                }
-                              },
+                                },
+                                onChanged: (e){
+                                  if(e.length==10){
+                                    FocusScope.of(context).requestFocus(new FocusNode());
+                                    show_preogress=true;
+                                    account_no=e;
+                                    verify_account_no(my_num, my_token);
+                                    _timer = new Timer(const Duration(milliseconds: 400), () {
+                                      setState(() {
+                                        size_transaction_container=false;
+                                      });
+                                    });
+                                  }
+                                },
+                              ),
                             ),
-                          ),
-                          GestureDetector(
-                              onTap: (){
-                                _selectContact();
-                              },
-                              child: Icon(Icons.contacts,size: 30,)),
-                        ],
+                            GestureDetector(
+                                onTap: (){
+                                  _selectContact();
+                                },
+                                child: Icon(Icons.contacts,size: 30,)),
+                          ],
+                      ),
                     ),
+                  )
+                  ,
+                Padding(
+                  padding: EdgeInsets.all(15),
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    child: Text("Recents",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14),),
                   ),
-                )
-                ,
-              Padding(
-                padding: EdgeInsets.all(15),
-                child: Container(
-                  alignment: Alignment.centerLeft,
-                  child: Text("Recently",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14),),
-                ),
-                  ),
+                    ),
        Material(
          elevation: 10,
          borderRadius: BorderRadius.circular(10),
          child: Container(
           height: size_transaction_container!=true
            ?height-242
-              //?height/3
+                //?height/3
           :height/2.5,
           //height: height-242,
           child:  Stack(
-            children: [
-              Visibility(
-                  visible: progress_bar_load_transaction,
-                  child: Container(
+              children: [
+                Visibility(
+                    visible: progress_bar_load_transaction,
+                    child: Container(
 
-                      child: ListView(
-                        children: const [
-                          LinearProgressIndicator(
-                            semanticsLabel: 'Linear progress indicator',
-                          )
-                        ],
-                      ))),
-              Column(
-                children: [
+                        child: ListView(
+                          children: const [
+                            LinearProgressIndicator(
+                              semanticsLabel: 'Linear progress indicator',
+                            )
+                          ],
+                        ))),
+                Column(
+                  children: [
 
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child:
-                      Visibility(
-                        visible: _account_history_visable,
-                        child: ListView.builder(
-                          physics: AlwaysScrollableScrollPhysics(),
-                          itemCount: _accountData.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            final AccountHistory account = _accountData[index];
-                            return GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    account.isHidden = !account.isHidden;
-                                    account_no=account.account_no_his;
-                                    verify_account_no(my_num, my_token);
-                                  });
-                                },
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child:
+                        Visibility(
+                          visible: _account_history_visable,
+                          child: ListView.builder(
+                            physics: AlwaysScrollableScrollPhysics(),
+                            itemCount: _accountData.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              final AccountHistory account = _accountData[index];
+                              return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      account.isHidden = !account.isHidden;
+                                      account_no=account.account_no_his;
+                                      verify_account_no(my_num, my_token);
+                                    });
+                                  },
 
-                                child: Container(
-                                  margin: EdgeInsets.only(bottom: 8.0),
-                                  padding: EdgeInsets.all(16.0),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.3),
-                                        spreadRadius: 1,
-                                        blurRadius: 3,
-                                        offset: Offset(0, 2),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            account.name+"("+account.account_no_his+")",
-                                            style: TextStyle(
-                                              fontSize: 14.0,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-
-                                          Text(
-                                            account.amount.toStringAsFixed(2),
-                                            style: TextStyle(
-                                              fontSize: 14.0,
-                                              fontWeight: FontWeight.bold,
-                                              color: account.amount >= 0
-                                                  ? Colors.green
-                                                  : Colors.red,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(height: 8.0),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "Processed on:",
-                                                style: TextStyle(
-                                                  fontSize: 12.0,
-                                                  color: Colors.grey[600],
-                                                ),
+                                  child: Container(
+                                    margin: EdgeInsets.only(bottom: 8.0),
+                                    padding: EdgeInsets.all(16.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.3),
+                                          spreadRadius: 1,
+                                          blurRadius: 3,
+                                          offset: Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              account.name+"("+account.account_no_his+")",
+                                              style: TextStyle(
+                                                fontSize: 14.0,
+                                                fontWeight: FontWeight.bold,
                                               ),
-                                              SizedBox(width: 4.0),
-                                              Text(
-                                                account.dte,
-                                                style: TextStyle(
-                                                  fontSize: 12.0,
-                                                  color: Colors.grey[600],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            "Reference No: FASPAY/${account.trnx_id}",
-                                            style: TextStyle(
-                                              fontSize: 12.0,
-                                              color: Colors.grey[600],
                                             ),
-                                          ),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.end,
-                                            children: [
-                                              Icon(
-                                                account.amount >= 0
-                                                    ? Icons.arrow_back
-                                                    : Icons.arrow_forward,
+
+                                            Text(
+                                              account.amount.toStringAsFixed(2),
+                                              style: TextStyle(
+                                                fontSize: 14.0,
+                                                fontWeight: FontWeight.bold,
                                                 color: account.amount >= 0
                                                     ? Colors.green
                                                     : Colors.red,
-                                              )     // IconButton(
-                                              //   onPressed: () {
-                                              //     Share.share(
-                                              //         'Here is my account history: ${account.name}, ${account.amount}');
-                                              //   },
-                                              //   icon: Icon(Icons.share),
-                                              // ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 8.0),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "Processed on:",
+                                                  style: TextStyle(
+                                                    fontSize: 12.0,
+                                                    color: Colors.grey[600],
+                                                  ),
+                                                ),
+                                                SizedBox(width: 4.0),
+                                                Text(
+                                                  account.dte,
+                                                  style: TextStyle(
+                                                    fontSize: 12.0,
+                                                    color: Colors.grey[600],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              "Reference No: FASPAY/${account.trnx_id}",
+                                              style: TextStyle(
+                                                fontSize: 12.0,
+                                                color: Colors.grey[600],
+                                              ),
+                                            ),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.end,
+                                              children: [
+                                                Icon(
+                                                  account.amount >= 0
+                                                      ? Icons.arrow_back
+                                                      : Icons.arrow_forward,
+                                                  color: account.amount >= 0
+                                                      ? Colors.green
+                                                      : Colors.red,
+                                                )     // IconButton(
+                                                //   onPressed: () {
+                                                //     Share.share(
+                                                //         'Here is my account history: ${account.name}, ${account.amount}');
+                                                //   },
+                                                //   icon: Icon(Icons.share),
+                                                // ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
 
-                                    ],
+                                      ],
 
+                                    ),
                                   ),
-                                ),
-                              );
-                          },
+                                );
+                            },
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
           )
 
 
          )
        )
-              ],
+                ],
+              ),
             ),
           ),
           Visibility(
@@ -322,7 +330,7 @@ appBar: AppBar(
                     children: [
 
                       Text(
-                        'Information Confirmed',
+                        'Confirm Beneficiary',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 14
@@ -740,7 +748,7 @@ alignment: Alignment.bottomCenter,
                          children: [
                            Icon(Icons.info,color: Colors.red,),
                            SizedBox(width: 10,),
-                           Flexible(child: Text("Please re-confirm receiver's identity before sending any money. Kindly notes that funds sent cannot be reversed."))
+                           Flexible(child: Text("Please confirm the receiver's identity before sending any money. Kindly note that, funds sent cannot be reversed."))
                          ],
                        ),
                      ),
