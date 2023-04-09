@@ -1,6 +1,8 @@
 import 'package:faspay/pages/cardrequestpage.dart';
 import 'package:faspay/pages/resetpinpage.dart';
 import 'package:faspay/pages/setpinpage.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
@@ -18,7 +20,7 @@ class _CardPageState extends State<CardPage> {
   ];
 
   int currentCardIndex = 0;
-
+  int hold_index = 0;
   @override
   Widget build(BuildContext context) {
     int myindex = 0;
@@ -37,15 +39,18 @@ class _CardPageState extends State<CardPage> {
                       scrollDirection: Axis.horizontal,
                       itemCount: cardList.length,
                       itemBuilder: (context, index) {
+                        hold_index = index;
                         return GestureDetector(
                           // set the current card index on tap
                           onTap: () {
                             setState(() {
                               currentCardIndex = index;
                               myindex = currentCardIndex;
+                              hold_index = currentCardIndex;
                               print(currentCardIndex);
                             });
                           },
+
                           child: Container(
                             width: MediaQuery.of(context).size.width * 0.9,
                             height: MediaQuery.of(context).size.height * 0.3,
@@ -394,6 +399,7 @@ class _CardPageState extends State<CardPage> {
                                         // color: Colors.blue.shade900,
                                         child: GestureDetector(
                                           onTap: () {
+                                            _showVoucher(context);
                                             print("Voucher");
                                           },
                                           child: Padding(
@@ -489,6 +495,27 @@ class _CardPageState extends State<CardPage> {
           ),
         ],
       ),
+    );
+  }
+
+  _showVoucher(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Center(child: Text("Voucher")),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Container(
+                child: Text(
+                  "Your voucher code is FV30P, it will expire in 24hrs",
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
