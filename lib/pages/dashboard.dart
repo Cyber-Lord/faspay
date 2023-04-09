@@ -70,20 +70,32 @@ class _DashboardState extends State<Dashboard> {
     final pdf = pw.Document();
 
     // Add page
-    pdf.addPage(pw.MultiPage(
+    pdf.addPage(
+      pw.MultiPage(
         pageFormat: PdfPageFormat.a4,
         margin: pw.EdgeInsets.all(40),
         header: (pw.Context context) {
           return pw.Container(
             alignment: pw.Alignment.center,
             margin: const pw.EdgeInsets.only(bottom: 20.0, top: 20.0),
-            child: pw.Text(
-              'Dear ${name}',
-              style: pw.TextStyle(
-                color: PdfColors.blue900,
-                fontSize: 32.0,
-                fontWeight: pw.FontWeight.bold,
-              ),
+            child: pw.Column(
+              children: [
+                pw.Text(
+                  'Transaction Receipt',
+                  style: pw.TextStyle(
+                    color: PdfColors.blue900,
+                    fontSize: 32.0,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+                pw.Divider(
+                  color: PdfColors.black,
+                  thickness: 2.0,
+                ),
+                pw.SizedBox(
+                  height: 40,
+                ),
+              ],
             ),
           );
         },
@@ -91,111 +103,263 @@ class _DashboardState extends State<Dashboard> {
           return pw.Container(
             alignment: pw.Alignment.centerRight,
             margin: const pw.EdgeInsets.only(top: 30.0),
-            child: pw.Text(
-              'Date & Time Generated: ${DateTime.now().toLocal().toString()}',
-              style: pw.TextStyle(
-                fontSize: 20.0,
-                color: PdfColors.blue900,
-              ),
+            child: pw.Column(
+              children: [
+                pw.Divider(
+                  color: PdfColors.black,
+                  thickness: 2.0,
+                ),
+                pw.SizedBox(
+                  height: 10,
+                ),
+                pw.Text(
+                  'Date & Time Generated: ${DateTime.now().toLocal().toString()}',
+                  style: pw.TextStyle(
+                    fontSize: 20.0,
+                    color: PdfColors.blue900,
+                  ),
+                ),
+              ],
             ),
           );
         },
         build: (pw.Context context) => <pw.Widget>[
-              // Add logo
-              pw.Center(
-                child: pw.Column(
-                  children: [
-                    pw.SizedBox(height: 30),
-                    pw.Text(
-                      'Transaction Receipt',
-                      style: pw.TextStyle(
-                        color: PdfColors.blue900,
-                        fontSize: 32.0,
-                        fontWeight: pw.FontWeight.bold,
-                      ),
-                    ),
-                  ],
+          // Add logo
+          pw.SizedBox(height: 20),
+          pw.Row(
+            mainAxisAlignment: pw.MainAxisAlignment.start,
+            children: [
+              pw.Container(
+                width: 250,
+                child: pw.Text(
+                  'Sender: ',
+                  style: pw.TextStyle(
+                    color: PdfColors.black,
+                    fontSize: 20.0,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
                 ),
               ),
+              pw.Container(
+                width: 150,
+                child: pw.Text(
+                  '${account.name}',
+                  style: pw.TextStyle(
+                    color: PdfColors.blue900,
+                    fontSize: 20.0,
+                    // fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
 
-              pw.SizedBox(height: 80),
-              pw.Text(
-                'Sender: ${account.name}',
-                style: pw.TextStyle(
-                  color: PdfColors.black,
-                  fontSize: 20.0,
-                  fontWeight: pw.FontWeight.bold,
+          pw.SizedBox(height: 20),
+          pw.Row(
+            mainAxisAlignment: pw.MainAxisAlignment.start,
+            children: [
+              pw.Container(
+                width: 250,
+                child: pw.Text(
+                  'Beneficiary Name:',
+                  style: pw.TextStyle(
+                    color: PdfColors.black,
+                    fontSize: 20.0,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
                 ),
               ),
-              pw.SizedBox(height: 20),
-              pw.Text(
-                'Beneficiary Name: ${name}',
-                style: pw.TextStyle(
-                  color: PdfColors.black,
-                  fontSize: 20.0,
-                  fontWeight: pw.FontWeight.bold,
+              pw.Container(
+                width: 150,
+                child: pw.Text(
+                  '${name}',
+                  style: pw.TextStyle(
+                    color: PdfColors.blue900,
+                    fontSize: 20.0,
+                    // fontWeight: pw.FontWeight.bold,
+                  ),
                 ),
               ),
-              pw.SizedBox(height: 20),
-              pw.Text(
-                'Account Number: ${accNo}',
-                style: pw.TextStyle(
-                  color: PdfColors.black,
-                  fontSize: 20.0,
-                  fontWeight: pw.FontWeight.bold,
-                ),
-              ),
-              pw.SizedBox(height: 20),
-              pw.Text(
-                'Transaction Type: ${account.type}',
-                style: pw.TextStyle(
-                  color: PdfColors.black,
-                  fontSize: 20.0,
-                  fontWeight: pw.FontWeight.bold,
-                ),
-              ),
-              pw.SizedBox(height: 20),
-              pw.Text(
-                'Description: Description',
-                style: pw.TextStyle(
-                  color: PdfColors.black,
-                  fontSize: 20.0,
-                  fontWeight: pw.FontWeight.bold,
-                ),
-              ),
-              pw.SizedBox(height: 20),
-              pw.Text(
-                'Transaction Reference: ${account.trnx_id}',
-                style: pw.TextStyle(
-                  color: PdfColors.black,
-                  fontSize: 20.0,
-                  fontWeight: pw.FontWeight.bold,
-                ),
-              ),
-              pw.SizedBox(height: 20),
-              pw.Text(
-                'Amount: ${account.amount}',
-                style: pw.TextStyle(
-                  color: PdfColors.black,
-                  fontSize: 20.0,
-                  fontWeight: pw.FontWeight.bold,
-                ),
-              ),
-              pw.SizedBox(height: 20),
-              pw.Text(
-                'Effective On: ${account.dte}',
-                style: pw.TextStyle(
-                  color: PdfColors.black,
-                  fontSize: 20.0,
-                  fontWeight: pw.FontWeight.bold,
-                ),
-              ),
-            ]));
+            ],
+          ),
 
-    // Save PDF to file
+          pw.SizedBox(height: 20),
+          pw.Row(
+            mainAxisAlignment: pw.MainAxisAlignment.start,
+            children: [
+              pw.Container(
+                width: 250,
+                child: pw.Text(
+                  'Account Number:',
+                  style: pw.TextStyle(
+                    color: PdfColors.black,
+                    fontSize: 20.0,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+              ),
+              pw.Container(
+                width: 150,
+                child: pw.Text(
+                  '${accNo}',
+                  style: pw.TextStyle(
+                    color: PdfColors.blue900,
+                    fontSize: 20.0,
+                    // fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          pw.SizedBox(height: 20),
+          pw.Row(
+            mainAxisAlignment: pw.MainAxisAlignment.start,
+            children: [
+              pw.Container(
+                width: 250,
+                child: pw.Text(
+                  'Transaction Type:',
+                  style: pw.TextStyle(
+                    color: PdfColors.black,
+                    fontSize: 20.0,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+              ),
+              pw.Container(
+                width: 150,
+                child: pw.Text(
+                  '${account.type}',
+                  style: pw.TextStyle(
+                    color: PdfColors.blue900,
+                    fontSize: 20.0,
+                    // fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          pw.SizedBox(height: 20),
+          pw.Row(
+            mainAxisAlignment: pw.MainAxisAlignment.start,
+            children: [
+              pw.Container(
+                width: 250,
+                child: pw.Text(
+                  'Description:',
+                  style: pw.TextStyle(
+                    color: PdfColors.black,
+                    fontSize: 20.0,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+              ),
+              pw.Container(
+                width: 150,
+                child: pw.Text(
+                  'Description',
+                  style: pw.TextStyle(
+                    color: PdfColors.blue900,
+                    fontSize: 20.0,
+                    // fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          pw.SizedBox(height: 20),
+          pw.Row(
+            mainAxisAlignment: pw.MainAxisAlignment.start,
+            children: [
+              pw.Container(
+                width: 250,
+                child: pw.Text(
+                  'Transaction Reference:',
+                  style: pw.TextStyle(
+                    color: PdfColors.black,
+                    fontSize: 20.0,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+              ),
+              pw.Container(
+                width: 150,
+                child: pw.Text(
+                  '${account.trnx_id}',
+                  style: pw.TextStyle(
+                    color: PdfColors.blue900,
+                    fontSize: 20.0,
+                    // fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          pw.SizedBox(height: 20),
+          pw.Row(
+            mainAxisAlignment: pw.MainAxisAlignment.start,
+            children: [
+              pw.Container(
+                width: 250,
+                child: pw.Text(
+                  'Transaction Amount:',
+                  style: pw.TextStyle(
+                    color: PdfColors.black,
+                    fontSize: 20.0,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+              ),
+              pw.Container(
+                width: 150,
+                child: pw.Text(
+                  '${account.amount}',
+                  style: pw.TextStyle(
+                    color: PdfColors.blue900,
+                    fontSize: 20.0,
+                    // fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          pw.SizedBox(height: 20),
+          pw.Row(
+            mainAxisAlignment: pw.MainAxisAlignment.start,
+            children: [
+              pw.Container(
+                width: 250,
+                child: pw.Text(
+                  'Effective On:',
+                  style: pw.TextStyle(
+                    color: PdfColors.black,
+                    fontSize: 20.0,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+              ),
+              pw.Container(
+                width: 200,
+                child: pw.Text(
+                  '${account.dte}',
+                  style: pw.TextStyle(
+                    color: PdfColors.blue900,
+                    fontSize: 20.0,
+                    // fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+
     final Uint8List bytes = await pdf.save();
-
-    // Share PDF
     await Printing.sharePdf(
       bytes: bytes,
       filename: account.name + '.pdf',
