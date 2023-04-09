@@ -85,6 +85,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.16.0"
+  confirmation_success:
+    dependency: "direct main"
+    description:
+      name: confirmation_success
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2"
   contacts_service:
     dependency: "direct main"
     description:
@@ -160,6 +167,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
+  flutter_pin_code_widget:
+    dependency: "direct main"
+    description:
+      name: flutter_pin_code_widget
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
