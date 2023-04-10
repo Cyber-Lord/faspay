@@ -43,7 +43,7 @@ class _TransferState extends State<Transfer> {
   final List<AccountHistory> _accountData = [];
   final currencyFormatter = NumberFormat('#,##0.00');
   final TextEditingController _accountNumberController =
-      TextEditingController();
+  TextEditingController();
   TextEditingController txt_in_account_n0 = TextEditingController();
   TextEditingController txt_amount = TextEditingController();
   TextEditingController note = TextEditingController();
@@ -171,7 +171,7 @@ class _TransferState extends State<Transfer> {
                       child: Container(
                           height: size_transaction_container != true
                               ? height - 242
-                              //?height/3
+                          //?height/3
                               : height / 2.5,
                           //height: height-242,
                           child: Stack(
@@ -180,13 +180,13 @@ class _TransferState extends State<Transfer> {
                                   visible: progress_bar_load_transaction,
                                   child: Container(
                                       child: ListView(
-                                    children: const [
-                                      LinearProgressIndicator(
-                                        semanticsLabel:
+                                        children: const [
+                                          LinearProgressIndicator(
+                                            semanticsLabel:
                                             'Linear progress indicator',
-                                      )
-                                    ],
-                                  ))),
+                                          )
+                                        ],
+                                      ))),
                               Column(
                                 children: [
                                   Expanded(
@@ -196,17 +196,17 @@ class _TransferState extends State<Transfer> {
                                         visible: _account_history_visable,
                                         child: ListView.builder(
                                           physics:
-                                              AlwaysScrollableScrollPhysics(),
+                                          AlwaysScrollableScrollPhysics(),
                                           itemCount: _accountData.length,
                                           itemBuilder: (BuildContext context,
                                               int index) {
                                             final AccountHistory account =
-                                                _accountData[index];
+                                            _accountData[index];
                                             return GestureDetector(
                                               onTap: () {
                                                 setState(() {
                                                   account.isHidden =
-                                                      !account.isHidden;
+                                                  !account.isHidden;
                                                   account_no =
                                                       account.account_no_his;
                                                   verify_account_no(
@@ -220,8 +220,8 @@ class _TransferState extends State<Transfer> {
                                                 decoration: BoxDecoration(
                                                   color: Colors.white,
                                                   borderRadius:
-                                                      BorderRadius.circular(
-                                                          8.0),
+                                                  BorderRadius.circular(
+                                                      8.0),
                                                   boxShadow: [
                                                     BoxShadow(
                                                       color: Colors.grey
@@ -234,12 +234,12 @@ class _TransferState extends State<Transfer> {
                                                 ),
                                                 child: Column(
                                                   crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                                  CrossAxisAlignment.start,
                                                   children: [
                                                     Row(
                                                       mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                       children: [
                                                         Text(
                                                           account.name +
@@ -250,20 +250,20 @@ class _TransferState extends State<Transfer> {
                                                           style: TextStyle(
                                                             fontSize: 14.0,
                                                             fontWeight:
-                                                                FontWeight.bold,
+                                                            FontWeight.bold,
                                                           ),
                                                         ),
                                                         Text(
                                                           account.amount
                                                               .toStringAsFixed(
-                                                                  2),
+                                                              2),
                                                           style: TextStyle(
                                                             fontSize: 14.0,
                                                             fontWeight:
-                                                                FontWeight.bold,
+                                                            FontWeight.bold,
                                                             color: account
-                                                                        .amount >=
-                                                                    0
+                                                                .amount >=
+                                                                0
                                                                 ? Colors.green
                                                                 : Colors.red,
                                                           ),
@@ -273,8 +273,8 @@ class _TransferState extends State<Transfer> {
                                                     SizedBox(height: 8.0),
                                                     Row(
                                                       mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                       children: [
                                                         Row(
                                                           children: [
@@ -302,8 +302,8 @@ class _TransferState extends State<Transfer> {
                                                     ),
                                                     Row(
                                                       mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                       children: [
                                                         Text(
                                                           "Reference No: FASPAY/${account.trnx_id}",
@@ -315,23 +315,23 @@ class _TransferState extends State<Transfer> {
                                                         ),
                                                         Row(
                                                           mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .end,
+                                                          MainAxisAlignment
+                                                              .end,
                                                           children: [
                                                             Icon(
                                                               account.amount >=
-                                                                      0
+                                                                  0
                                                                   ? Icons
-                                                                      .arrow_back
+                                                                  .arrow_back
                                                                   : Icons
-                                                                      .arrow_forward,
+                                                                  .arrow_forward,
                                                               color:
-                                                                  account.amount >=
-                                                                          0
-                                                                      ? Colors
-                                                                          .green
-                                                                      : Colors
-                                                                          .red,
+                                                              account.amount >=
+                                                                  0
+                                                                  ? Colors
+                                                                  .green
+                                                                  : Colors
+                                                                  .red,
                                                             )
                                                           ],
                                                         ),
@@ -354,17 +354,6 @@ class _TransferState extends State<Transfer> {
               ),
             ),
           ),
-          Visibility(
-              visible: show_preogress,
-              child: Container(
-                  color: Colors.black.withOpacity(0.5),
-                  child: ListView(
-                    children: const [
-                      LinearProgressIndicator(
-                        semanticsLabel: 'Linear progress indicator',
-                      )
-                    ],
-                  ))),
           Visibility(child: _verify_account()),
           Visibility(
             visible: show_account_not_found,
@@ -417,7 +406,7 @@ class _TransferState extends State<Transfer> {
                     child: const Text(
                       'Close',
                       style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                   ),
                 ],
@@ -478,7 +467,7 @@ class _TransferState extends State<Transfer> {
                                         fontWeight: FontWeight.bold),
                                     textAlign: TextAlign.center,
                                     keyboardType:
-                                        TextInputType.numberWithOptions(),
+                                    TextInputType.numberWithOptions(),
                                     autofocus: true,
                                     decoration: InputDecoration(
                                       border: InputBorder.none,
@@ -545,15 +534,15 @@ class _TransferState extends State<Transfer> {
                           )),
                       Flexible(
                           child: Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Container(
-                            width: width,
-                            child: proceed_btn(),
-                          ),
-                        ),
-                      ))
+                            padding: EdgeInsets.all(10),
+                            child: Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                width: width,
+                                child: proceed_btn(),
+                              ),
+                            ),
+                          ))
                     ],
                   ),
                 ),
@@ -600,14 +589,16 @@ class _TransferState extends State<Transfer> {
                       onPressColorAnimation: Colors.red,
                       onChangedPin: (String pin) {
                         if (pin == trnx_pin) {
-                         // print("pinner" + pin);
+                          setState(() {
+                            show_preogress=true;
+                          });
                           _show_pin = false;
                           transfer_fund(my_num, my_token);
                         }
                         // check the PIN length and check different PINs with 4,5.. length.
                       },
                       onEnter: (pin, _) {
-                        showSuccessAnimation(context);
+
                         // callback user pressed enter
                         print(pin);
                       },
@@ -616,7 +607,18 @@ class _TransferState extends State<Transfer> {
                 ],
               ),
             ),
-          )
+          ),
+          Visibility(
+              visible: show_preogress,
+              child: Container(
+                  color: Colors.black.withOpacity(0.5),
+                  child: ListView(
+                    children: const [
+                      LinearProgressIndicator(
+                        semanticsLabel: 'Linear progress indicator',
+                      )
+                    ],
+                  ))),
         ],
       ),
     );
@@ -664,7 +666,7 @@ class _TransferState extends State<Transfer> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Transfer(),
+                        builder: (context) => HomePage(phoneNumber: my_num,token: my_token,),
                       ),
                     );
                   }),
@@ -877,7 +879,7 @@ class _TransferState extends State<Transfer> {
                     child: Text(
                       "Information Confirmed",
                       style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Expanded(
@@ -980,8 +982,8 @@ class _TransferState extends State<Transfer> {
                       style: OutlinedButton.styleFrom(
                           backgroundColor: Colors.blue.shade900,
                           foregroundColor: Colors.white
-                          //<-- SEE HERE
-                          ),
+                        //<-- SEE HERE
+                      ),
                       onPressed: () {
                         setState(() {
                           //_account_history_visable=false;
@@ -1039,7 +1041,7 @@ class _TransferState extends State<Transfer> {
           ),
         ),
         action:
-            SnackBarAction(label: '', onPressed: scaffold.hideCurrentSnackBar),
+        SnackBarAction(label: '', onPressed: scaffold.hideCurrentSnackBar),
       ),
     );
   }
@@ -1062,7 +1064,8 @@ class _TransferState extends State<Transfer> {
       print(response.body);
 
       if (data["status"] == "true") {
-        print("DONE!!!");
+       // print("DONE!!!");
+        showSuccessAnimation(context);
         show_preogress = false;
       } else {
         show_preogress = false;
