@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:faspay/pages/homepage.dart';
 import 'package:faspay/pages/transfer.dart';
 import 'package:faspay/pages/withdrawalpage.dart';
@@ -49,15 +50,7 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   final List<AccountHistory> _accountData = [];
-  /*
-  final List<AccountHistory> _accountData = [
-    AccountHistory(name: 'Oga Master', amount: 1200.0, type: 'Credit'),
-    AccountHistory(name: 'Techie Abba', amount: 5000.0, type: 'Credit'),
-    AccountHistory(name: 'Musa Yola', amount: -1000.0, type: 'Debit'),
-    AccountHistory(name: 'Techie Abba', amount: 5000.0, type: 'Credit'),
-    AccountHistory(name: 'Musa Yola', amount: -1000.0, type: 'Debit'),
-  ];
-  */
+
   String accNo = "";
   double balance = 0;
   String my_num = "", my_token = "";
@@ -68,6 +61,12 @@ class _DashboardState extends State<Dashboard> {
 
   Future<void> generatePDF(BuildContext context, AccountHistory account) async {
     final pdf = pw.Document();
+
+    final assetImg = await rootBundle.load('assets/images/logo.png');
+    final img = PdfImage.file(
+      pdf.document,
+      bytes: assetImg.buffer.asUint8List(),
+    );
 
     // Add page
     pdf.addPage(
@@ -93,7 +92,7 @@ class _DashboardState extends State<Dashboard> {
                   thickness: 2.0,
                 ),
                 pw.SizedBox(
-                  height: 40,
+                  height: 10,
                 ),
               ],
             ),
@@ -125,7 +124,20 @@ class _DashboardState extends State<Dashboard> {
         },
         build: (pw.Context context) => <pw.Widget>[
           // Add logo
-          pw.SizedBox(height: 20),
+          pw.Positioned(
+            child: pw.Transform.rotate(
+              angle: 15,
+              child: pw.Text(
+                'FASPAY',
+                style: pw.TextStyle(
+                  color: PdfColors.grey200,
+                  fontSize: 50.0,
+                  fontWeight: pw.FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+          // pw.SizedBox(height: 20),
           pw.Row(
             mainAxisAlignment: pw.MainAxisAlignment.start,
             children: [
@@ -354,6 +366,25 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ),
             ],
+          ),
+          pw.SizedBox(
+            height: 20,
+          ),
+          pw.Positioned(
+            child: pw.Transform.rotate(
+              angle: 15,
+              child: pw.Align(
+                alignment: pw.Alignment.bottomCenter,
+                child: pw.Text(
+                  'FASPAY',
+                  style: pw.TextStyle(
+                    color: PdfColors.grey200,
+                    fontSize: 50.0,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
           ),
         ],
       ),
