@@ -600,7 +600,7 @@ class _TransferState extends State<Transfer> {
                       onPressColorAnimation: Colors.red,
                       onChangedPin: (String pin) {
                         if (pin == trnx_pin) {
-                          print("pinner" + pin);
+                         // print("pinner" + pin);
                           _show_pin = false;
                           transfer_fund(my_num, my_token);
                         }
