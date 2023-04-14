@@ -20,6 +20,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final _formKey = GlobalKey<FormState>();
+  late String _fullName;
+  late String _email;
+  late String _phoneNumber;
+  late String _address;
+
   int _currentIndex = 0;
   String my_num = "", my_token = "";
   void initState() {

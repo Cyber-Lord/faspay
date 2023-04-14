@@ -91,7 +91,7 @@ class _TransferState extends State<Transfer> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
                     child: Padding(
-                      padding: EdgeInsets.all(10),
+                      padding: EdgeInsets.only(left: 10.0,right: 10.0),
                       child: Row(
                         children: <Widget>[
                           Icon(
