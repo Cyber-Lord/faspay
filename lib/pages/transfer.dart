@@ -769,18 +769,34 @@ class _TransferState extends State<Transfer> {
     if (response.statusCode == 200) {
       progress_bar_load_transaction = false;
       for (var data in data) {
-        //print(data["rcver"][0]["f_name"]);
-        _accountData.add(new AccountHistory(
-            name: data["sender"][0]["f_name"] +
-                " " +
-                data["sender"][0]["s_name"] +
-                " " +
-                data["sender"][0]["o_name"],
-            amount: double.parse(data["amount"]),
-            type: data["trnx_type"],
-            dte: data["dte"],
-            trnx_id: data["tranx_id"],
-            account_no_his: data["sender"][0]["phone"]));
+        //print(my_num.substring(1));
+        String my_account=my_num.substring(1);
+        if(my_account==data["rcver"][0]["phone"]){
+          _accountData.add(new AccountHistory(
+              name: data["sender"][0]["f_name"] +
+                  " " +
+                  data["sender"][0]["s_name"] +
+                  " " +
+                  data["sender"][0]["o_name"],
+              amount: double.parse(data["amount"]),
+              type: data["trnx_type"],
+              dte: data["dte"],
+              trnx_id: data["tranx_id"],
+              account_no_his: data["sender"][0]["phone"]));
+        }else{
+          _accountData.add(new AccountHistory(
+              name: data["rcver"][0]["f_name"] +
+                  " " +
+                  data["rcver"][0]["s_name"] +
+                  " " +
+                  data["rcver"][0]["o_name"],
+              amount: double.parse(data["amount"]),
+              type: data["trnx_type"],
+              dte: data["dte"],
+              trnx_id: data["tranx_id"],
+              account_no_his: data["rcver"][0]["phone"]));
+        }
+
       }
 
       setState(() {

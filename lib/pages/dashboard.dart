@@ -23,19 +23,33 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
 class AccountHistory {
-  String name;
+  String sender_name;
+  String rcva_name;
   double amount;
   String type;
   String dte;
   String trnx_id;
   bool isHidden;
+  String sender_s_name;
+  String sender_o_name;
+  String rcva_s_name;
+  String rcva_o_name;
+  String Beneficiary_account;
+  String tittle_name;
 
   AccountHistory({
-    required this.name,
+    required this.sender_name,
+    required this.rcva_name,
     required this.amount,
     required this.type,
     required this.dte,
     required this.trnx_id,
+    required this.sender_s_name,
+    required this.sender_o_name,
+    required this.rcva_s_name,
+    required this.rcva_o_name,
+    required this.Beneficiary_account,
+    required this.tittle_name,
     this.isHidden = true,
   });
 }
@@ -155,7 +169,7 @@ class _DashboardState extends State<Dashboard> {
               pw.Container(
                 width: 150,
                 child: pw.Text(
-                  '${account.name}',
+                  '${account.sender_name+" "+account.sender_s_name+" "+account.sender_o_name}',
                   style: pw.TextStyle(
                     color: PdfColors.blue900,
                     fontSize: 20.0,
@@ -184,7 +198,7 @@ class _DashboardState extends State<Dashboard> {
               pw.Container(
                 width: 150,
                 child: pw.Text(
-                  '${name}',
+                  '${account.rcva_name+" "+account.rcva_s_name+" "+account.rcva_o_name}',
                   style: pw.TextStyle(
                     color: PdfColors.blue900,
                     fontSize: 20.0,
@@ -213,7 +227,7 @@ class _DashboardState extends State<Dashboard> {
               pw.Container(
                 width: 150,
                 child: pw.Text(
-                  '${accNo}',
+                  '${account.Beneficiary_account}',
                   style: pw.TextStyle(
                     color: PdfColors.blue900,
                     fontSize: 20.0,
@@ -393,7 +407,7 @@ class _DashboardState extends State<Dashboard> {
     final Uint8List bytes = await pdf.save();
     await Printing.sharePdf(
       bytes: bytes,
-      filename: account.name + '.pdf',
+      filename: account.sender_name + '.pdf',
       subject: 'Transaction Receipt',
     );
   }
@@ -698,7 +712,7 @@ class _DashboardState extends State<Dashboard> {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      account.name,
+                                      account.tittle_name,
                                       style: TextStyle(
                                         fontSize: 14.0,
                                         fontWeight: FontWeight.bold,
@@ -1057,12 +1071,29 @@ class _DashboardState extends State<Dashboard> {
 
       for (var data in data) {
         //print(data["rcver"][0]["f_name"]);
-        _accountData.add(new AccountHistory(
-            name: data["sender"][0]["f_name"],
-            amount: double.parse(data["amount"]),
-            type: data["trnx_type"],
-            dte: data["dte"],
-            trnx_id: data["tranx_id"]));
+        String my_account=my_num.substring(1);
+        if(my_account==data["rcver"][0]["phone"]){
+          _accountData.add(new AccountHistory(
+              sender_name: data["sender"][0]["f_name"],
+              rcva_name: data["rcver"][0]["f_name"],
+              amount: double.parse(data["amount"]),
+              type: data["trnx_type"],
+              dte: data["dte"],
+              trnx_id: data["tranx_id"],sender_s_name: data["sender"][0]["s_name"],sender_o_name: data["sender"][0]["o_name"],
+              rcva_s_name: data["rcver"][0]["s_name"],rcva_o_name: data["rcver"][0]["o_name"],Beneficiary_account: data["rcver"][0]["phone"],tittle_name:data["sender"][0]["f_name"]
+          ));
+        }else{
+          _accountData.add(new AccountHistory(
+              sender_name: data["sender"][0]["f_name"],
+              rcva_name: data["rcver"][0]["f_name"],
+              amount: double.parse(data["amount"]),
+              type: data["trnx_type"],
+              dte: data["dte"],
+              trnx_id: data["tranx_id"],sender_s_name: data["sender"][0]["s_name"],sender_o_name: data["sender"][0]["o_name"],
+              rcva_s_name: data["rcver"][0]["s_name"],rcva_o_name: data["rcver"][0]["o_name"],Beneficiary_account: data["rcver"][0]["phone"],tittle_name:data["rcver"][0]["f_name"]
+          ));
+        }
+
       }
 
       setState(() {
