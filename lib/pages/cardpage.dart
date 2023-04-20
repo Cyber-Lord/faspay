@@ -10,6 +10,7 @@ import 'package:confirmation_success/confirmation_success.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
+
 // ignore: must_be_immutable
 class CardPage extends StatefulWidget {
   @override
@@ -24,15 +25,15 @@ class _CardPageState extends State<CardPage> {
   late String _email;
   late String _phoneNumber;
   late String _address;
-  bool visable_card_request=false;
+  bool visable_card_request = false;
   bool show_preogress = false;
-  TextEditingController txt_full_name=TextEditingController();
-  TextEditingController txt_mail =TextEditingController();
-  TextEditingController txt_phone= TextEditingController();
-  TextEditingController txt_state=TextEditingController();
-  TextEditingController txt_lga=TextEditingController();
-  TextEditingController txt_ward=TextEditingController();
-  TextEditingController txt_near_by=TextEditingController();
+  TextEditingController txt_full_name = TextEditingController();
+  TextEditingController txt_mail = TextEditingController();
+  TextEditingController txt_phone = TextEditingController();
+  TextEditingController txt_state = TextEditingController();
+  TextEditingController txt_lga = TextEditingController();
+  TextEditingController txt_ward = TextEditingController();
+  TextEditingController txt_near_by = TextEditingController();
 
   String my_num = "", my_token = "";
   List<Card> cardList = [
@@ -301,7 +302,7 @@ class _CardPageState extends State<CardPage> {
                                       child: GestureDetector(
                                         onTap: () {
                                           setState(() {
-                                            visable_card_request=true;
+                                            visable_card_request = true;
                                           });
                                         },
                                         child: Padding(
@@ -507,7 +508,8 @@ class _CardPageState extends State<CardPage> {
                                   width: MediaQuery.of(context).size.width,
                                   child: GestureDetector(
                                     onTap: () {
-                                      showSuccessAnimation_card_request(context);
+                                      showSuccessAnimation_card_request(
+                                          context);
                                       print("Deactivate");
                                     },
                                     child: Center(
@@ -535,339 +537,384 @@ class _CardPageState extends State<CardPage> {
           ),
           Visibility(
             visible: visable_card_request,
-           child: AnimatedOpacity(
-             opacity: visable_card_request ? 1.0 : 0.0,
-             duration: const Duration(milliseconds: 500),
-
-             child: Container(
-               color: Colors.black.withOpacity(0.5),
-               child: Padding(
-                 padding: EdgeInsets.all(10),
-                 child: Material(
-                   borderRadius: BorderRadius.circular(10),
-                   color: Colors.white,
-                   child: Padding(
-                     padding: EdgeInsets.all(10),
-                     child: Column(
-                       children: [
-                         Row(
-                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                           children: [
-                             const SizedBox(width: 32.0),
-                            Text("Delivery Information",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),),
-                            GestureDetector(
+            child: AnimatedOpacity(
+              opacity: visable_card_request ? 1.0 : 0.0,
+              duration: const Duration(milliseconds: 500),
+              child: Container(
+                color: Colors.black.withOpacity(0.5),
+                child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Material(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const SizedBox(width: 32.0),
+                              Text(
+                                "Delivery Information",
+                                style: TextStyle(
+                                  color: Colors.blue.shade900,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
+                              ),
+                              GestureDetector(
                                 child: Icon(Icons.close),
-                                    onTap: (){
+                                onTap: () {
                                   setState(() {
-                                    visable_card_request=false;
+                                    visable_card_request = false;
                                   });
-                                    },
+                                },
+                              ),
+                            ],
+                          ),
+                          Divider(
+                            thickness: 2,
+                            color: Colors.green,
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            "Tell us where to deliver your card",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
                             ),
-
-                           ],
-                         ),
-                         Divider(),
-                         SizedBox(height: 20,),
-                         Text("Let's Get some basic info",style: TextStyle(fontWeight: FontWeight.bold),),
-                         Text("Please enter your delivery details and use an actual house address",textAlign: TextAlign.center,),
-
-                         Flexible(child:
-                         Container(
-                           height: height-315,
-
-                           child: ListView(
-                             children: [
-                               Form(
-                                 key: _formKey,
-                                 child: Padding(
-                                   padding: const EdgeInsets.all(16.0),
-                                   child: Column(
-                                     crossAxisAlignment: CrossAxisAlignment.start,
-                                     children: [
-                                       TextFormField(
-                                         controller: txt_full_name,
-                                         decoration: InputDecoration(
-                                           enabledBorder: OutlineInputBorder(
-                                             borderSide: BorderSide(
-                                               color: Colors.blue.shade900,
-                                             ),
-                                           ),
-                                           errorBorder: OutlineInputBorder(
-                                             borderSide: BorderSide(color: Colors.red),
-                                           ),
-                                           focusedBorder: OutlineInputBorder(
-                                             borderSide: BorderSide(
-                                               color: Colors.blue.shade900,
-                                             ),
-                                           ),
-                                           labelStyle: TextStyle(
-                                             color: Colors.black,
-                                           ),
-                                           contentPadding:
-                                           EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
-                                           labelText: 'Full Name',
-                                         ),
-                                         validator: (value) {
-                                           if (value!.isEmpty) {
-                                             return 'Please enter your full name';
-                                           }
-                                           return null;
-                                         },
-                                         onSaved: (value) {
-                                           _fullName = value!;
-                                         },
-                                       ),
-                                       SizedBox(height: 16),
-                                       TextFormField(
-                                         controller: txt_mail,
-                                         decoration: InputDecoration(
-                                           enabledBorder: OutlineInputBorder(
-                                             borderSide: BorderSide(
-                                               color: Colors.blue.shade900,
-                                             ),
-                                           ),
-                                           errorBorder: OutlineInputBorder(
-                                             borderSide: BorderSide(color: Colors.grey),
-                                           ),
-                                           focusedBorder: OutlineInputBorder(
-                                             borderSide: BorderSide(
-                                               color: Colors.blue.shade900,
-                                             ),
-                                           ),
-                                           labelStyle: TextStyle(
-                                             color: Colors.black,
-                                           ),
-                                           contentPadding:
-                                           EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
-                                           labelText: 'Email',
-                                         ),
-                                         validator: (value) {
-                                           if (value!.isEmpty) {
-                                             return 'Please enter your email';
-                                           }
-                                           return null;
-                                         },
-                                         onSaved: (value) {
-                                           _email = value!;
-                                         },
-                                       ),
-                                       SizedBox(height: 16),
-                                       TextFormField(
-                                         controller: txt_phone,
-                                         keyboardType: TextInputType.number,
-                                         maxLength: 11,
-                                         decoration: InputDecoration(
-                                           enabledBorder: OutlineInputBorder(
-                                             borderSide: BorderSide(
-                                               color: Colors.blue.shade900,
-                                             ),
-                                           ),
-                                           errorBorder: OutlineInputBorder(
-                                             borderSide: BorderSide(color: Colors.grey),
-                                           ),
-                                           focusedBorder: OutlineInputBorder(
-                                             borderSide: BorderSide(
-                                               color: Colors.blue.shade900,
-                                             ),
-                                           ),
-                                           labelStyle: TextStyle(
-                                             color: Colors.black,
-                                           ),
-                                           contentPadding:
-                                           EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
-                                           labelText: 'Phone Number',
-                                         ),
-                                         validator: (value) {
-                                           if (value!.isEmpty) {
-                                             return 'Please enter your phone number';
-                                           }
-                                           return null;
-                                         },
-                                         onSaved: (value) {
-                                           _phoneNumber = value!;
-                                         },
-                                       ),
-                                       SizedBox(height: 16),
-
-                                       TextFormField(
-                                         controller: txt_state,
-                                         decoration: InputDecoration(
-                                           enabledBorder: OutlineInputBorder(
-                                             borderSide: BorderSide(
-                                               color: Colors.blue.shade900,
-                                             ),
-                                           ),
-                                           errorBorder: OutlineInputBorder(
-                                             borderSide: BorderSide(color: Colors.grey),
-                                           ),
-                                           focusedBorder: OutlineInputBorder(
-                                             borderSide: BorderSide(
-                                               color: Colors.blue.shade900,
-                                             ),
-                                           ),
-                                           labelStyle: TextStyle(
-                                             color: Colors.black,
-                                           ),
-                                           contentPadding:
-                                           EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
-                                           labelText: 'State',
-                                         ),
-                                         validator: (value) {
-                                           if (value!.isEmpty) {
-                                             return 'Please enter your State';
-                                           }
-                                           return null;
-                                         },
-                                         onSaved: (value) {
-                                           _address = value!;
-                                         },
-                                       ),
-                                       SizedBox(height: 32),
-                                       TextFormField(
-                                         controller: txt_lga,
-                                         decoration: InputDecoration(
-                                           enabledBorder: OutlineInputBorder(
-                                             borderSide: BorderSide(
-                                               color: Colors.blue.shade900,
-                                             ),
-                                           ),
-                                           errorBorder: OutlineInputBorder(
-                                             borderSide: BorderSide(color: Colors.grey),
-                                           ),
-                                           focusedBorder: OutlineInputBorder(
-                                             borderSide: BorderSide(
-                                               color: Colors.blue.shade900,
-                                             ),
-                                           ),
-                                           labelStyle: TextStyle(
-                                             color: Colors.black,
-                                           ),
-                                           contentPadding:
-                                           EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
-                                           labelText: 'LGA',
-                                         ),
-                                         validator: (value) {
-                                           if (value!.isEmpty) {
-                                             return 'Please enter your LGA';
-                                           }
-                                           return null;
-                                         },
-                                         onSaved: (value) {
-                                           _address = value!;
-                                         },
-                                       ),
-                                       SizedBox(height: 32),
-                                       TextFormField(
-                                         controller: txt_ward,
-                                         decoration: InputDecoration(
-                                           enabledBorder: OutlineInputBorder(
-                                             borderSide: BorderSide(
-                                               color: Colors.blue.shade900,
-                                             ),
-                                           ),
-                                           errorBorder: OutlineInputBorder(
-                                             borderSide: BorderSide(color: Colors.grey),
-                                           ),
-                                           focusedBorder: OutlineInputBorder(
-                                             borderSide: BorderSide(
-                                               color: Colors.blue.shade900,
-                                             ),
-                                           ),
-                                           labelStyle: TextStyle(
-                                             color: Colors.black,
-                                           ),
-                                           contentPadding:
-                                           EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
-                                           labelText: 'Ward',
-                                         ),
-                                         validator: (value) {
-                                           if (value!.isEmpty) {
-                                             return 'Please enter your ward';
-                                           }
-                                           return null;
-                                         },
-                                         onSaved: (value) {
-                                           _address = value!;
-                                         },
-                                       ),
-                                       SizedBox(height: 32),
-                                       TextFormField(
-                                         controller: txt_near_by,
-                                         decoration: InputDecoration(
-                                           enabledBorder: OutlineInputBorder(
-                                             borderSide: BorderSide(
-                                               color: Colors.blue.shade900,
-                                             ),
-                                           ),
-                                           errorBorder: OutlineInputBorder(
-                                             borderSide: BorderSide(color: Colors.red),
-                                           ),
-                                           focusedBorder: OutlineInputBorder(
-                                             borderSide: BorderSide(
-                                               color: Colors.blue.shade900,
-                                             ),
-                                           ),
-                                           labelStyle: TextStyle(
-                                             color: Colors.black,
-                                           ),
-                                           contentPadding:
-                                           EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
-                                           labelText: 'Near by',
-                                         ),
-                                         validator: (value) {
-                                           if (value!.isEmpty) {
-                                             return 'Please enter your address';
-                                           }
-                                           return null;
-                                         },
-                                         onSaved: (value) {
-                                           _address = value!;
-                                         },
-                                       ),
-                                       SizedBox(height: 32),
-                                       Container(
-                                         color: Colors.blue.shade900,
-                                         height: 50,
-                                         child: GestureDetector(
-                                           onTap: (() {
-                                             // showSuccess(context);
-                                             if (_formKey.currentState!.validate()) {
-                                               _formKey.currentState!.save();
-                                               // Submit
-                                               card_request(my_num, my_token);
-                                             }else{
-
-                                             }
-                                           }),
-                                           child: Center(
-                                             child: Text(
-                                               "Submit",
-                                               style: TextStyle(
-                                                 color: Colors.white,
-                                                 fontSize: 14,
-                                                 fontWeight: FontWeight.bold,
-                                               ),
-                                             ),
-                                           ),
-                                         ),
-                                       ),
-                                     ],
-                                   ),
-                                 ),
-                               ),
-                             ],
-                           ),
-                         ))
-                       ],
-                       
-                     ),
-                   ),
-                 ),
-               ),
-             ),
-           ),
-         ),
-
+                          ),
+                          Text(
+                            "Please enter your delivery address, do ensure that the address is correct before submitting this form. \nThank You!",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 12,
+                            ),
+                          ),
+                          Flexible(
+                              child: Container(
+                            height: height - 315,
+                            child: ListView(
+                              children: [
+                                Form(
+                                  key: _formKey,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        TextFormField(
+                                          controller: txt_full_name,
+                                          decoration: InputDecoration(
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Colors.blue.shade900,
+                                              ),
+                                            ),
+                                            errorBorder: OutlineInputBorder(
+                                              borderSide:
+                                                  BorderSide(color: Colors.red),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Colors.blue.shade900,
+                                              ),
+                                            ),
+                                            labelStyle: TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 14,
+                                            ),
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: 15.0,
+                                                    horizontal: 15),
+                                            labelText: 'Full Name',
+                                          ),
+                                          validator: (value) {
+                                            if (value!.isEmpty) {
+                                              return 'Please enter your full name';
+                                            }
+                                            return null;
+                                          },
+                                          onSaved: (value) {
+                                            _fullName = value!;
+                                          },
+                                        ),
+                                        SizedBox(height: 16),
+                                        TextFormField(
+                                          controller: txt_mail,
+                                          decoration: InputDecoration(
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Colors.blue.shade900,
+                                              ),
+                                            ),
+                                            errorBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.grey),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Colors.blue.shade900,
+                                              ),
+                                            ),
+                                            labelStyle: TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 14,
+                                            ),
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: 15.0,
+                                                    horizontal: 15),
+                                            labelText: 'Email',
+                                          ),
+                                          validator: (value) {
+                                            if (value!.isEmpty) {
+                                              return 'Please enter your email';
+                                            }
+                                            return null;
+                                          },
+                                          onSaved: (value) {
+                                            _email = value!;
+                                          },
+                                        ),
+                                        SizedBox(height: 16),
+                                        TextFormField(
+                                          controller: txt_phone,
+                                          keyboardType: TextInputType.number,
+                                          maxLength: 11,
+                                          decoration: InputDecoration(
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Colors.blue.shade900,
+                                              ),
+                                            ),
+                                            errorBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.grey),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Colors.blue.shade900,
+                                              ),
+                                            ),
+                                            labelStyle: TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 14,
+                                            ),
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: 15.0,
+                                                    horizontal: 15),
+                                            labelText: 'Phone Number',
+                                          ),
+                                          validator: (value) {
+                                            if (value!.isEmpty) {
+                                              return 'Please enter your phone number';
+                                            }
+                                            return null;
+                                          },
+                                          onSaved: (value) {
+                                            _phoneNumber = value!;
+                                          },
+                                        ),
+                                        SizedBox(height: 16),
+                                        TextFormField(
+                                          controller: txt_state,
+                                          decoration: InputDecoration(
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Colors.blue.shade900,
+                                              ),
+                                            ),
+                                            errorBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.grey),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Colors.blue.shade900,
+                                              ),
+                                            ),
+                                            labelStyle: TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 14,
+                                            ),
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: 15.0,
+                                                    horizontal: 15),
+                                            labelText: 'State',
+                                          ),
+                                          validator: (value) {
+                                            if (value!.isEmpty) {
+                                              return 'Please enter your State';
+                                            }
+                                            return null;
+                                          },
+                                          onSaved: (value) {
+                                            _address = value!;
+                                          },
+                                        ),
+                                        SizedBox(height: 32),
+                                        TextFormField(
+                                          controller: txt_lga,
+                                          decoration: InputDecoration(
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Colors.blue.shade900,
+                                              ),
+                                            ),
+                                            errorBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.grey),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Colors.blue.shade900,
+                                              ),
+                                            ),
+                                            labelStyle: TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 14,
+                                            ),
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: 15.0,
+                                                    horizontal: 15),
+                                            labelText: 'LGA',
+                                          ),
+                                          validator: (value) {
+                                            if (value!.isEmpty) {
+                                              return 'Please enter your LGA';
+                                            }
+                                            return null;
+                                          },
+                                          onSaved: (value) {
+                                            _address = value!;
+                                          },
+                                        ),
+                                        SizedBox(height: 32),
+                                        TextFormField(
+                                          controller: txt_ward,
+                                          decoration: InputDecoration(
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Colors.blue.shade900,
+                                              ),
+                                            ),
+                                            errorBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.grey),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Colors.blue.shade900,
+                                              ),
+                                            ),
+                                            labelStyle: TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 14,
+                                            ),
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: 15.0,
+                                                    horizontal: 15),
+                                            labelText: 'Ward',
+                                          ),
+                                          validator: (value) {
+                                            if (value!.isEmpty) {
+                                              return 'Please enter your ward';
+                                            }
+                                            return null;
+                                          },
+                                          onSaved: (value) {
+                                            _address = value!;
+                                          },
+                                        ),
+                                        SizedBox(height: 32),
+                                        TextFormField(
+                                          controller: txt_near_by,
+                                          decoration: InputDecoration(
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Colors.blue.shade900,
+                                              ),
+                                            ),
+                                            errorBorder: OutlineInputBorder(
+                                              borderSide:
+                                                  BorderSide(color: Colors.red),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Colors.blue.shade900,
+                                              ),
+                                            ),
+                                            labelStyle: TextStyle(
+                                              color: Colors.black,
+                                            ),
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: 15.0,
+                                                    horizontal: 15),
+                                            labelText: 'Nearest Landmark',
+                                          ),
+                                          validator: (value) {
+                                            if (value!.isEmpty) {
+                                              return 'Please enter a nearest landmark';
+                                            }
+                                            return null;
+                                          },
+                                          onSaved: (value) {
+                                            _address = value!;
+                                          },
+                                        ),
+                                        SizedBox(height: 32),
+                                        Container(
+                                          color: Colors.blue.shade900,
+                                          height: 50,
+                                          child: GestureDetector(
+                                            onTap: (() {
+                                              // showSuccess(context);
+                                              if (_formKey.currentState!
+                                                  .validate()) {
+                                                _formKey.currentState!.save();
+                                                // Submit
+                                                card_request(my_num, my_token);
+                                              } else {}
+                                            }),
+                                            child: Center(
+                                              child: Text(
+                                                "Submit",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ))
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -893,6 +940,7 @@ class _CardPageState extends State<CardPage> {
       },
     );
   }
+
   Future<void> my_session() async {
     WidgetsFlutterBinding.ensureInitialized();
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -910,6 +958,7 @@ class _CardPageState extends State<CardPage> {
       });
     }
   }
+
   Future<void> logout() async {
     WidgetsFlutterBinding.ensureInitialized();
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -917,12 +966,14 @@ class _CardPageState extends State<CardPage> {
 
     goto_phone_screen(context);
   }
+
   void goto_phone_screen(BuildContext context) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => PhoneScreen()),
     );
   }
+
   void showSuccessAnimation_card_request(BuildContext context) {
     showDialog(
       context: context,
@@ -932,7 +983,7 @@ class _CardPageState extends State<CardPage> {
           backgroundColor: Colors.transparent,
           child: Container(
             height: MediaQuery.of(context).size.height / 2.5,
-            width: MediaQuery.of(context).size.height-40,
+            width: MediaQuery.of(context).size.height - 40,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(20),
@@ -973,7 +1024,7 @@ class _CardPageState extends State<CardPage> {
                 TextButton(
                   onPressed: (() {
                     Navigator.pop(context);
-                    visable_card_request=false;
+                    visable_card_request = false;
                   }),
                   child: Text(
                     "OK",
@@ -993,6 +1044,7 @@ class _CardPageState extends State<CardPage> {
       },
     );
   }
+
   void showSuccessAnimation(BuildContext context) {
     showDialog(
       context: context,
@@ -1052,6 +1104,7 @@ class _CardPageState extends State<CardPage> {
       },
     );
   }
+
   Future card_request(phone, token) async {
     show_preogress = true;
     FocusScope.of(context).requestFocus(new FocusNode());
@@ -1067,7 +1120,6 @@ class _CardPageState extends State<CardPage> {
       "txt_lga": txt_lga.text,
       "txt_ward": txt_ward.text,
       "txt_near_by": txt_near_by.text,
-
     });
 
     var data = json.decode(response.body);
@@ -1075,9 +1127,9 @@ class _CardPageState extends State<CardPage> {
       print(response.body);
 
       if (data["success"] == "true") {
-         print("DONE!!!");
+        print("DONE!!!");
 
-         showSuccessAnimation_card_request(context);
+        showSuccessAnimation_card_request(context);
 
         show_preogress = false;
       } else {
@@ -1089,6 +1141,7 @@ class _CardPageState extends State<CardPage> {
       });
     }
   }
+
   _showDialog(BuildContext context, double balance) {
     double amount = 0.0;
     showDialog(
