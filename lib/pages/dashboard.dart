@@ -1072,7 +1072,7 @@ class _DashboardState extends State<Dashboard> {
       for (var data in data) {
         //print(data["rcver"][0]["f_name"]);
         String my_account=my_num.substring(1);
-        if(my_account==data["rcver"][0]["phone"]){
+        if(my_account==data["rcver_account"]){
           _accountData.add(new AccountHistory(
               sender_name: data["sender"][0]["f_name"],
               rcva_name: data["rcver"][0]["f_name"],
@@ -1080,7 +1080,7 @@ class _DashboardState extends State<Dashboard> {
               type: data["trnx_type"],
               dte: data["dte"],
               trnx_id: data["tranx_id"],sender_s_name: data["sender"][0]["s_name"],sender_o_name: data["sender"][0]["o_name"],
-              rcva_s_name: data["rcver"][0]["s_name"],rcva_o_name: data["rcver"][0]["o_name"],Beneficiary_account: data["rcver"][0]["phone"],tittle_name:data["sender"][0]["f_name"]
+              rcva_s_name: data["rcver"][0]["s_name"],rcva_o_name: data["rcver"][0]["o_name"],Beneficiary_account: data["rcver_account"],tittle_name:data["sender"][0]["f_name"]
           ));
         }else{
           _accountData.add(new AccountHistory(
@@ -1090,7 +1090,7 @@ class _DashboardState extends State<Dashboard> {
               type: data["trnx_type"],
               dte: data["dte"],
               trnx_id: data["tranx_id"],sender_s_name: data["sender"][0]["s_name"],sender_o_name: data["sender"][0]["o_name"],
-              rcva_s_name: data["rcver"][0]["s_name"],rcva_o_name: data["rcver"][0]["o_name"],Beneficiary_account: data["rcver"][0]["phone"],tittle_name:data["rcver"][0]["f_name"]
+              rcva_s_name: data["rcver"][0]["s_name"],rcva_o_name: data["rcver"][0]["o_name"],Beneficiary_account: data["rcver_account"],tittle_name:data["rcver"][0]["f_name"]
           ));
         }
 
