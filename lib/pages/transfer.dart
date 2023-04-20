@@ -761,7 +761,7 @@ class _TransferState extends State<Transfer> {
     }
   }
 
-  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Comment
   Future fetch_transaction() async {
     var url = "https://a2ctech.net/api/faspay/fetch_transaction.php";
     var response;
@@ -776,7 +776,7 @@ class _TransferState extends State<Transfer> {
       for (var data in data) {
         //print(my_num.substring(1));
         String my_account = my_num.substring(1);
-        if (my_account == data["rcver"][0]["phone"]) {
+        if (my_account == data["rcver_account"]) {
           _accountData.add(new AccountHistory(
               name: data["sender"][0]["f_name"] +
                   " " +
@@ -799,7 +799,7 @@ class _TransferState extends State<Transfer> {
               type: data["trnx_type"],
               dte: data["dte"],
               trnx_id: data["tranx_id"],
-              account_no_his: data["rcver"][0]["phone"]));
+              account_no_his: data["rcver_account"]));
         }
       }
 
