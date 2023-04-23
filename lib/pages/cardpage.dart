@@ -1023,6 +1023,33 @@ class _CardPageState extends State<CardPage> {
            mainAxisAlignment: MainAxisAlignment.center,
            crossAxisAlignment: CrossAxisAlignment.center,
            children: [
+           Row(
+           mainAxisAlignment: MainAxisAlignment.center,
+           crossAxisAlignment: CrossAxisAlignment.center,
+           children: [
+             Image.asset(
+               'assets/images/nfc_sample.png',
+               height: 300.0,
+               // color: Colors.blue.shade900,
+             ),
+             ]
+           ),
+             Row(
+               mainAxisAlignment: MainAxisAlignment.center,
+               crossAxisAlignment: CrossAxisAlignment.center,
+               children: [
+                 Text("About NFC Card",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),)
+                 ]
+             ),
+             Row(
+                 mainAxisAlignment: MainAxisAlignment.center,
+                 crossAxisAlignment: CrossAxisAlignment.center,
+                 children: [
+                  Flexible(child:
+                  Text("NFC cards have several advantages over traditional contact-based smart cards, including faster transaction times, increased convenience, and improved security features. They are also more durable and resistant to physical wear and tear, making them ideal for use in high-traffic areas.",style: TextStyle(),)
+                  )
+                 ]
+             ),
              Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -1469,6 +1496,7 @@ class _CardPageState extends State<CardPage> {
       setState(() {
         my_num = phone!;
         my_token = tokn!;
+        fetch_cards(my_num, my_token);
       });
     }
   }
@@ -1657,7 +1685,7 @@ class _CardPageState extends State<CardPage> {
   Future fetch_cards(phone, token) async {
     show_preogress = true;
     FocusScope.of(context).requestFocus(new FocusNode());
-    var url = "https://a2ctech.net/api/faspay/card_request.php";
+    var url = "https://a2ctech.net/api/faspay/fetch_cards.php";
     var response;
     response = await http.post(Uri.parse(url), body: {
       "phone": phone,
@@ -1667,6 +1695,9 @@ class _CardPageState extends State<CardPage> {
     var data = json.decode(response.body);
     if (response.statusCode == 200) {
       print(response.body);
+      for (var data in data) {
+        print(data["account_no"]);
+      }
 
       setState(() {
         //show_preogress = false;.
