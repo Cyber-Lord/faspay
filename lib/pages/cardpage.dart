@@ -37,11 +37,9 @@ class _CardPageState extends State<CardPage> {
   TextEditingController txt_near_by = TextEditingController();
 
   String my_num = "", my_token = "";
-  List<Card> cardList = [
-    Card('Debit Card', '1234', '02/25', 500.0),
-    Card('Credit Card', '5678', '03/26', 1000.0),
-  ];
-
+  List<Card> cardList = [];
+// Card('Debit Card', '1234', '02/25', 500.0),
+//     Card('Credit Card', '5678', '03/26', 1000.0),
   int currentCardIndex = 0;
   int hold_index = 0;
   @override
@@ -622,16 +620,24 @@ class _CardPageState extends State<CardPage> {
                                    Padding(
                                      padding: const EdgeInsets.symmetric(
                                          horizontal: 20),
-                                     child: Text(
-                                       currentCardIndex == index
-                                           ? 'Card No. 1234567890'
-                                           : 'Card No. **********',
-                                       style: TextStyle(
-                                         color: Colors.white,
-                                         fontSize: 20,
-                                         fontWeight: FontWeight.bold,
-                                       ),
-                                     ),
+                                     child: Row(
+                                       children: [
+                                         Text("Card No. ",style: TextStyle(
+                                       color: Colors.white,
+
+                                     ),),
+                                         Text(
+                                           currentCardIndex == index
+                                               ? ''+cardList[index].number
+                                               : ' **********',
+                                           style: TextStyle(
+                                             color: Colors.white,
+                                             fontSize: 20,
+                                             fontWeight: FontWeight.bold,
+                                           ),
+                                         ),
+                                       ],
+                                     )
                                    ),
                                    Padding(
                                      padding: const EdgeInsets.symmetric(
@@ -652,7 +658,7 @@ class _CardPageState extends State<CardPage> {
                                          ),
                                          Text(
                                            currentCardIndex == index
-                                               ? '02/25'
+                                               ? cardList[index].expiryDate
                                                : '*****',
                                            style: TextStyle(
                                                color: Colors.white,
@@ -1696,12 +1702,26 @@ class _CardPageState extends State<CardPage> {
     if (response.statusCode == 200) {
       print(response.body);
       for (var data in data) {
-        print(data["account_no"]);
+        if(data["card_checker"]=="false"){
+          print("No card Av");
+        }else{
+          cardList.add(new Card("Debit",data["account_no"],data["expire"],double.parse(data["balance"][0]["balance"])));
+          setState(() {
+            check_card=true;
+          });
+/*
+'account_no'=>$row["aacount_no"],
+        'expire'=>$row["expire_ttle"],
+        'daily_limit'=>$row["daily_limit"],
+        'status'=>$row["status"],
+        'card_checker'=>"true",
+        'balance'=>get_balance($row['card_id'],$servername, $username, $password, $dbname),
+ */
+        }
+
       }
 
-      setState(() {
-        //show_preogress = false;.
-      });
+
     }
   }
   _showDialog(BuildContext context, double balance) {
