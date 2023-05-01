@@ -1017,6 +1017,86 @@ class _CardPageState extends State<CardPage> {
               },
               child: Container(
                 color: Colors.black.withOpacity(0.5),
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+    Row(
+
+    children: [
+
+     Expanded(
+
+    child:  Align(
+
+      alignment: Alignment.bottomRight,
+      child: Material(
+          borderRadius: BorderRadius.circular(5),
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+
+                TextButton.icon(
+                  onPressed: () {
+                    setState(() {
+                      visable_card_request=true;
+                      isGrey=false;
+
+                    });
+                  },
+                  icon: Icon( // <-- Icon
+                    Icons.add,
+                    size: 24.0,
+                    color: Colors.blue.shade900,
+                  ),
+                  label: Text('Request Card',style: TextStyle(color: Colors.black),),
+                ),
+          TextButton.icon(
+            onPressed: () {},
+            icon: Icon( // <-- Icon
+              Icons.settings,
+              size: 24.0,
+              color: Colors.blue.shade900,
+            ),
+            label: Text('Card Management',style: TextStyle(color: Colors.black)), // <-- Text
+          ),
+                TextButton.icon(
+
+                  onPressed: () {},
+                  icon: Icon( // <-- Icon
+                    Icons.card_giftcard,
+                    size: 24.0,
+                    color: Colors.blue.shade900,
+                  ),
+                  label: Text('Generate Voucher',style: TextStyle(color: Colors.black)), // <-- Text
+                ),
+
+              ],
+            ),
+          )
+      
+      ),
+    )
+       ,
+    ),
+      SizedBox(width: 10,)
+    ],
+    ),
+SizedBox(height: 80,)
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
             visible: isGrey,
@@ -1036,129 +1116,12 @@ class _CardPageState extends State<CardPage> {
         ),
         child: FloatingActionButton(
           onPressed: () {
-            isGrey = !isGrey;
-            showMenu(
-              context: context,
-              position: RelativeRect.fromLTRB(
-                MediaQuery.of(context).size.width - 100,
-                MediaQuery.of(context).size.height - 280,
-                20,
-                0,
-              ),
-              items: [
-                PopupMenuItem(
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.add,
-                        color: Colors.blue.shade900,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        'Request Card',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  value: 1,
-                ),
-                PopupMenuItem(
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.settings,
-                        color: Colors.blue.shade900,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        'Card Management',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  value: 2,
-                ),
-                PopupMenuItem(
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.text_fields,
-                        color: Colors.blue.shade900,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        'Generate Voucher',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  value: 3,
-                ),
-              ],
-              elevation: 8.0,
-            ).then((value) {
-              switch (value) {
-                case 1:
-                  visable_card_request = true;
-                  break;
-                case 2:
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Button 2'),
-                        content: Text('Button 2 was pressed.'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('Close'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                  break;
-                case 3:
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Button 3'),
-                        content: Text('Button 3 was pressed.'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('Close'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                  break;
-                default:
-                  break;
+
+            setState(() {
+              if(isGrey){
+                isGrey=false;
+              }else{
+                isGrey=true;
               }
             });
           },
