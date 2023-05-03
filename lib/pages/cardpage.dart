@@ -1,6 +1,8 @@
 import 'dart:convert';
-
+import 'dart:math';
 import 'package:faspay/pages/cardrequestpage.dart';
+import 'package:faspay/pages/dashboard.dart';
+import 'package:faspay/pages/homepage.dart';
 import 'package:faspay/pages/phonescreen.dart';
 import 'package:faspay/pages/resetpinpage.dart';
 import 'package:faspay/pages/setpinpage.dart';
@@ -8,6 +10,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:confirmation_success/confirmation_success.dart';
 import 'package:http/http.dart' as http;
+import 'package:passcode_screen/keyboard.dart';
+import 'package:printing/printing.dart';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_pin_code_widget/flutter_pin_code_widget.dart';
@@ -83,6 +87,58 @@ class _CardPageState extends State<CardPage> {
   int hold_index = 0;
   String trnx_mode = "";
   double amount = 0.0;
+  bool isActive = false;
+  TextEditingController _oldPinController = TextEditingController();
+  TextEditingController _newPinController = TextEditingController();
+  TextEditingController _confirmPinController = TextEditingController();
+  String _errorMessage = '';
+  bool _isPinVisible = false;
+  String? _voucher;
+  TextEditingController _voucherPinController = TextEditingController();
+  TextEditingController _voucherAmountController = TextEditingController();
+
+  void _changePin() {
+    String oldPin = _oldPinController.text;
+    String newPin = _newPinController.text;
+    String confirmPin = _confirmPinController.text;
+
+    if (oldPin.isEmpty || newPin.isEmpty || confirmPin.isEmpty) {
+      setState(() {
+        _errorMessage = 'Please enter all PINs';
+      });
+      return;
+    }
+
+    if (newPin.length != 4 || confirmPin.length != 4) {
+      setState(() {
+        _errorMessage = 'PINs must be 4 digits long';
+      });
+      return;
+    }
+
+    if (newPin != confirmPin) {
+      setState(() {
+        _errorMessage = 'New PIN and Confirm PIN do not match';
+      });
+      return;
+    }
+
+    Navigator.of(context).pop();
+  }
+
+  void _generateVoucher() {
+    var rng = new Random();
+    var codeUnits = new List.generate(3, (index) {
+      return rng.nextInt(26) + 65; // A-Z
+    });
+    setState(() {
+      var rng = new Random();
+      rng.nextInt(3);
+      _voucher = new String.fromCharCodes(codeUnits);
+      _voucher = "${_voucher}" + rng.nextInt(1000).toString();
+    });
+  }
+
   @override
   void initState() {
     my_session();
@@ -896,7 +952,7 @@ class _CardPageState extends State<CardPage> {
                                               ),
                                             ),
                                             labelStyle: TextStyle(
-                                              color: Colors.black,
+                                              color: Colors.grey,
                                             ),
                                             contentPadding:
                                                 EdgeInsets.symmetric(
@@ -1026,72 +1082,96 @@ class _CardPageState extends State<CardPage> {
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-    Row(
-
-    children: [
-
-     Expanded(
-
-    child:  Align(
-
-      alignment: Alignment.bottomRight,
-      child: Material(
-          borderRadius: BorderRadius.circular(5),
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-
-                TextButton.icon(
-                  onPressed: () {
-                    setState(() {
-                      visable_card_request=true;
-                      isGrey=false;
-
-                    });
-                  },
-                  icon: Icon( // <-- Icon
-                    Icons.add,
-                    size: 24.0,
-                    color: Colors.blue.shade900,
-                  ),
-                  label: Text('Request Card',style: TextStyle(color: Colors.black),),
-                ),
-          TextButton.icon(
-            onPressed: () {},
-            icon: Icon( // <-- Icon
-              Icons.settings,
-              size: 24.0,
-              color: Colors.blue.shade900,
-            ),
-            label: Text('Card Management',style: TextStyle(color: Colors.black)), // <-- Text
-          ),
-                TextButton.icon(
-
-                  onPressed: () {},
-                  icon: Icon( // <-- Icon
-                    Icons.card_giftcard,
-                    size: 24.0,
-                    color: Colors.blue.shade900,
-                  ),
-                  label: Text('Generate Voucher',style: TextStyle(color: Colors.black)), // <-- Text
-                ),
-
-              ],
-            ),
-          )
-      
-      ),
-    )
-       ,
-    ),
-      SizedBox(width: 10,)
-    ],
-    ),
-SizedBox(height: 80,)
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Align(
+                                  alignment: Alignment.bottomRight,
+                                  child: Material(
+                                      borderRadius: BorderRadius.circular(5),
+                                      child: Padding(
+                                        padding: EdgeInsets.all(10),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            TextButton.icon(
+                                              onPressed: () {
+                                                setState(() {
+                                                  visable_card_request = true;
+                                                  isGrey = false;
+                                                });
+                                              },
+                                              icon: Icon(
+                                                // <-- Icon
+                                                Icons.add,
+                                                size: 24.0,
+                                                color: Colors.blue.shade900,
+                                              ),
+                                              label: Text(
+                                                'Request Card',
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                            ),
+                                            TextButton.icon(
+                                              onPressed: () {
+                                                _showDebitCardSettings(
+                                                    context, isActive);
+                                                isGrey = false;
+                                              },
+                                              icon: Icon(
+                                                // <-- Icon
+                                                Icons.settings,
+                                                size: 24.0,
+                                                color: Colors.blue.shade900,
+                                              ),
+                                              label: Text('Card Management',
+                                                  style: TextStyle(
+                                                      color: Colors
+                                                          .black)), // <-- Text
+                                            ),
+                                            TextButton.icon(
+                                              onPressed: () {
+                                                isGrey = false;
+                                                _generateVoucher();
+                                                VoucherBottomSheet(context);
+                                                // showModalBottomSheet(
+                                                //   context: context,
+                                                //   builder:
+                                                //       (BuildContext context) {
+                                                //     return VoucherBottomSheet(
+                                                //         context);
+                                                //   },
+                                                // );
+                                              },
+                                              icon: Icon(
+                                                // <-- Icon
+                                                Icons.card_giftcard,
+                                                size: 24.0,
+                                                color: Colors.blue.shade900,
+                                              ),
+                                              label: Text('Generate Voucher',
+                                                  style: TextStyle(
+                                                      color: Colors
+                                                          .black)), // <-- Text
+                                            ),
+                                          ],
+                                        ),
+                                      )),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            height: 80,
+                          )
                         ],
                       ),
                     )
@@ -1116,12 +1196,11 @@ SizedBox(height: 80,)
         ),
         child: FloatingActionButton(
           onPressed: () {
-
             setState(() {
-              if(isGrey){
-                isGrey=false;
-              }else{
-                isGrey=true;
+              if (isGrey) {
+                isGrey = false;
+              } else {
+                isGrey = true;
               }
             });
           },
@@ -1136,25 +1215,628 @@ SizedBox(height: 80,)
     );
   }
 
-  _showVoucher(BuildContext context) {
-    showDialog(
+  Future<void> _showWarningDialog(BuildContext context) async {
+    return showDialog<void>(
       context: context,
+      barrierDismissible: false, // user must tap a button to close the dialog
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Center(child: Text("Voucher")),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Container(
-                child: Text(
-                  "Your voucher code is FV30P, it will expire in 24hrs",
-                ),
+          title: Container(
+            width: MediaQuery.of(context).size.width,
+            child: Center(
+              child: Column(
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.warning,
+                        size: 30,
+                        color: Colors.red,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        'Danger!!!',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Divider(
+                    height: 2,
+                    color: Colors.black,
+                  ),
+                ],
               ),
+            ),
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(
+                  'Are you sure you want to freeze this Card? Once frozen, you can not be able to use this card for any transaction until this process is reverserd.',
+                  style: TextStyle(
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+              ),
+              onPressed: () {
+                setState(
+                  () {
+                    isActive = !isActive;
+                  },
+                );
+                Navigator.of(context).pop();
+                _showSuccessDialog(context);
+              },
+              child: Text('Freeze'),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue.shade900,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
             ),
           ],
         );
       },
     );
+  }
+
+  void _changePIN(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          // use StatefulBuilder to access setState inside the dialog
+          builder: (context, setState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              elevation: 5,
+              title: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Reset PIN',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue.shade900,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          "X",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Divider(
+                    height: 2,
+                    color: Colors.black,
+                  ),
+                ],
+              ),
+              content: Container(
+                width: MediaQuery.of(context).size.width,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text(
+                        "Please enter your old PIN and new PIN below:",
+                        style: TextStyle(
+                          fontSize: 12,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      TextFormField(
+                        controller: _oldPinController,
+                        obscureText: !_isPinVisible,
+                        enableSuggestions: false,
+                        autocorrect: false,
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.blue.shade900,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.blue.shade900,
+                            ),
+                          ),
+                          labelStyle: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 12,
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 15.0, horizontal: 15),
+                          labelText: 'Old PIN',
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      TextFormField(
+                        controller: _newPinController,
+                        obscureText: !_isPinVisible,
+                        enableSuggestions: false,
+                        autocorrect: false,
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.blue.shade900,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.blue.shade900,
+                            ),
+                          ),
+                          labelStyle: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 12,
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 15.0, horizontal: 15),
+                          labelText: 'New PIN',
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      TextFormField(
+                        controller: _confirmPinController,
+                        obscureText: !_isPinVisible,
+                        enableSuggestions: false,
+                        autocorrect: false,
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.blue.shade900,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.blue.shade900,
+                            ),
+                          ),
+                          labelStyle: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 12,
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 15.0,
+                            horizontal: 15,
+                          ),
+                          labelText: 'Confirm PIN',
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      Row(
+                        children: [
+                          Checkbox(
+                            value: _isPinVisible,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                _isPinVisible = value ?? false;
+                              });
+                            },
+                          ),
+                          Text('Show PIN'),
+                        ],
+                      ),
+                      if (_errorMessage.isNotEmpty)
+                        Text(
+                          _errorMessage,
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 12,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+              actions: <Widget>[
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Cancel'),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue.shade900,
+                  ),
+                  onPressed: _changePin,
+                  child: Text('Save'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+// Create a function to show the success dialog
+  Future<void> _showSuccessDialog(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap a button to close the dialog
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Center(child: Text('Success!')),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Icon(Icons.check_circle, color: Colors.blue.shade900, size: 80),
+                SizedBox(
+                  height: 20,
+                ),
+                Text('Your card is temporarily blocked.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue.shade900,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showDebitCardSettings(BuildContext context, bool isFrozen) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(16),
+              topRight: Radius.circular(16),
+            ),
+          ),
+          padding: EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                    border: Border(
+                  bottom: BorderSide(
+                    color: Colors.grey.shade300,
+                    width: 1,
+                  ),
+                )),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Card Management',
+                      style: TextStyle(
+                        color: Colors.blue.shade900,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      icon: Icon(
+                        Icons.close,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                "Card Details",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Available Balance : ",
+                      style: TextStyle(
+                        color: Colors.grey.shade700,
+                        fontSize: 14,
+                      ),
+                    ),
+                    Text(
+                      "NGN " + cardList[currentCardIndex].balance.toString(),
+                      style: TextStyle(
+                        color: Colors.blue.shade900,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Card Number : ",
+                      style: TextStyle(
+                        color: Colors.grey.shade700,
+                        fontSize: 14,
+                      ),
+                    ),
+                    Text(
+                      cardList[currentCardIndex].number,
+                      style: TextStyle(
+                        color: Colors.blue.shade900,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Expiry Date : ",
+                      style: TextStyle(
+                        color: Colors.grey.shade700,
+                        fontSize: 14,
+                      ),
+                    ),
+                    Text(
+                      cardList[currentCardIndex].expiryDate,
+                      style: TextStyle(
+                        color: Colors.blue.shade900,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue.shade900,
+                    ),
+                    onPressed: () {
+                      _changePIN(context);
+                    },
+                    child: Text('Reset PIN'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      _showWarningDialog(context);
+                    },
+                    child: Text(isFrozen ? 'UnFreeze Card' : "Freeze Card"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          isFrozen ? Colors.blue.shade900 : Colors.red,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void VoucherBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+        backgroundColor: Colors.transparent,
+        context: context,
+        builder: (BuildContext context) {
+          return SingleChildScrollView(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
+                ),
+              ),
+              child: Wrap(
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Transaction Voucher',
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue.shade900,
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              icon: Icon(
+                                Icons.close,
+                                size: 20,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Divider(
+                          height: 2,
+                        ),
+                        SizedBox(height: 10.0),
+                        Text(
+                          "Please kindly use the voucher below to complete your transaction when requested.",
+                          style: TextStyle(
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey.shade700,
+                          ),
+                        ),
+                        SizedBox(height: 10.0),
+                        Container(
+                          child: Column(
+                            children: [
+                              Text(
+                                _voucher ?? "",
+                                style: TextStyle(
+                                  fontSize: 25.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 10.0),
+                              TextFormField(
+                                keyboardType: TextInputType.number,
+                                controller: _voucherAmountController,
+                                obscureText: false,
+                                enableSuggestions: false,
+                                autocorrect: false,
+                                decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.blue.shade900,
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.blue.shade900,
+                                    ),
+                                  ),
+                                  labelStyle: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 12,
+                                  ),
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 15.0, horizontal: 15),
+                                  labelText: 'Amount',
+                                ),
+                              ),
+                              SizedBox(height: 16.0),
+                              TextFormField(
+                                maxLength: 4,
+                                keyboardType: TextInputType.number,
+                                controller: _voucherPinController,
+                                obscureText: false,
+                                enableSuggestions: false,
+                                autocorrect: false,
+                                decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.blue.shade900,
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.blue.shade900,
+                                    ),
+                                  ),
+                                  labelStyle: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 12,
+                                  ),
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 15.0, horizontal: 15),
+                                  labelText: 'Voucher PIN',
+                                ),
+                              ),
+                              SizedBox(height: 16.0),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blue.shade900,
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('Activate Voucher'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
   }
 
   Future<void> my_session() async {
