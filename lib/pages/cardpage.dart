@@ -1696,18 +1696,18 @@ class _CardPageState extends State<CardPage> {
   }
 
   void VoucherBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-        backgroundColor: Colors.transparent,
-        context: context,
-        builder: (BuildContext context) {
-          return SingleChildScrollView(
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          child: SingleChildScrollView(
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
-                ),
+                borderRadius: BorderRadius.circular(10),
               ),
               child: Wrap(
                 children: <Widget>[
@@ -1716,38 +1716,45 @@ class _CardPageState extends State<CardPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Transaction Voucher',
-                              style: TextStyle(
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue.shade900,
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: 30.0,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Transaction Voucher',
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blue.shade900,
+                                ),
                               ),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              icon: Icon(
-                                Icons.close,
-                                size: 20,
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                icon: Icon(
+                                  Icons.close,
+                                  color: Colors.red,
+                                  size: 20,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                         Divider(
                           height: 2,
+                          color: Colors.blue.shade900,
                         ),
-                        SizedBox(height: 10.0),
+                        SizedBox(height: 15.0),
                         Text(
                           "Please kindly use the voucher below to complete your transaction when requested.",
                           style: TextStyle(
                             fontSize: 12.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey.shade700,
+                            // fontWeight: FontWeight.bold,
+                            color: Colors.grey.shade900,
                           ),
                         ),
                         SizedBox(height: 10.0),
@@ -1757,6 +1764,7 @@ class _CardPageState extends State<CardPage> {
                               Text(
                                 _voucher ?? "",
                                 style: TextStyle(
+                                  color: Colors.blue.shade900,
                                   fontSize: 25.0,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -1835,8 +1843,10 @@ class _CardPageState extends State<CardPage> {
                 ],
               ),
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 
   Future<void> my_session() async {

@@ -30,6 +30,14 @@ class _UserProfilePageState extends State<UserProfilePage> {
   File _image = File('');
   bool _editing = true;
 
+  bool _isBiometricEnabled = false;
+
+  void _toggleBiometric(bool value) {
+    setState(() {
+      _isBiometricEnabled = value;
+    });
+  }
+
   Future<void> _getImage() async {
     final pickedFile =
         await ImagePicker().getImage(source: ImageSource.gallery);
@@ -157,6 +165,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 SizedBox(
                   height: 16,
                 ),
+
                 // TextFormField(
                 //   decoration: InputDecoration(
                 //     labelText: 'City',
