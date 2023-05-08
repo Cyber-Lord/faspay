@@ -1,7 +1,11 @@
+import 'package:faspay/pages/phonescreen.dart';
+import 'package:faspay/pages/upgradetierthreeform.dart';
 import 'package:faspay/pages/upgradetiertwoform.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum VerificationTier {
   basic,
@@ -9,33 +13,94 @@ enum VerificationTier {
   advanced,
 }
 
-class UserProfilePage extends StatefulWidget {
+class UserProfile extends StatefulWidget {
   final String name;
   final String email;
+  final String bvn;
+  final String dob;
   final VerificationTier tier;
   final String phoneNumber;
 
-  UserProfilePage(
+  UserProfile(
       {required this.name,
       required this.email,
+      required this.bvn,
+      required this.dob,
       required this.tier,
       required this.phoneNumber});
 
   @override
-  _UserProfilePageState createState() => _UserProfilePageState();
+  _UserProfileState createState() => _UserProfileState();
 }
 
-class _UserProfilePageState extends State<UserProfilePage> {
+class _UserProfileState extends State<UserProfile> {
   final _formKey = GlobalKey<FormState>();
   File _image = File('');
   bool _editing = true;
+  bool isTier1 = false;
+  bool isTier2 = false;
+  bool isTier3 = false;
 
   bool _isBiometricEnabled = false;
+  TextEditingController _oldPinController = TextEditingController();
+  TextEditingController _newPinController = TextEditingController();
+  TextEditingController _confirmPinController = TextEditingController();
+  String _errorMessage = '';
+  bool _isPinVisible = false;
+
+  void initState() {
+    super.initState();
+    _getTierBadge();
+  }
 
   void _toggleBiometric(bool value) {
     setState(() {
       _isBiometricEnabled = value;
     });
+  }
+
+  void _changePin() {
+    String oldPin = _oldPinController.text;
+    String newPin = _newPinController.text;
+    String confirmPin = _confirmPinController.text;
+
+    if (oldPin.isEmpty || newPin.isEmpty || confirmPin.isEmpty) {
+      setState(() {
+        _errorMessage = 'Please enter all PINs';
+      });
+      return;
+    }
+
+    if (newPin.length != 4 || confirmPin.length != 4) {
+      setState(() {
+        _errorMessage = 'PINs must be 4 digits long';
+      });
+      return;
+    }
+
+    if (newPin != confirmPin) {
+      setState(() {
+        _errorMessage = 'New PIN and Confirm PIN do not match';
+      });
+      return;
+    }
+
+    Navigator.of(context).pop();
+  }
+
+  void goto_phone_screen(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => PhoneScreen()),
+    );
+  }
+
+  Future<void> logout() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove("phone");
+
+    goto_phone_screen(context);
   }
 
   Future<void> _getImage() async {
@@ -55,7 +120,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
         actions: [
           IconButton(
             icon: Icon(Icons.logout, color: Colors.white),
-            onPressed: () {},
+            onPressed: () {
+              logout();
+            },
           ),
         ],
       ),
@@ -103,14 +170,21 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 ),
                 Text(
                   widget.name,
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.blue.shade900,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
                       'Verification Status: ',
-                      style: TextStyle(fontSize: 18),
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
                     ),
                     _getTierBadge(),
                   ],
@@ -119,9 +193,20 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   height: 16,
                 ),
                 TextFormField(
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey,
+                  ),
                   decoration: InputDecoration(
+                    labelStyle: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
+                    ),
                     labelText: 'Email',
-                    prefixIcon: Icon(Icons.email),
+                    prefixIcon: Icon(
+                      Icons.email,
+                      // color: Colors.blue.shade900,
+                    ),
                   ),
                   keyboardType: TextInputType.emailAddress,
                   enabled: false,
@@ -137,7 +222,15 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   height: 16,
                 ),
                 TextFormField(
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey,
+                  ),
                   decoration: InputDecoration(
+                    labelStyle: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
+                    ),
                     labelText: 'Phone Number',
                     prefixIcon: Icon(Icons.phone),
                   ),
@@ -148,49 +241,312 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 SizedBox(
                   height: 16,
                 ),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Address',
-                    prefixIcon: Icon(Icons.location_on),
+                Visibility(
+                  child: TextFormField(
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 14,
+                    ),
+                    decoration: InputDecoration(
+                      labelStyle: TextStyle(
+                        fontSize: 14,
+                        color: Colors.black,
+                      ),
+                      labelText: 'Date of Birth',
+                      prefixIcon: Icon(Icons.calendar_today),
+                    ),
+                    keyboardType: TextInputType.datetime,
+                    enabled: false,
+                    initialValue: widget.dob,
                   ),
-                  keyboardType: TextInputType.streetAddress,
-                  enabled: _editing,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Please enter your address';
-                    }
-                    return null;
-                  },
+                  visible: !isTier1,
+                ),
+                Visibility(
+                  child: TextFormField(
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey,
+                    ),
+                    decoration: InputDecoration(
+                      labelText: 'BVN',
+                      labelStyle: TextStyle(
+                        fontSize: 14,
+                        color: Colors.black,
+                      ),
+                      prefixIcon: Icon(Icons.credit_card),
+                    ),
+                    keyboardType: TextInputType.number,
+                    enabled: false,
+                    initialValue: widget.bvn,
+                  ),
+                  visible: !isTier1,
                 ),
                 SizedBox(
                   height: 16,
                 ),
-
-                // TextFormField(
-                //   decoration: InputDecoration(
-                //     labelText: 'City',
-                //     prefixIcon: Icon(Icons.location_city),
-                //   ),
-                //   keyboardType: TextInputType.streetAddress,
-                //   enabled: _editing,
-                //   validator: (value) {
-                //     if (value!.isEmpty) {
-                //       return 'Please enter your city';
-                //     }
-                //     return null;
-                //   },
-                // ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: TextButton(
-                    onPressed: () {
+                TextButton(
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    backgroundColor: Colors.grey.shade300,
+                    elevation: 1,
+                  ),
+                  onPressed: () {
+                    if (isTier1) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => UpgradePage()),
                       );
-                    },
-                    child: Text("Upgrade to Tier 2"),
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TierThreeUpgradePage()),
+                      );
+                    }
+                  },
+                  child: Column(
+                    children: [
+                      ListTile(
+                        leading: Icon(
+                          Icons.verified_user,
+                          color: Colors.blue.shade900,
+                        ),
+                        title: Text(
+                          !isTier1 ? 'Upgrade Account' : 'Verify Account',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue.shade900,
+                          ),
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward,
+                          color: Colors.blue.shade900,
+                        ),
+                      ),
+                    ],
                   ),
+                ),
+                Divider(
+                  height: 2,
+                  color: Colors.grey,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    // color: Colors.grey.shade300,
+                  ),
+                  height: 50,
+                  width: double.infinity,
+                  // color: Colors.grey.shade300,
+                  child: Center(
+                    child: Text(
+                      "Security Settings",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue.shade900,
+                      ),
+                    ),
+                  ),
+                ),
+                Divider(
+                  height: 2,
+                  color: Colors.grey,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    // elevation: 1,
+                  ),
+                  onPressed: () {
+                    _changePIN(
+                      context,
+                      "Reset Password",
+                      "Dear ${widget.name} Please kindly enter your old password and new password below to reset your account:",
+                      "Old Password",
+                      "New Password",
+                      "Confirm New Password",
+                      false,
+                    );
+                  },
+                  child: Column(
+                    children: [
+                      ListTile(
+                        leading: Icon(
+                          Icons.password,
+                          color: Colors.blue.shade900,
+                        ),
+                        title: Text(
+                          'Reset Password',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.blue.shade900,
+                          ),
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward,
+                          color: Colors.blue.shade900,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                  ),
+                  onPressed: () {
+                    _changePIN(
+                      context,
+                      "Reset Transaction PIN",
+                      "Dear ${widget.name} Please kindly enter your old PIN and new PIN below:",
+                      "Old PIN",
+                      "New PIN",
+                      "Confirm PIN",
+                      true,
+                    );
+                  },
+                  child: Column(
+                    children: [
+                      ListTile(
+                        leading: Icon(
+                          Icons.pin,
+                          color: Colors.blue.shade900,
+                        ),
+                        title: Text(
+                          'Reset Transaction PIN',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.blue.shade900,
+                          ),
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward,
+                          color: Colors.blue.shade900,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Column(
+                  children: [
+                    ListTile(
+                      leading: Icon(
+                        Icons.fingerprint,
+                        color: Colors.blue.shade900,
+                      ),
+                      title: Text(
+                        'Biometric Authentication',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.blue.shade900,
+                        ),
+                      ),
+                      trailing: Switch(
+                        value: _isBiometricEnabled,
+                        onChanged: (value) {
+                          setState(() {
+                            _isBiometricEnabled = value;
+                          });
+                          if (value) {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Center(
+                                    child: Text(
+                                      "Verify Biometric",
+                                      style: TextStyle(
+                                        color: Colors.blue.shade900,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                  content: SizedBox(
+                                    height: 150,
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          Platform.isIOS
+                                              ? "Please verify your your face ID to enable biometric authentication."
+                                              : "Please verify your thumbprint to enable biometric authentication.",
+                                          style: TextStyle(
+                                            color: Colors.grey.shade700,
+                                            // fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        Icon(
+                                          Platform.isIOS
+                                              ? Icons.face
+                                              : Icons.fingerprint,
+                                          color: Colors.grey.shade700,
+                                          size: 80,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: Text(
+                                        "OK",
+                                        style: TextStyle(
+                                          color: Colors.blue.shade900,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          } else {
+                            // showDialog(
+                            //   context: context,
+                            //   builder: (BuildContext context) {
+                            //     return AlertDialog(
+                            //       title: Center(
+                            //         child: Text(
+                            //           "Biometric Disabled",
+                            //           style: TextStyle(
+                            //             color: Colors.blue.shade900,
+                            //             fontWeight: FontWeight.bold,
+                            //             fontSize: 16,
+                            //           ),
+                            //         ),
+                            //       ),
+                            //       content: Text(
+                            //           "Biometric authentication has been disabled."),
+                            //       actions: <Widget>[
+                            //         TextButton(
+                            //           child: Text("OK"),
+                            //           onPressed: () {
+                            //             Navigator.of(context).pop();
+                            //           },
+                            //         ),
+                            //       ],
+                            //     );
+                            //   },
+                            // );
+                          }
+                        },
+                      ),
+                    ),
+                  ],
                 ),
                 SizedBox(
                   height: 16.0,
@@ -227,6 +583,11 @@ class _UserProfilePageState extends State<UserProfilePage> {
   Widget _getTierBadge() {
     switch (widget.tier) {
       case VerificationTier.basic:
+        setState(() {
+          isTier1 = true;
+          isTier2 = false;
+          isTier3 = false;
+        });
         return Badge(
           icon: Icon(
             Icons.verified_user,
@@ -237,6 +598,11 @@ class _UserProfilePageState extends State<UserProfilePage> {
           text: 'Tier 1',
         );
       case VerificationTier.intermediate:
+        setState(() {
+          isTier2 = true;
+          isTier1 = false;
+          isTier3 = true;
+        });
         return Badge(
           icon: Icon(
             Icons.verified_user,
@@ -247,6 +613,11 @@ class _UserProfilePageState extends State<UserProfilePage> {
           text: 'Tier 2',
         );
       case VerificationTier.advanced:
+        setState(() {
+          isTier3 = true;
+          isTier2 = true;
+          isTier1 = false;
+        });
         return Badge(
           icon: Icon(
             Icons.verified_user,
@@ -267,6 +638,211 @@ class _UserProfilePageState extends State<UserProfilePage> {
           text: 'Unverified',
         );
     }
+  }
+
+  void _changePIN(BuildContext context, String title, String message,
+      String label1, String label2, label3, bool isPin) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          // use StatefulBuilder to access setState inside the dialog
+          builder: (context, setState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              elevation: 5,
+              title: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        title,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue.shade900,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          "X",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Divider(
+                    height: 2,
+                    color: Colors.black,
+                  ),
+                ],
+              ),
+              content: Container(
+                width: MediaQuery.of(context).size.width,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text(
+                        message,
+                        style: TextStyle(
+                          fontSize: 12,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      TextFormField(
+                        controller: _oldPinController,
+                        obscureText: !_isPinVisible,
+                        enableSuggestions: false,
+                        autocorrect: false,
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.blue.shade900,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.blue.shade900,
+                            ),
+                          ),
+                          labelStyle: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 12,
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 15.0, horizontal: 15),
+                          labelText: label1,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      TextFormField(
+                        controller: _newPinController,
+                        obscureText: !_isPinVisible,
+                        enableSuggestions: false,
+                        autocorrect: false,
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.blue.shade900,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.blue.shade900,
+                            ),
+                          ),
+                          labelStyle: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 12,
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 15.0, horizontal: 15),
+                          labelText: label2,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      TextFormField(
+                        controller: _confirmPinController,
+                        obscureText: !_isPinVisible,
+                        enableSuggestions: false,
+                        autocorrect: false,
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.blue.shade900,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.blue.shade900,
+                            ),
+                          ),
+                          labelStyle: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 12,
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 15.0,
+                            horizontal: 15,
+                          ),
+                          labelText: label3,
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      Row(
+                        children: [
+                          Checkbox(
+                            value: _isPinVisible,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                _isPinVisible = value ?? false;
+                              });
+                            },
+                          ),
+                          Text(
+                            _isPinVisible ? 'Hide' : 'Show',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue.shade900,
+                            ),
+                          ),
+                        ],
+                      ),
+                      if (_errorMessage.isNotEmpty)
+                        Text(
+                          _errorMessage,
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 12,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+              actions: <Widget>[
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Cancel'),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue.shade900,
+                  ),
+                  onPressed: _changePin,
+                  child: Text('Save'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
   }
 }
 

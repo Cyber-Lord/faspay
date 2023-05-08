@@ -1,9 +1,9 @@
 import 'package:faspay/pages/accountscreen.dart';
-import 'package:faspay/pages/billscreen.dart';
 import 'package:faspay/pages/cardpage.dart';
 import 'package:faspay/pages/phonescreen.dart';
 import 'package:faspay/pages/qrscan.dart';
-import 'package:faspay/pages/tiertwouserprofile.dart';
+import 'package:faspay/pages/supprtpage.dart';
+import 'package:faspay/pages/userprofile.dart';
 // import 'package:faspay/pages/userprofile.dart';
 import 'package:flutter/material.dart';
 import 'package:faspay/pages/dashboard.dart';
@@ -36,7 +36,6 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _children = [
     Dashboard(),
     CardPage(),
-    BillScreen(),
     AccountScreen(),
   ];
 
@@ -58,7 +57,7 @@ class _HomePageState extends State<HomePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => TierTwoUserProfile(
+                builder: (context) => UserProfile(
                   email: "John@doe.com",
                   name: "John Doe",
                   // tier: VerificationTier.basic,
@@ -91,7 +90,10 @@ class _HomePageState extends State<HomePage> {
           ),
           IconButton(
             onPressed: (() {
-              logout();
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SupportPage()),
+              );
             }),
             icon: Icon(
               Icons.support_agent_sharp,
@@ -126,10 +128,10 @@ class _HomePageState extends State<HomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.payments,
+              Icons.person,
               color: Colors.white,
             ),
-            label: 'Business',
+            label: 'Account',
             backgroundColor: Colors.white,
           ),
         ],
