@@ -22,11 +22,41 @@ class _LoginState extends State<Login> {
   bool correct_pass_checker = false;
   String? _phoneNumber;
   String token = "";
+  String _errorMessage = '';
+  bool _isPinVisible = false;
 
   @override
   void initState() {
     super.initState();
     _textEditingController.addListener(_onTextChanged);
+  }
+
+  void _verifyPassword(String password) {
+    if (password.isEmpty) {
+      setState(() {
+        _errorMessage = 'Please enter a password';
+        print(_errorMessage);
+      });
+    }
+    if (password.length < 8) {
+      setState(() {
+        _errorMessage = 'Incorrect Password';
+        print(_errorMessage);
+      });
+    }
+    if (!password.contains(RegExp(r'[a-zA-Z]'))) {
+      setState(() {
+        _errorMessage = 'Incorrect Password';
+        print(_errorMessage);
+      });
+    }
+    if (!password.contains(RegExp(r'[0-9]'))) {
+      setState(() {
+        _errorMessage = 'Incorrect Password';
+        print(_errorMessage);
+      });
+    }
+    return null;
   }
 
   Widget build(BuildContext context) {
@@ -58,7 +88,7 @@ class _LoginState extends State<Login> {
                           ),
                           Center(
                             child: Text(
-                              "Welcome back," + widget.name,
+                              "Welcome back, " + widget.name,
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -71,7 +101,7 @@ class _LoginState extends State<Login> {
                           ),
                           Center(
                             child: Text(
-                              "To use Faspay, Please enter your faspay Password",
+                              "To use FasPay, please enter your account password",
                               style: TextStyle(
                                 fontFamily: "Times New Roman",
                                 fontSize: 14,
@@ -83,40 +113,84 @@ class _LoginState extends State<Login> {
                             height: 15,
                           ),
                           TextFormField(
-                            controller: _textEditingController,
-                            obscureText: true,
-                            enableSuggestions: false,
-                            autocorrect: false,
-                            decoration: InputDecoration(
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
+                              controller: _textEditingController,
+                              obscureText: !_isPinVisible,
+                              enableSuggestions: false,
+                              autocorrect: false,
+                              style: TextStyle(
+                                color: Colors.grey.shade700,
+                                fontSize: 14,
+                              ),
+                              decoration: InputDecoration(
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.blue.shade900,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.blue.shade900,
+                                  ),
+                                ),
+                                labelStyle: TextStyle(
                                   color: Colors.blue.shade900,
                                 ),
+                                contentPadding: EdgeInsets.symmetric(
+                                  vertical: 15.0,
+                                  horizontal: 15,
+                                ),
+                                labelText: 'Password',
                               ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.blue.shade900,
+                              onChanged: (value) {
+                                _onTextChanged();
+                              },
+                              validator: ((value) {
+                                print(value);
+                                _verifyPassword(value!);
+                                return null;
+                              })),
+                          // SizedBox(
+                          //   height: 5,
+                          // ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              if (_errorMessage.isNotEmpty)
+                                Text(
+                                  _errorMessage,
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              TextButton(
+                                onPressed: (() {
+                                  // setState(() {
+                                  //   surgest_login = true;
+                                  // });
+                                }),
+                                child: Text(
+                                  "Forgot Password?",
+                                  style: TextStyle(
+                                    color: Colors.blue.shade900,
+                                    fontSize: 12,
+                                  ),
                                 ),
                               ),
-                              labelStyle: TextStyle(
-                                color: Colors.black,
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Checkbox(
+                                value: _isPinVisible,
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    _isPinVisible = value ?? false;
+                                  });
+                                },
                               ),
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 15.0, horizontal: 15),
-                              prefixStyle: TextStyle(
-                                color: Colors.black,
-                              ),
-                              labelText: 'Password',
-                            ),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Password is required';
-                              }
-                              return null;
-                            },
-                            onChanged: (value) {
-                              _onTextChanged();
-                            },
+                              Text('Show Password'),
+                            ],
                           ),
                         ],
                       ),
@@ -135,6 +209,7 @@ class _LoginState extends State<Login> {
                           onPressed: () {
                             setState(() {
                               show_preogress = true;
+                              _verifyPassword(_textEditingController.text);
                               login(widget.phoneNumber,
                                   _textEditingController.text);
                             });
@@ -184,8 +259,7 @@ class _LoginState extends State<Login> {
     var url = "https://a2ctech.net/api/faspay/login.php";
     var response;
     response =
-        await http.post(Uri.parse(url),
-            body: {"mail": mail, "pass": pass});
+        await http.post(Uri.parse(url), body: {"mail": mail, "pass": pass});
 
     var data = json.decode(response.body);
     if (response.statusCode == 200) {

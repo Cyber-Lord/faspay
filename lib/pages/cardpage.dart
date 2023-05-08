@@ -67,6 +67,7 @@ class _CardPageState extends State<CardPage> {
   late String _phoneNumber;
   late String _address;
   bool check_card = false;
+
   bool visable_card_request = false;
   bool show_preogress = false;
   double main_account_balance = 0;
@@ -96,6 +97,8 @@ class _CardPageState extends State<CardPage> {
   String? _voucher;
   TextEditingController _voucherPinController = TextEditingController();
   TextEditingController _voucherAmountController = TextEditingController();
+  bool isFundCard = false;
+  bool isWithdraw = false;
 
   void _changePin() {
     String oldPin = _oldPinController.text;
@@ -360,11 +363,13 @@ class _CardPageState extends State<CardPage> {
                                   ),
                                   onPressed: (() {
                                     setState(() {
+                                      isFundCard = true;
+                                      isWithdraw = false;
                                       myindex = currentCardIndex;
                                     });
                                     if (currentCardIndex == myindex) {
                                       print(myindex);
-                                      _showDialog(context, balance);
+                                      _showDialog(context, balance, isFundCard);
                                     }
                                   }),
                                   child: Text("Fund Card"),
@@ -376,8 +381,15 @@ class _CardPageState extends State<CardPage> {
                                   ),
                                   onPressed: (() {
                                     setState(() {
-                                      check_card = false;
+                                      isWithdraw = true;
+                                      isFundCard = false;
+                                      myindex = currentCardIndex;
                                     });
+                                    if (currentCardIndex == myindex) {
+                                      print(myindex);
+                                      _showDialog(
+                                          context, balance, !isWithdraw);
+                                    }
                                   }),
                                   child: Text("Withdraw"),
                                 ),
@@ -392,16 +404,7 @@ class _CardPageState extends State<CardPage> {
                           height: 30,
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
-                            border: Border(
-                                // top: BorderSide(
-                                //   color: Colors.grey,
-                                //   width: 1,
-                                // ),
-                                // bottom: BorderSide(
-                                //   color: Colors.grey,
-                                //   width: 1,
-                                // ),
-                                ),
+                            border: Border(),
                           ),
                           child: Center(
                             child: Text(
@@ -518,6 +521,9 @@ class _CardPageState extends State<CardPage> {
                                                 ),
                                               ],
                                             ),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
                                             Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment
@@ -529,28 +535,6 @@ class _CardPageState extends State<CardPage> {
                                                     fontSize: 12.0,
                                                     color: Colors.grey[600],
                                                   ),
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  children: [
-                                                    IconButton(
-                                                      icon: Icon(
-                                                        Icons.picture_as_pdf,
-                                                        color: Colors.red,
-                                                      ),
-                                                      onPressed: () {
-                                                        print("Pressed");
-                                                      },
-                                                    ),
-                                                    // IconButton(
-                                                    //   onPressed: () {
-                                                    //     Share.share(
-                                                    //         'Here is my account history: ${account.name}, ${account.amount}');
-                                                    //   },
-                                                    //   icon: Icon(Icons.share),
-                                                    // ),
-                                                  ],
                                                 ),
                                               ],
                                             ),
@@ -569,41 +553,63 @@ class _CardPageState extends State<CardPage> {
                   ),
                 )
               : Padding(
-                  padding: EdgeInsets.all(10),
+                  padding: EdgeInsets.only(
+                    left: 10,
+                    right: 10,
+                  ),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Image.asset(
-                              'assets/images/nfc_sample.png',
-                              height: 300.0,
-                              // color: Colors.blue.shade900,
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              height: MediaQuery.of(context).size.height * 0.4,
+                              child: Image.asset(
+                                fit: BoxFit.contain,
+                                'assets/images/nfc.png',
+                              ),
                             ),
                           ]),
                       Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              "About NFC Card",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 16),
-                            )
-                          ]),
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "What is Fascard?",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Colors.blue.shade900,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
                       Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Flexible(
-                                child: Text(
-                              "NFC cards have several advantages over traditional contact-based smart cards, including faster transaction times, increased convenience, and improved security features. They are also more durable and resistant to physical wear and tear, making them ideal for use in high-traffic areas.",
-                              style: TextStyle(),
-                            ))
-                          ]),
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Flexible(
+                            child: Text(
+                              "Fascard is an advanced NFC enabled debit card that facilitates quick payments using NFC technology. Fascard supports tap to pay, deposits and withdrawals. Order a Fascard today for free and enjoy speedy, safe and secure transactions.",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade700,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -2194,13 +2200,13 @@ class _CardPageState extends State<CardPage> {
     }
   }
 
-  _showDialog(BuildContext context, double balance) {
+  _showDialog(BuildContext context, double balance, bool isWithdraw) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            'Enter an amount',
+            'Enter an Amount',
             style: TextStyle(
               color: Colors.blue.shade900,
               fontWeight: FontWeight.bold,
@@ -2264,7 +2270,8 @@ class _CardPageState extends State<CardPage> {
                   );
                 } else {
                   _action = "card_top_up";
-                  _show_pin = true;
+                  _show_pin = isWithdraw;
+                  // _show_pin = true;
 
                   Navigator.of(context).pop();
                   // onAmountSelected(amount);

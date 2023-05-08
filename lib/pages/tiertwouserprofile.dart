@@ -34,6 +34,9 @@ class _TierTwoUserProfileState extends State<TierTwoUserProfile> {
   final _formKey = GlobalKey<FormState>();
   File _image = File('');
   bool _editing = true;
+  bool isTier1 = false;
+  bool isTier2 = false;
+  bool isTier3 = false;
 
   bool _isBiometricEnabled = false;
   TextEditingController _oldPinController = TextEditingController();
@@ -41,6 +44,11 @@ class _TierTwoUserProfileState extends State<TierTwoUserProfile> {
   TextEditingController _confirmPinController = TextEditingController();
   String _errorMessage = '';
   bool _isPinVisible = false;
+
+  void initState() {
+    super.initState();
+    _getTierBadge();
+  }
 
   void _toggleBiometric(bool value) {
     setState(() {
@@ -175,7 +183,10 @@ class _TierTwoUserProfileState extends State<TierTwoUserProfile> {
                       color: Colors.black,
                     ),
                     labelText: 'Email',
-                    prefixIcon: Icon(Icons.email),
+                    prefixIcon: Icon(
+                      Icons.email,
+                      // color: Colors.blue.shade900,
+                    ),
                   ),
                   keyboardType: TextInputType.emailAddress,
                   enabled: false,
@@ -210,39 +221,45 @@ class _TierTwoUserProfileState extends State<TierTwoUserProfile> {
                 SizedBox(
                   height: 16,
                 ),
-                TextFormField(
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 14,
-                  ),
-                  decoration: InputDecoration(
-                    labelStyle: TextStyle(
+                Visibility(
+                  child: TextFormField(
+                    style: TextStyle(
+                      color: Colors.grey,
                       fontSize: 14,
-                      color: Colors.black,
                     ),
-                    labelText: 'Date of Birth',
-                    prefixIcon: Icon(Icons.calendar_today),
+                    decoration: InputDecoration(
+                      labelStyle: TextStyle(
+                        fontSize: 14,
+                        color: Colors.black,
+                      ),
+                      labelText: 'Date of Birth',
+                      prefixIcon: Icon(Icons.calendar_today),
+                    ),
+                    keyboardType: TextInputType.datetime,
+                    enabled: false,
+                    initialValue: widget.dob,
                   ),
-                  keyboardType: TextInputType.datetime,
-                  enabled: false,
-                  initialValue: widget.dob,
+                  visible: !isTier1,
                 ),
-                TextFormField(
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey,
-                  ),
-                  decoration: InputDecoration(
-                    labelText: 'BVN',
-                    labelStyle: TextStyle(
+                Visibility(
+                  child: TextFormField(
+                    style: TextStyle(
                       fontSize: 14,
-                      color: Colors.black,
+                      color: Colors.grey,
                     ),
-                    prefixIcon: Icon(Icons.credit_card),
+                    decoration: InputDecoration(
+                      labelText: 'BVN',
+                      labelStyle: TextStyle(
+                        fontSize: 14,
+                        color: Colors.black,
+                      ),
+                      prefixIcon: Icon(Icons.credit_card),
+                    ),
+                    keyboardType: TextInputType.number,
+                    enabled: false,
+                    initialValue: widget.bvn,
                   ),
-                  keyboardType: TextInputType.number,
-                  enabled: false,
-                  initialValue: widget.bvn,
+                  visible: !isTier1,
                 ),
                 SizedBox(
                   height: 16,
@@ -250,14 +267,22 @@ class _TierTwoUserProfileState extends State<TierTwoUserProfile> {
                 TextButton(
                   style: TextButton.styleFrom(
                     padding: EdgeInsets.zero,
+                    backgroundColor: Colors.grey.shade300,
                     elevation: 1,
                   ),
                   onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //       builder: (context) => TierThreeUpgradePage()),
-                    // );
+                    if (isTier1) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => UpgradePage()),
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TierThreeUpgradePage()),
+                      );
+                    }
                   },
                   child: Column(
                     children: [
@@ -267,7 +292,7 @@ class _TierTwoUserProfileState extends State<TierTwoUserProfile> {
                           color: Colors.blue.shade900,
                         ),
                         title: Text(
-                          'Upgrade Account',
+                          !isTier1 ? 'Upgrade Account' : 'Verify Account',
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
@@ -292,7 +317,7 @@ class _TierTwoUserProfileState extends State<TierTwoUserProfile> {
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5),
-                    color: Colors.grey.shade300,
+                    // color: Colors.grey.shade300,
                   ),
                   height: 50,
                   width: double.infinity,
@@ -308,6 +333,10 @@ class _TierTwoUserProfileState extends State<TierTwoUserProfile> {
                     ),
                   ),
                 ),
+                Divider(
+                  height: 2,
+                  color: Colors.grey,
+                ),
                 SizedBox(
                   height: 10,
                 ),
@@ -317,7 +346,15 @@ class _TierTwoUserProfileState extends State<TierTwoUserProfile> {
                     // elevation: 1,
                   ),
                   onPressed: () {
-                    print("Reset Password");
+                    _changePIN(
+                      context,
+                      "Reset Password",
+                      "Dear ${widget.name} Please kindly enter your old password and new password below to reset your account:",
+                      "Old Password",
+                      "New Password",
+                      "Confirm New Password",
+                      false,
+                    );
                   },
                   child: Column(
                     children: [
@@ -346,7 +383,15 @@ class _TierTwoUserProfileState extends State<TierTwoUserProfile> {
                     padding: EdgeInsets.zero,
                   ),
                   onPressed: () {
-                    _changePIN(context);
+                    _changePIN(
+                      context,
+                      "Reset Transaction PIN",
+                      "Dear ${widget.name} Please kindly enter your old PIN and new PIN below:",
+                      "Old PIN",
+                      "New PIN",
+                      "Confirm PIN",
+                      true,
+                    );
                   },
                   child: Column(
                     children: [
@@ -386,7 +431,99 @@ class _TierTwoUserProfileState extends State<TierTwoUserProfile> {
                       ),
                       trailing: Switch(
                         value: _isBiometricEnabled,
-                        onChanged: _toggleBiometric,
+                        onChanged: (value) {
+                          setState(() {
+                            _isBiometricEnabled = value;
+                          });
+                          if (value) {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Center(
+                                    child: Text(
+                                      "Verify Biometric",
+                                      style: TextStyle(
+                                        color: Colors.blue.shade900,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                  content: SizedBox(
+                                    height: 150,
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          Platform.isIOS
+                                              ? "Please verify your your face ID to enable biometric authentication."
+                                              : "Please verify your thumbprint to enable biometric authentication.",
+                                          style: TextStyle(
+                                            color: Colors.grey.shade700,
+                                            // fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        Icon(
+                                          Platform.isIOS
+                                              ? Icons.face
+                                              : Icons.fingerprint,
+                                          color: Colors.grey.shade700,
+                                          size: 80,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: Text(
+                                        "OK",
+                                        style: TextStyle(
+                                          color: Colors.blue.shade900,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          } else {
+                            // showDialog(
+                            //   context: context,
+                            //   builder: (BuildContext context) {
+                            //     return AlertDialog(
+                            //       title: Center(
+                            //         child: Text(
+                            //           "Biometric Disabled",
+                            //           style: TextStyle(
+                            //             color: Colors.blue.shade900,
+                            //             fontWeight: FontWeight.bold,
+                            //             fontSize: 16,
+                            //           ),
+                            //         ),
+                            //       ),
+                            //       content: Text(
+                            //           "Biometric authentication has been disabled."),
+                            //       actions: <Widget>[
+                            //         TextButton(
+                            //           child: Text("OK"),
+                            //           onPressed: () {
+                            //             Navigator.of(context).pop();
+                            //           },
+                            //         ),
+                            //       ],
+                            //     );
+                            //   },
+                            // );
+                          }
+                        },
                       ),
                     ),
                   ],
@@ -426,6 +563,11 @@ class _TierTwoUserProfileState extends State<TierTwoUserProfile> {
   Widget _getTierBadge() {
     switch (widget.tier) {
       case VerificationTier.basic:
+        setState(() {
+          isTier1 = true;
+          isTier2 = false;
+          isTier3 = false;
+        });
         return Badge(
           icon: Icon(
             Icons.verified_user,
@@ -436,6 +578,11 @@ class _TierTwoUserProfileState extends State<TierTwoUserProfile> {
           text: 'Tier 1',
         );
       case VerificationTier.intermediate:
+        setState(() {
+          isTier2 = true;
+          isTier1 = false;
+          isTier3 = true;
+        });
         return Badge(
           icon: Icon(
             Icons.verified_user,
@@ -446,6 +593,11 @@ class _TierTwoUserProfileState extends State<TierTwoUserProfile> {
           text: 'Tier 2',
         );
       case VerificationTier.advanced:
+        setState(() {
+          isTier3 = true;
+          isTier2 = true;
+          isTier1 = false;
+        });
         return Badge(
           icon: Icon(
             Icons.verified_user,
@@ -468,7 +620,8 @@ class _TierTwoUserProfileState extends State<TierTwoUserProfile> {
     }
   }
 
-  void _changePIN(BuildContext context) {
+  void _changePIN(BuildContext context, String title, String message,
+      String label1, String label2, label3, bool isPin) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -486,7 +639,7 @@ class _TierTwoUserProfileState extends State<TierTwoUserProfile> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Reset Transaction PIN',
+                        title,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -523,7 +676,7 @@ class _TierTwoUserProfileState extends State<TierTwoUserProfile> {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Text(
-                        "Dear ${widget.name} Please kindly enter your old PIN and new PIN below:",
+                        message,
                         style: TextStyle(
                           fontSize: 12,
                         ),
@@ -553,7 +706,7 @@ class _TierTwoUserProfileState extends State<TierTwoUserProfile> {
                           ),
                           contentPadding: EdgeInsets.symmetric(
                               vertical: 15.0, horizontal: 15),
-                          labelText: 'Old PIN',
+                          labelText: label1,
                         ),
                       ),
                       SizedBox(
@@ -581,7 +734,7 @@ class _TierTwoUserProfileState extends State<TierTwoUserProfile> {
                           ),
                           contentPadding: EdgeInsets.symmetric(
                               vertical: 15.0, horizontal: 15),
-                          labelText: 'New PIN',
+                          labelText: label2,
                         ),
                       ),
                       SizedBox(
@@ -611,7 +764,7 @@ class _TierTwoUserProfileState extends State<TierTwoUserProfile> {
                             vertical: 15.0,
                             horizontal: 15,
                           ),
-                          labelText: 'Confirm PIN',
+                          labelText: label3,
                         ),
                       ),
                       SizedBox(height: 5),
@@ -625,7 +778,14 @@ class _TierTwoUserProfileState extends State<TierTwoUserProfile> {
                               });
                             },
                           ),
-                          Text('Show PIN'),
+                          Text(
+                            _isPinVisible ? 'Hide' : 'Show',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue.shade900,
+                            ),
+                          ),
                         ],
                       ),
                       if (_errorMessage.isNotEmpty)

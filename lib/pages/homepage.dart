@@ -50,7 +50,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-
         elevation: 10,
         leading: IconButton(
           icon: Icon(Icons.person),
@@ -62,6 +61,7 @@ class _HomePageState extends State<HomePage> {
                 builder: (context) => TierTwoUserProfile(
                   email: "John@doe.com",
                   name: "John Doe",
+                  // tier: VerificationTier.basic,
                   tier: VerificationTier.advanced,
                   bvn: "1234567890",
                   dob: "01/01/2000",

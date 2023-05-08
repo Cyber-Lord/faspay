@@ -59,102 +59,112 @@ class _OtpPageState extends State<OtpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(
-      children: [
-        ListView(
-          children: [
-            Container(
-              height: 50,
-              alignment: Alignment.centerLeft,
-              child: IconButton(
-                onPressed: (() {}),
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: Colors.black,
-                  size: 30,
-                ),
-              ),
+        appBar: AppBar(
+          leading: IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: Icon(Icons.arrow_back),
+          ),
+          title: Text(
+            "Phone Verification",
+            style: TextStyle(
+              fontSize: 18,
+              // fontWeight: FontWeight.bold,
             ),
-            Padding(
-              padding:
-                  EdgeInsets.only(top: 20, left: 15, right: 15, bottom: 10),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
+          ),
+        ),
+        body: Stack(
+          children: [
+            ListView(
+              children: [
+                Padding(
+                  padding:
+                      EdgeInsets.only(top: 20, left: 15, right: 15, bottom: 10),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "Enter the 6 digit code sent to your mobile number",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            Text(
+                              "A 6 digit code was sent to your mobile number, fill it below to continue.",
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade700,
+                                // fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                _buildOtpDigitField(0),
-                                _buildOtpDigitField(1),
-                                _buildOtpDigitField(2),
-                                _buildOtpDigitField(3),
-                                _buildOtpDigitField(4),
-                                _buildOtpDigitField(5),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    _buildOtpDigitField(0),
+                                    _buildOtpDigitField(1),
+                                    _buildOtpDigitField(2),
+                                    _buildOtpDigitField(3),
+                                    _buildOtpDigitField(4),
+                                    _buildOtpDigitField(5),
+                                  ],
+                                ),
                               ],
                             ),
+                            SizedBox(height: 20),
+                            _remainingSeconds > 0
+                                ? Text(
+                                    'Resend again in $_remainingSeconds seconds',
+                                    style: TextStyle(
+                                      // fontWeight: FontWeight.bold,
+                                      color: Colors.red.shade900,
+                                    ),
+                                  )
+                                : ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.blue.shade900,
+                                    ),
+                                    onPressed: _resendOtp,
+                                    child: Text(
+                                      'Resend OTP',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                            SizedBox(height: 20),
                           ],
                         ),
-                        SizedBox(height: 20),
-                        _remainingSeconds > 0
-                            ? Text(
-                                'Resend OTP in $_remainingSeconds seconds',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              )
-                            : TextButton(
-                                onPressed: _resendOtp,
-                                child: Text(
-                                  'Resend OTP',
-                                  style: TextStyle(
-                                    color: Colors.blue.shade900,
-                                  ),
-                                ),
-                              ),
-                        SizedBox(height: 20),
+
+                        // Text(widget.phoneNumber),
                       ],
                     ),
-
-                    // Text(widget.phoneNumber),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
+            Visibility(
+                visible: show_preogress,
+                child: Container(
+                    color: Colors.black.withOpacity(0.5),
+                    child: ListView(
+                      children: const [
+                        LinearProgressIndicator(
+                          semanticsLabel: 'Linear progress indicator',
+                        )
+                      ],
+                    ))),
           ],
-        ),
-        Visibility(
-            visible: show_preogress,
-            child: Container(
-                color: Colors.black.withOpacity(0.5),
-                child: ListView(
-                  children: const [
-                    LinearProgressIndicator(
-                      semanticsLabel: 'Linear progress indicator',
-                    )
-                  ],
-                ))),
-      ],
-    ));
+        ));
   }
 
   bool change_color = false;

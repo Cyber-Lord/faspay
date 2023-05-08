@@ -38,7 +38,13 @@ class _UpgradePageState extends State<UpgradePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Upgrade Account'),
+        title: const Text(
+          'Upgrade Account',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -48,14 +54,22 @@ class _UpgradePageState extends State<UpgradePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Please enter your information to upgrade your account to Tier 2: This will allow you to make transactions above ₦100,000NGN daily',
-                  style: TextStyle(fontSize: 13.0),
+                Text(
+                  'Please enter your information to upgrade your account to second tier: This will allow you to make transactions above NGN 100,000NGN daily',
+                  style: TextStyle(
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey.shade700,
+                  ),
                 ),
-                const SizedBox(height: 16.0),
+                SizedBox(height: 16.0),
                 TextFormField(
                   controller: _dateController,
                   decoration: InputDecoration(
+                    hintStyle: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 12,
+                    ),
                     contentPadding: EdgeInsets.symmetric(vertical: 15.0),
                     hintText: "Date of Birth",
                     border: OutlineInputBorder(
@@ -72,10 +86,14 @@ class _UpgradePageState extends State<UpgradePage> {
                 SizedBox(
                   height: 10,
                 ),
-                const SizedBox(height: 16.0),
+                SizedBox(height: 16.0),
                 TextFormField(
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
+                    hintStyle: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 12,
+                    ),
                     contentPadding: EdgeInsets.symmetric(vertical: 15.0),
                     hintText: "BVN",
                     border: OutlineInputBorder(
@@ -97,10 +115,14 @@ class _UpgradePageState extends State<UpgradePage> {
                     _bvn = value!;
                   },
                 ),
-                const SizedBox(height: 16.0),
+                SizedBox(height: 16.0),
                 TextFormField(
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
+                    hintStyle: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 12,
+                    ),
                     contentPadding: EdgeInsets.symmetric(vertical: 15.0),
                     hintText: "Email Address",
                     border: OutlineInputBorder(
@@ -137,7 +159,7 @@ class _UpgradePageState extends State<UpgradePage> {
                       _upgradeAccount();
                     }
                   },
-                  child: const Text('Upgrade Account'),
+                  child: Text('Submit'),
                 ),
               ],
             ),
@@ -156,15 +178,36 @@ class _UpgradePageState extends State<UpgradePage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Congratulations!"),
-            content: Text("Your account will be upgraded shortly"),
+            title: Center(
+                child: Text(
+              "Congratulations!",
+              style: TextStyle(
+                color: Colors.blue.shade900,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            )),
+            content: Text(
+              "Check your email for a confirmation link",
+              style: TextStyle(
+                color: Colors.grey.shade700,
+                fontSize: 12,
+              ),
+            ),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
                 },
-                child: Text("OK"),
+                child: Text(
+                  "OK",
+                  style: TextStyle(
+                    color: Colors.blue.shade900,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               )
             ],
           );

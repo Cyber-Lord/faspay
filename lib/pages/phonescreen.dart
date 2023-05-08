@@ -86,15 +86,15 @@ class _PhoneScreenState extends State<PhoneScreen> {
                               ),
                             ),
                             SizedBox(
-                              height: 5,
+                              height: 10,
                             ),
                             Center(
                               child: Text(
                                 "To use Faspay, Please enter your mobile number",
                                 style: TextStyle(
-                                  fontFamily: "Times New Roman",
+                                  // fontFamily: "Times New Roman",
                                   fontSize: 14,
-                                  color: Colors.grey.shade600,
+                                  color: Colors.grey.shade700,
                                 ),
                               ),
                             ),
@@ -105,6 +105,10 @@ class _PhoneScreenState extends State<PhoneScreen> {
                               controller: _textEditingController,
                               keyboardType: TextInputType.phone,
                               maxLength: 11,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.blue.shade900,
+                              ),
                               decoration: InputDecoration(
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
@@ -117,13 +121,13 @@ class _PhoneScreenState extends State<PhoneScreen> {
                                   ),
                                 ),
                                 labelStyle: TextStyle(
-                                  color: Colors.black,
+                                  color: Colors.blue.shade900,
                                 ),
                                 contentPadding: EdgeInsets.symmetric(
                                     vertical: 15.0, horizontal: 15),
                                 prefixText: "+234 - ",
                                 prefixStyle: TextStyle(
-                                  color: Colors.black,
+                                  color: Colors.blue.shade900,
                                 ),
                                 labelText: 'Phone Number',
                               ),
@@ -201,25 +205,57 @@ class _PhoneScreenState extends State<PhoneScreen> {
                               clipBehavior: Clip.antiAlias, // Add This
                               child: Container(
                                 padding: EdgeInsets.all(15),
-                                height: 140,
+                                height: MediaQuery.of(context).size.height / 4,
                                 child: ListView(
                                   children: [
-                                    Text(
-                                      "Your mobile number is already registered \n faspay",
-                                      textAlign: TextAlign.center,
+                                    Container(
+                                      // decoration: BoxDecoration(
+                                      //   border: Border.all(
+                                      //     color: Colors.grey.shade700,
+                                      //     strokeAlign: StrokeAlign.inside,
+                                      //     width: 0.5,
+                                      //   ),
+                                      // ),
+                                      height: 40,
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Center(
+                                        child: Text(
+                                          "Account Found",
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.blue.shade900,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        "An account associated with this phone number was found on FasPay.",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey.shade700,
+                                        ),
+                                      ),
                                     ),
                                     SizedBox(
-                                      height: 10,
+                                      height: 15,
                                     ),
                                     MaterialButton(
                                       color: Colors.blue.shade900,
                                       materialTapTargetSize:
                                           MaterialTapTargetSize.shrinkWrap,
                                       height: 50.0,
-                                      child: new Text('Login Now',
-                                          style: new TextStyle(
-                                              fontSize: 16.0,
-                                              color: Colors.white)),
+                                      child: new Text(
+                                        'Login Now',
+                                        style: new TextStyle(
+                                          fontSize: 16.0,
+                                          // fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
                                       onPressed: () {
                                         goto_login(context);
                                       },
