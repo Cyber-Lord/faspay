@@ -1,4 +1,4 @@
-import 'package:faspay/pages/accountscreen.dart';
+import 'package:faspay/pages/terminalscreen.dart';
 import 'package:faspay/pages/cardpage.dart';
 import 'package:faspay/pages/phonescreen.dart';
 import 'package:faspay/pages/qrscan.dart';
@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _children = [
     Dashboard(),
     CardPage(),
-    AccountScreen(),
+    TerminalScreen(),
   ];
 
   void onTabTapped(int index) {
@@ -128,10 +128,10 @@ class _HomePageState extends State<HomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.person,
+              Icons.important_devices_sharp,
               color: Colors.white,
             ),
-            label: 'Account',
+            label: 'Terminal',
             backgroundColor: Colors.white,
           ),
         ],

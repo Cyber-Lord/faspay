@@ -148,6 +148,16 @@ class _CardPageState extends State<CardPage> {
     super.initState();
   }
 
+  void dispose() {
+    _oldPinController.dispose();
+    _newPinController.dispose();
+    _confirmPinController.dispose();
+    _voucherPinController.dispose();
+    _voucherAmountController.dispose();
+
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
     int myindex = 0;
     size = MediaQuery.of(context).size;
@@ -1221,7 +1231,7 @@ class _CardPageState extends State<CardPage> {
     );
   }
 
-  Future<void> _showWarningDialog(BuildContext context) async {
+  Future<void> _showWarningDialog(BuildContext context, bool isFrozen) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap a button to close the dialog
@@ -1245,7 +1255,7 @@ class _CardPageState extends State<CardPage> {
                         width: 10,
                       ),
                       Text(
-                        'Danger!!!',
+                        'Warning',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -1268,7 +1278,9 @@ class _CardPageState extends State<CardPage> {
             child: ListBody(
               children: <Widget>[
                 Text(
-                  'Are you sure you want to freeze this Card? Once frozen, you can not be able to use this card for any transaction until this process is reverserd.',
+                  !isFrozen
+                      ? 'Are you sure you want to freeze this Card? Once frozen, you can not be able to use this card for any transaction until this process is reverserd.'
+                      : 'Are you sure you want to unfreeze this Card? ',
                   style: TextStyle(
                     fontSize: 12,
                   ),
@@ -1288,13 +1300,13 @@ class _CardPageState extends State<CardPage> {
                   },
                 );
                 Navigator.of(context).pop();
-                _showSuccessDialog(context);
+                _showSuccessDialog(context, isFrozen);
               },
-              child: Text('Freeze'),
+              child: isFrozen ? Text('UnFreeze') : Text('Freeze'),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue.shade900,
+                backgroundColor: !isFrozen ? Colors.blue.shade900 : Colors.red,
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -1307,7 +1319,7 @@ class _CardPageState extends State<CardPage> {
     );
   }
 
-  void _changePIN(BuildContext context) {
+  void _changePIN(BuildContext context, bool isPIN) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -1372,6 +1384,9 @@ class _CardPageState extends State<CardPage> {
                       ),
                       TextFormField(
                         controller: _oldPinController,
+                        maxLength: isPIN ? 4 : 25,
+                        keyboardType:
+                            isPIN ? TextInputType.number : TextInputType.text,
                         obscureText: !_isPinVisible,
                         enableSuggestions: false,
                         autocorrect: false,
@@ -1399,6 +1414,9 @@ class _CardPageState extends State<CardPage> {
                         height: 10,
                       ),
                       TextFormField(
+                        maxLength: isPIN ? 4 : 25,
+                        keyboardType:
+                            isPIN ? TextInputType.number : TextInputType.text,
                         controller: _newPinController,
                         obscureText: !_isPinVisible,
                         enableSuggestions: false,
@@ -1427,6 +1445,9 @@ class _CardPageState extends State<CardPage> {
                         height: 10,
                       ),
                       TextFormField(
+                        maxLength: isPIN ? 4 : 25,
+                        keyboardType:
+                            isPIN ? TextInputType.number : TextInputType.text,
                         controller: _confirmPinController,
                         obscureText: !_isPinVisible,
                         enableSuggestions: false,
@@ -1505,13 +1526,22 @@ class _CardPageState extends State<CardPage> {
   }
 
 // Create a function to show the success dialog
-  Future<void> _showSuccessDialog(BuildContext context) async {
+  Future<void> _showSuccessDialog(BuildContext context, bool isFrozen) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap a button to close the dialog
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Center(child: Text('Success!')),
+          title: Center(
+            child: Text(
+              'Success!',
+              style: TextStyle(
+                color: Colors.blue.shade900,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
@@ -1519,7 +1549,25 @@ class _CardPageState extends State<CardPage> {
                 SizedBox(
                   height: 20,
                 ),
-                Text('Your card is temporarily blocked.'),
+                !isFrozen
+                    ? Center(
+                        child: Text(
+                          'Your card is temporarily blocked.',
+                          style: TextStyle(
+                            color: Colors.grey.shade600,
+                            fontSize: 12,
+                          ),
+                        ),
+                      )
+                    : Center(
+                        child: Text(
+                          "Your card is now active.",
+                          style: TextStyle(
+                            color: Colors.grey.shade600,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
               ],
             ),
           ),
@@ -1678,13 +1726,13 @@ class _CardPageState extends State<CardPage> {
                       backgroundColor: Colors.blue.shade900,
                     ),
                     onPressed: () {
-                      _changePIN(context);
+                      _changePIN(context, true);
                     },
                     child: Text('Reset PIN'),
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      _showWarningDialog(context);
+                      _showWarningDialog(context, isFrozen);
                     },
                     child: Text(isFrozen ? 'UnFreeze Card' : "Freeze Card"),
                     style: ElevatedButton.styleFrom(
