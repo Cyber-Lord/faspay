@@ -97,6 +97,7 @@ class _TransferState extends State<Transfer> {
                           Icon(
                             Icons.search,
                             size: 30,
+                            color: Colors.blue.shade900,
                           ),
                           new Flexible(
                             child: new TextField(
@@ -112,7 +113,15 @@ class _TransferState extends State<Transfer> {
                                 contentPadding: EdgeInsets.symmetric(
                                     vertical: 15.0, horizontal: 15),
                                 hintText: "E.g 8012345678",
+                                hintStyle: TextStyle(
+                                  color: Colors.grey.shade700,
+                                  fontSize: 12,
+                                ),
                                 labelText: "Account number",
+                                labelStyle: TextStyle(
+                                  color: Colors.blue.shade900,
+                                  // fontWeight: FontWeight.bold,
+                                ),
                                 border: InputBorder.none,
                                 counterText: "",
                               ),
@@ -149,6 +158,7 @@ class _TransferState extends State<Transfer> {
                               child: Icon(
                                 Icons.contacts,
                                 size: 30,
+                                color: Colors.blue.shade900,
                               )),
                         ],
                       ),
@@ -158,10 +168,15 @@ class _TransferState extends State<Transfer> {
                     padding: EdgeInsets.all(15),
                     child: Container(
                       alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Recents",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 14),
+                      child: Center(
+                        child: Text(
+                          "Recent Transactions",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey.shade700,
+                            fontSize: 14,
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -249,8 +264,10 @@ class _TransferState extends State<Transfer> {
                                                               ")",
                                                           style: TextStyle(
                                                             fontSize: 14.0,
+                                                            color:
+                                                                Colors.black87,
                                                             fontWeight:
-                                                                FontWeight.bold,
+                                                                FontWeight.w600,
                                                           ),
                                                         ),
                                                         Text(
@@ -426,28 +443,38 @@ class _TransferState extends State<Transfer> {
                           elevation: 5,
                           borderRadius: BorderRadius.circular(10),
                           child: Container(
-                            height: 130,
+                            color: Colors.grey.shade200,
+                            height: 140,
                             width: width,
                             child: Padding(
                               padding: EdgeInsets.all(5),
                               child: Column(
                                 children: [
                                   CircleAvatar(
-                                    backgroundColor: Color(0xFFf65433),
+                                    radius: 30,
+                                    backgroundColor: Colors.transparent,
                                     backgroundImage: AssetImage(
-                                      'assets/images/profile_icon.png',
+                                      'assets/images/pngegg.png',
                                     ),
                                   ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
                                   Text(
-                                    "To",
+                                    account_no,
+                                    style: TextStyle(
+                                      color: Colors.grey.shade600,
+                                      fontSize: 14,
+                                    ),
                                   ),
                                   Text(
                                     account_name,
                                     style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16),
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue.shade900,
+                                      fontSize: 16,
+                                    ),
                                   ),
-                                  Text("(" + account_no + ")")
                                 ],
                               ),
                             ),
@@ -459,6 +486,7 @@ class _TransferState extends State<Transfer> {
                           child: Align(
                             alignment: Alignment.bottomCenter,
                             child: Container(
+                              // color: Colors.red,
                               child: Column(
                                 children: [
                                   TextFormField(
@@ -466,16 +494,31 @@ class _TransferState extends State<Transfer> {
                                       size_transaction_container = true;
                                     },
                                     style: TextStyle(
-                                        fontSize: 30,
-                                        fontWeight: FontWeight.bold),
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue.shade900,
+                                    ),
                                     textAlign: TextAlign.center,
                                     keyboardType:
                                         TextInputType.numberWithOptions(),
                                     autofocus: true,
                                     decoration: InputDecoration(
-                                      border: InputBorder.none,
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide(
+                                          style: BorderStyle.solid,
+                                          color: Colors.blue.shade900,
+                                          width: 1,
+                                        ),
+                                      ),
                                       hintText: "0.00 NGN",
                                     ),
+                                    // decoration: InputDecoration(
+                                    //   border: InputBorder.none,
+                                    //   hintText: "0.00 NGN",
+                                    // ),
                                     controller: txt_amount,
                                     onChanged: (val) {
                                       if (val == "") {
@@ -507,28 +550,50 @@ class _TransferState extends State<Transfer> {
                                       ),
                                     ],
                                   ),
-                                  Divider(),
-                                  Text(
-                                    "Available Balance:" +
-                                        "N" +
-                                        currencyFormatter.format(balance),
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                      color: Colors.green,
-                                    ),
+                                  SizedBox(
+                                    height: 15,
                                   ),
-                                  if (hold_amount > balance)
-                                    Text(
-                                      "insufficient funds",
-                                      style: TextStyle(color: Colors.red),
-                                    ),
+                                  hold_amount <= balance
+                                      ? Text(
+                                          "Available Balance: " +
+                                              "N" +
+                                              currencyFormatter.format(balance),
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                            color: Colors.blue.shade900,
+                                          ),
+                                        )
+                                      : Text(
+                                          "Insufficient Funds",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
                                   TextField(
                                     controller: note,
-                                    maxLength: 50,
+                                    maxLength: 25,
                                     decoration: InputDecoration(
-                                      hintText: "Note",
-                                      prefixIcon: Icon(Icons.edit_note),
+                                      prefixIcon: Icon(
+                                        Icons.edit_note,
+                                        // color: Colors.blue.shade900,
+                                      ),
+                                      hintText: "Note (Optional)",
+                                      hintStyle: TextStyle(
+                                        color: Colors.grey.shade600,
+                                        fontSize: 12,
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Colors.blue.shade900,
+                                        ),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -564,19 +629,27 @@ class _TransferState extends State<Transfer> {
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    "to " +
+                    "" +
                         account_name.toString() +
-                        "(" +
+                        "\n" +
                         account_no.toString() +
-                        ")",
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                        "",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: Colors.grey.shade600,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 100),
-                  const Text(
+                  SizedBox(height: 100),
+                  Text(
                     'Enter your transaction pin complete',
-                    style: TextStyle(color: Colors.grey, fontSize: 16),
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 16,
+                    ),
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10),
                   Expanded(
                     child: PinCodeWidget(
                       buttonColor: Colors.white,
@@ -897,9 +970,12 @@ class _TransferState extends State<Transfer> {
                   Align(
                     alignment: Alignment.topLeft,
                     child: Text(
-                      "Information Confirmed",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      "Beneficiary Information",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue.shade900,
+                      ),
                     ),
                   ),
                   Expanded(
@@ -912,7 +988,10 @@ class _TransferState extends State<Transfer> {
                               txt_in_account_n0.text = "";
                             });
                           },
-                          child: Icon(Icons.close),
+                          child: Icon(
+                            Icons.close,
+                            color: Colors.red,
+                          ),
                         )),
                   ),
                 ],
@@ -932,13 +1011,21 @@ class _TransferState extends State<Transfer> {
                           Icon(
                             Icons.info,
                             color: Colors.red,
+                            size: 25,
                           ),
                           SizedBox(
                             width: 10,
                           ),
                           Flexible(
-                              child: Text(
-                                  "Please confirm the receiver's identity before sending any money. Kindly note that, funds sent cannot be reversed."))
+                            child: Text(
+                              "Please confirm the receiver's identity before sending any money. Kindly note that, funds sent cannot be reversed.",
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -946,44 +1033,64 @@ class _TransferState extends State<Transfer> {
                   SizedBox(
                     height: 10,
                   ),
-                  Row(
-                    children: [
-                      Text(
-                        "Account No",
-                        style: TextStyle(fontSize: 13),
-                      ),
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.topRight,
-                          child: Text(
-                            account_no,
-                            style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.bold),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 12.0, right: 12.0, top: 12.0),
+                    child: Row(
+                      children: [
+                        Text(
+                          "Account No:",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey.shade700,
                           ),
                         ),
-                      ),
-                    ],
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.topRight,
+                            child: Text(
+                              account_no,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue.shade900,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(
                     height: 10,
                   ),
-                  Row(
-                    children: [
-                      Text(
-                        "Account Name",
-                        style: TextStyle(fontSize: 13),
-                      ),
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.topRight,
-                          child: Text(
-                            account_name,
-                            style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.bold),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 12.0, right: 12.0, bottom: 12),
+                    child: Row(
+                      children: [
+                        Text(
+                          "Account Name:",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey.shade700,
                           ),
                         ),
-                      ),
-                    ],
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.topRight,
+                            child: Text(
+                              account_name,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue.shade900,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(
                     height: 10,

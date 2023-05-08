@@ -33,7 +33,7 @@ class _SupportPageState extends State<SupportPage> {
 
   void _sendMessage(String message) {
     setState(() {
-      _chatMessages.add("You: $message");
+      _chatMessages.add("Me: $message");
     });
 
     // Perform some logic to handle the user's message
@@ -134,8 +134,11 @@ class _SupportPageState extends State<SupportPage> {
                   child: TextField(
                     controller: _chatController,
                     decoration: InputDecoration(
+                      icon: Icon(Icons.message, color: Colors.blue.shade900),
                       hintText: "Type your message here",
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                   ),
                 ),
@@ -143,6 +146,7 @@ class _SupportPageState extends State<SupportPage> {
                 IconButton(
                   onPressed: (() {
                     _sendMessage(_chatController.text);
+                    print(_chatMessages[_chatMessages.length - 1]);
                   }),
                   icon: Icon(
                     Icons.send,

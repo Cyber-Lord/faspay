@@ -294,7 +294,7 @@ class _BankTransferPageState extends State<BankTransferPage> {
           actions: [
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Colors.red.shade900,
+                backgroundColor: Colors.red.shade900,
               ),
               child: Text('Cancel'),
               onPressed: () {
@@ -303,7 +303,7 @@ class _BankTransferPageState extends State<BankTransferPage> {
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Colors.blue.shade900,
+                backgroundColor: Colors.blue.shade900,
               ),
               child: Text('OK'),
               onPressed: () {
