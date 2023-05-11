@@ -1,3 +1,4 @@
+import 'package:faspay/pages/pospage.dart';
 import 'package:faspay/pages/terminalscreen.dart';
 import 'package:faspay/pages/cardpage.dart';
 import 'package:faspay/pages/phonescreen.dart';
@@ -36,7 +37,7 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _children = [
     Dashboard(),
     CardPage(),
-    TerminalScreen(),
+    POSPage(),
   ];
 
   void onTabTapped(int index) {
