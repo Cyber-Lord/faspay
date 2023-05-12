@@ -419,6 +419,7 @@ class _TransferState extends State<Transfer> {
                   TextButton(
                     onPressed: () {
                       show_account_not_found = false;
+                      Navigator.of(context).pop();
                     },
                     child: const Text(
                       'Close',
