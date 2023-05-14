@@ -1,5 +1,5 @@
 import 'package:faspay/pages/pospage.dart';
-import 'package:faspay/pages/terminalscreen.dart';
+
 import 'package:faspay/pages/cardpage.dart';
 import 'package:faspay/pages/phonescreen.dart';
 import 'package:faspay/pages/qrscan.dart';
