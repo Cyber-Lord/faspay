@@ -585,21 +585,44 @@ class _POSPageState extends State<POSPage> {
                             builder: (BuildContext context) {
                               return AlertDialog(
                                 content: Container(
-                                  height: 100,
+                                  height: 200,
                                   width: 100,
                                   child: Column(
                                     children: [
                                       Text(
-                                        "Done",
+                                        "Transfer Enabled",
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.blue.shade900,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 15,
+                                      ),
+                                      Icon(
+                                        Icons.check_circle,
+                                        size: 100,
+                                        color: Colors.blue.shade900,
                                       ),
                                       SizedBox(
                                         height: 10,
                                       ),
-                                      Icon(
-                                        Icons.done,
-                                        size: 50,
-                                        color: Colors.blue.shade900,
-                                      ),
+                                      Align(
+                                        alignment: Alignment.bottomRight,
+                                        child: TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(),
+                                          child: Text(
+                                            'Close',
+                                            style: TextStyle(
+                                              color: Colors.red,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      )
                                     ],
                                   ),
                                 ),

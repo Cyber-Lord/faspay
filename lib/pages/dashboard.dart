@@ -169,7 +169,7 @@ class _DashboardState extends State<Dashboard> {
               pw.Container(
                 width: 150,
                 child: pw.Text(
-                  '${account.sender_name+" "+account.sender_s_name+" "+account.sender_o_name}',
+                  '${account.sender_name + " " + account.sender_s_name + " " + account.sender_o_name}',
                   style: pw.TextStyle(
                     color: PdfColors.blue900,
                     fontSize: 20.0,
@@ -198,7 +198,7 @@ class _DashboardState extends State<Dashboard> {
               pw.Container(
                 width: 150,
                 child: pw.Text(
-                  '${account.rcva_name+" "+account.rcva_s_name+" "+account.rcva_o_name}',
+                  '${account.rcva_name + " " + account.rcva_s_name + " " + account.rcva_o_name}',
                   style: pw.TextStyle(
                     color: PdfColors.blue900,
                     fontSize: 20.0,
@@ -427,397 +427,397 @@ class _DashboardState extends State<Dashboard> {
     width = size.width;
     return Scaffold(
         body: Stack(
+      children: [
+        Column(
           children: [
-            Column(
-              children: [
-                SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  height: height * 0.25,
-                  width: MediaQuery.of(context).size.width,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 12.0, right: 12, top: 6),
-                    child: Container(
-                      // height: MediaQuery.of(context).size.height / 4,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.3),
-                            spreadRadius: 1,
-                            blurRadius: 3,
-                            offset: Offset(0, 4),
-                          ),
-                        ],
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              height: height * 0.25,
+              width: MediaQuery.of(context).size.width,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 12.0, right: 12, top: 6),
+                child: Container(
+                  // height: MediaQuery.of(context).size.height / 4,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.3),
+                        spreadRadius: 1,
+                        blurRadius: 3,
+                        offset: Offset(0, 4),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            height: height / 200,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 8.0, left: 20, right: 20),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.max,
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: height / 200,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 8.0, left: 20, right: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Row(
                               children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      name,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w100,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    Icon(
-                                      Icons.verified,
-                                      color: Colors.green,
-                                    ),
-                                    SizedBox(
-                                      width: 20,
-                                    ),
-                                  ],
-                                ),
                                 Text(
-                                  accNo,
+                                  name,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w100,
                                     color: Colors.black,
                                   ),
                                 ),
+                                Icon(
+                                  Icons.verified,
+                                  color: Colors.green,
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
                               ],
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0, left: 20),
-                            child: Text(
-                              "N" + currencyFormatter.format(balance),
+                            Text(
+                              accNo,
                               style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.green,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w100,
+                                color: Colors.black,
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                              left: 20,
-                              right: 20,
-                              top: 20,
-                              bottom: 10,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    _showDialog(context);
-                                  },
-                                  child: Container(
-                                    height: MediaQuery.of(context).size.height / 10,
-                                    width: MediaQuery.of(context).size.width / 4,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.3),
-                                          spreadRadius: 1,
-                                          blurRadius: 3,
-                                          offset: Offset(0, 2),
-                                        ),
-                                      ],
-                                    ),
-                                    // color: Colors.blue,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment
-                                          .center, //Center Row contents horizontally,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.add_circle,
-                                          size: height / 25,
-                                          color: Colors.blue.shade900,
-                                        ),
-                                        Text(
-                                          "Deposit",
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.blue.shade900,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    // Navigator.of(context).pop();
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => Transfer(),
-                                      ),
-                                    );
-                                  },
-                                  child: Container(
-                                    height: MediaQuery.of(context).size.height / 10,
-                                    width: MediaQuery.of(context).size.width / 4,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.3),
-                                          spreadRadius: 1,
-                                          blurRadius: 3,
-                                          offset: Offset(0, 2),
-                                        ),
-                                      ],
-                                    ),
-                                    // color: Colors.green,
-                                    child: GestureDetector(
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment
-                                            .center, //Center Row contents horizontally,
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            Icons.arrow_circle_up,
-                                            size: height / 25,
-                                            color: Colors.blue.shade900,
-                                          ),
-                                          Text(
-                                            "Transfer",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.blue.shade900,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context).pop();
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => WithdrawalForm(),
-                                      ),
-                                    );
-                                  },
-                                  child: Container(
-                                    height: MediaQuery.of(context).size.height / 10,
-                                    width: MediaQuery.of(context).size.width / 4,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.3),
-                                          spreadRadius: 1,
-                                          blurRadius: 3,
-                                          offset: Offset(0, 2),
-                                        ),
-                                      ],
-                                    ),
-                                    // color: Colors.yellow,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment
-                                          .center, //Center Row contents horizontally,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.arrow_circle_down,
-                                          size: 35,
-                                          color: Colors.blue.shade900,
-                                        ),
-                                        Text(
-                                          "Withdraw",
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.blue.shade900,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0, left: 20),
+                        child: Text(
+                          "N" + currencyFormatter.format(balance),
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.green,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: 20,
+                          right: 20,
+                          top: 20,
+                          bottom: 10,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                _showDialog(context);
+                              },
+                              child: Container(
+                                height: MediaQuery.of(context).size.height / 10,
+                                width: MediaQuery.of(context).size.width / 4,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      spreadRadius: 1,
+                                      blurRadius: 3,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                // color: Colors.blue,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment
+                                      .center, //Center Row contents horizontally,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.add_circle,
+                                      size: height / 25,
+                                      color: Colors.blue.shade900,
+                                    ),
+                                    Text(
+                                      "Deposit",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.blue.shade900,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                // Navigator.of(context).pop();
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Transfer(),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                height: MediaQuery.of(context).size.height / 10,
+                                width: MediaQuery.of(context).size.width / 4,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      spreadRadius: 1,
+                                      blurRadius: 3,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                // color: Colors.green,
+                                child: GestureDetector(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment
+                                        .center, //Center Row contents horizontally,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.arrow_circle_up,
+                                        size: height / 25,
+                                        color: Colors.blue.shade900,
+                                      ),
+                                      Text(
+                                        "Transfer",
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.blue.shade900,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).pop();
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => WithdrawalForm(),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                height: MediaQuery.of(context).size.height / 10,
+                                width: MediaQuery.of(context).size.width / 4,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      spreadRadius: 1,
+                                      blurRadius: 3,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                // color: Colors.yellow,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment
+                                      .center, //Center Row contents horizontally,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.arrow_circle_down,
+                                      size: 35,
+                                      color: Colors.blue.shade900,
+                                    ),
+                                    Text(
+                                      "Withdraw",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.blue.shade900,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                Divider(),
-                Center(
-                  child: Text(
-                    "Financial Records",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+              ),
+            ),
+            Divider(),
+            Center(
+              child: Text(
+                "Financial Records",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
                 ),
-                Divider(),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: ListView.builder(
-                      physics: AlwaysScrollableScrollPhysics(),
-                      itemCount: _accountData.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final AccountHistory account = _accountData[index];
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              account.isHidden = !account.isHidden;
-                            });
-                          },
-                          child: Container(
-                            margin: EdgeInsets.only(bottom: 8.0),
-                            padding: EdgeInsets.all(16.0),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8.0),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.3),
-                                  spreadRadius: 1,
-                                  blurRadius: 3,
-                                  offset: Offset(0, 2),
+              ),
+            ),
+            Divider(),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: ListView.builder(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  itemCount: _accountData.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final AccountHistory account = _accountData[index];
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          account.isHidden = !account.isHidden;
+                        });
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 8.0),
+                        padding: EdgeInsets.all(16.0),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.3),
+                              spreadRadius: 1,
+                              blurRadius: 3,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  account.tittle_name,
+                                  style: TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  account.type,
+                                  style: TextStyle(
+                                    fontSize: 14.0,
+                                    color: Colors.grey[600],
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  account.amount.toStringAsFixed(2),
+                                  style: TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: account.amount >= 0
+                                        ? Colors.green
+                                        : Colors.red,
+                                  ),
                                 ),
                               ],
                             ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            SizedBox(height: 8.0),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      account.tittle_name,
-                                      style: TextStyle(
-                                        fontSize: 14.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Text(
-                                      account.type,
-                                      style: TextStyle(
-                                        fontSize: 14.0,
-                                        color: Colors.grey[600],
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Text(
-                                      account.amount.toStringAsFixed(2),
-                                      style: TextStyle(
-                                        fontSize: 14.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: account.amount >= 0
-                                            ? Colors.green
-                                            : Colors.red,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 8.0),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Processed on:",
-                                          style: TextStyle(
-                                            fontSize: 12.0,
-                                            color: Colors.grey[600],
-                                          ),
-                                        ),
-                                        SizedBox(width: 4.0),
-                                        Text(
-                                          account.dte,
-                                          style: TextStyle(
-                                            fontSize: 12.0,
-                                            color: Colors.grey[600],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Reference No: FASPAY/${account.trnx_id}",
+                                      "Processed on:",
                                       style: TextStyle(
                                         fontSize: 12.0,
                                         color: Colors.grey[600],
                                       ),
                                     ),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        IconButton(
-                                          icon: Icon(
-                                            Icons.picture_as_pdf,
-                                            color: Colors.red,
-                                          ),
-                                          onPressed: () =>
-                                              generatePDF(context, account),
-                                        ),
-                                        // IconButton(
-                                        //   onPressed: () {
-                                        //     Share.share(
-                                        //         'Here is my account history: ${account.name}, ${account.amount}');
-                                        //   },
-                                        //   icon: Icon(Icons.share),
-                                        // ),
-                                      ],
+                                    SizedBox(width: 4.0),
+                                    Text(
+                                      account.dte,
+                                      style: TextStyle(
+                                        fontSize: 12.0,
+                                        color: Colors.grey[600],
+                                      ),
                                     ),
                                   ],
                                 ),
                               ],
                             ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Reference No: FASPAY/${account.trnx_id}",
+                                  style: TextStyle(
+                                    fontSize: 12.0,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(
+                                        Icons.picture_as_pdf,
+                                        color: Colors.red,
+                                      ),
+                                      onPressed: () =>
+                                          generatePDF(context, account),
+                                    ),
+                                    // IconButton(
+                                    //   onPressed: () {
+                                    //     Share.share(
+                                    //         'Here is my account history: ${account.name}, ${account.amount}');
+                                    //   },
+                                    //   icon: Icon(Icons.share),
+                                    // ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                 ),
-              ],
+              ),
             ),
-            Visibility(
-                visible: show_preogress,
-                child: Container(
-                    color: Colors.black.withOpacity(0.5),
-                    child: ListView(
-                      children: const [
-                        LinearProgressIndicator(
-                          semanticsLabel: 'Linear progress indicator',
-                        )
-                      ],
-                    ))),
           ],
-        ));
+        ),
+        Visibility(
+            visible: show_preogress,
+            child: Container(
+                color: Colors.black.withOpacity(0.5),
+                child: ListView(
+                  children: const [
+                    LinearProgressIndicator(
+                      semanticsLabel: 'Linear progress indicator',
+                    )
+                  ],
+                ))),
+      ],
+    ));
   }
 
   Future get_customer_details(phone, token) async {
@@ -905,48 +905,54 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
           ),
-          content: TextFormField(
-            controller: _amountController,
-            keyboardType: TextInputType.number,
-            onChanged: (value) {
-              setState(() {
-                depositAmount = double.tryParse(value)!;
-              });
-            },
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(10),
-            ],
-            decoration: InputDecoration(
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.blue.shade900,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.blue.shade900,
-                ),
-              ),
-              labelStyle: TextStyle(
-                color: Colors.grey,
-                fontSize: 14,
-              ),
-              contentPadding:
-              EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
-              labelText: 'Amount',
-              hintText: 'Enter amount',
+          content: Padding(
+            padding: const EdgeInsets.only(
+              left: 12.0,
+              right: 12.0,
             ),
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Please enter amount';
-              }
-              final amount = double.tryParse(value);
-              if (amount == null || amount <= 0) {
-                return 'Please enter a valid amount';
-              }
-              return null;
-            },
+            child: TextFormField(
+              controller: _amountController,
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                setState(() {
+                  depositAmount = double.tryParse(value)!;
+                });
+              },
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(10),
+              ],
+              decoration: InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.blue.shade900,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.blue.shade900,
+                  ),
+                ),
+                labelStyle: TextStyle(
+                  color: Colors.grey.shade600,
+                  fontSize: 12,
+                ),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
+                labelText: 'Amount',
+                hintText: 'Enter amount',
+              ),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Please enter amount';
+                }
+                final amount = double.tryParse(value);
+                if (amount == null || amount <= 0) {
+                  return 'Please enter a valid amount';
+                }
+                return null;
+              },
+            ),
           ),
           actions: [
             Center(
@@ -959,7 +965,7 @@ class _DashboardState extends State<Dashboard> {
                   ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.blue.shade900,
+                      backgroundColor: Colors.blue.shade900,
                     ),
                     onPressed: () {
                       Navigator.of(context).pop();
@@ -996,7 +1002,7 @@ class _DashboardState extends State<Dashboard> {
                   ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.blue.shade900,
+                      backgroundColor: Colors.blue.shade900,
                     ),
                     child: Row(
                       children: [
@@ -1071,29 +1077,36 @@ class _DashboardState extends State<Dashboard> {
 
       for (var data in data) {
         //print(data["rcver"][0]["f_name"]);
-        String my_account=my_num.substring(1);
-        if(my_account==data["rcver_account"]){
+        String my_account = my_num.substring(1);
+        if (my_account == data["rcver_account"]) {
           _accountData.add(new AccountHistory(
               sender_name: data["sender"][0]["f_name"],
               rcva_name: data["rcver"][0]["f_name"],
               amount: double.parse(data["amount"]),
               type: data["trnx_type"],
               dte: data["dte"],
-              trnx_id: data["tranx_id"],sender_s_name: data["sender"][0]["s_name"],sender_o_name: data["sender"][0]["o_name"],
-              rcva_s_name: data["rcver"][0]["s_name"],rcva_o_name: data["rcver"][0]["o_name"],Beneficiary_account: data["rcver_account"],tittle_name:data["sender"][0]["f_name"]
-          ));
-        }else{
+              trnx_id: data["tranx_id"],
+              sender_s_name: data["sender"][0]["s_name"],
+              sender_o_name: data["sender"][0]["o_name"],
+              rcva_s_name: data["rcver"][0]["s_name"],
+              rcva_o_name: data["rcver"][0]["o_name"],
+              Beneficiary_account: data["rcver_account"],
+              tittle_name: data["sender"][0]["f_name"]));
+        } else {
           _accountData.add(new AccountHistory(
               sender_name: data["sender"][0]["f_name"],
               rcva_name: data["rcver"][0]["f_name"],
               amount: double.parse(data["amount"]),
               type: data["trnx_type"],
               dte: data["dte"],
-              trnx_id: data["tranx_id"],sender_s_name: data["sender"][0]["s_name"],sender_o_name: data["sender"][0]["o_name"],
-              rcva_s_name: data["rcver"][0]["s_name"],rcva_o_name: data["rcver"][0]["o_name"],Beneficiary_account: data["rcver_account"],tittle_name:data["rcver"][0]["f_name"]
-          ));
+              trnx_id: data["tranx_id"],
+              sender_s_name: data["sender"][0]["s_name"],
+              sender_o_name: data["sender"][0]["o_name"],
+              rcva_s_name: data["rcver"][0]["s_name"],
+              rcva_o_name: data["rcver"][0]["o_name"],
+              Beneficiary_account: data["rcver_account"],
+              tittle_name: data["rcver"][0]["f_name"]));
         }
-
       }
 
       setState(() {
@@ -1118,7 +1131,7 @@ void _showToast(BuildContext context, String msg) {
         ),
       ),
       action:
-      SnackBarAction(label: '', onPressed: scaffold.hideCurrentSnackBar),
+          SnackBarAction(label: '', onPressed: scaffold.hideCurrentSnackBar),
     ),
   );
 }
@@ -1147,6 +1160,8 @@ void showQRCode(BuildContext context, String data) {
                 'Scan the QR Code below',
                 style: TextStyle(
                   fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue.shade900,
                 ),
               ),
             ),
@@ -1167,22 +1182,22 @@ void showQRCode(BuildContext context, String data) {
               ),
             ),
             SizedBox(height: 10),
-            Container(
-              height: 50,
-              color: Colors.blue.shade900,
-              child: GestureDetector(
-                onTap: () {
-                  // Navigator.of(context).pop();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => HomePage(
-                        phoneNumber: "",
-                        token: "",
-                      ),
+            GestureDetector(
+              onTap: () {
+                // Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HomePage(
+                      phoneNumber: "",
+                      token: "",
                     ),
-                  );
-                },
+                  ),
+                );
+              },
+              child: Container(
+                height: 50,
+                color: Colors.blue.shade900,
                 child: Center(
                   child: Text(
                     "DONE",
