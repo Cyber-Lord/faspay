@@ -44,6 +44,11 @@ class _POSPageState extends State<POSPage> {
   final TextEditingController _newPinController = TextEditingController();
   final TextEditingController _confirmPinController = TextEditingController();
 
+  final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -638,6 +643,202 @@ class _POSPageState extends State<POSPage> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _requestPOS() {
+    showDialog(
+      useSafeArea: true,
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Center(
+            child: Text(
+              "Request POS",
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.blue.shade900,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          content: Container(
+            height: MediaQuery.of(context).size.height / 1.9,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              children: [
+                Text(
+                  "Please kindly enter the following details. Doing so will enable us to process your request.",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey.shade600,
+                    // fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 10),
+                TextFormField(
+                  controller: _fullNameController,
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.blue.shade900,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.blue.shade900,
+                      ),
+                    ),
+                    labelStyle: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 12,
+                    ),
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: 15.0,
+                      horizontal: 15,
+                    ),
+                    labelText: "Full Name",
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                  controller: _phoneNumberController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.blue.shade900,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.blue.shade900,
+                      ),
+                    ),
+                    labelStyle: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 12,
+                    ),
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: 15.0,
+                      horizontal: 15,
+                    ),
+                    labelText: "Contact Number",
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.blue.shade900,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.blue.shade900,
+                      ),
+                    ),
+                    labelStyle: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 12,
+                    ),
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: 15.0,
+                      horizontal: 15,
+                    ),
+                    labelText: "Email",
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                  controller: _addressController,
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.blue.shade900,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.blue.shade900,
+                      ),
+                    ),
+                    labelStyle: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 12,
+                    ),
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: 15.0,
+                      horizontal: 15,
+                    ),
+                    labelText: "Contact Address",
+                  ),
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Row(
+                  children: [
+                    Container(
+                        // width: MediaQuery.of(context).size.width / 2,
+                        ),
+                    SizedBox(
+                      width: 100,
+                    ),
+                    Container(
+                      // width: MediaQuery.of(context).size.width / 2,
+                      child: Row(
+                        children: [
+                          TextButton(
+                            onPressed: (() {
+                              Navigator.of(context).pop();
+                            }),
+                            child: Text(
+                              "Cancel",
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          TextButton(
+                            onPressed: (() {
+                              Navigator.of(context).pop();
+                            }),
+                            child: Text(
+                              "Submit",
+                              style: TextStyle(
+                                color: Colors.blue.shade900,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -1367,35 +1568,7 @@ class _POSPageState extends State<POSPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text('Add POS Terminal'),
-                content: TextField(
-                  controller: _controller,
-                  decoration: InputDecoration(
-                    hintText: 'Enter terminal name',
-                  ),
-                ),
-                actions: <Widget>[
-                  TextButton(
-                    child: Text('Cancel'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  TextButton(
-                    child: Text('Add'),
-                    onPressed: () {
-                      _addPOSTerminal();
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              );
-            },
-          );
+          _requestPOS();
         },
         child: Icon(Icons.add),
         backgroundColor: Colors.blue.shade900,
