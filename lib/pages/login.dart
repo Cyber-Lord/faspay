@@ -1,3 +1,4 @@
+import 'package:faspay/pages/otppage.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -16,14 +17,17 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final TextEditingController _textEditingController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
   bool _isButtonEnabled = false;
   bool show_preogress = false;
   bool surgest_login = false;
   bool correct_pass_checker = false;
-  String? _phoneNumber;
+
   String token = "";
   String _errorMessage = '';
+  String _reseterrorMessage = '';
   bool _isPinVisible = false;
+  bool _hasError = false;
 
   @override
   void initState() {
@@ -165,9 +169,148 @@ class _LoginState extends State<Login> {
                                 ),
                               TextButton(
                                 onPressed: (() {
-                                  // setState(() {
-                                  //   surgest_login = true;
-                                  // });
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Center(
+                                          child: Text(
+                                            "Reset Password",
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.blue.shade900,
+                                            ),
+                                          ),
+                                        ),
+                                        content: Container(
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height /
+                                              3,
+                                          child: Column(
+                                            children: [
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Text(
+                                                "To reset your password, Please kindly enter your phone number below and follow the instructions that will be sent to the phone number.",
+                                                style: TextStyle(
+                                                  fontFamily: "Times New Roman",
+                                                  fontSize: 12,
+                                                  color: Colors.grey.shade700,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 20,
+                                              ),
+                                              TextFormField(
+                                                maxLength: 11,
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                controller:
+                                                    _phoneNumberController,
+                                                enableSuggestions: false,
+                                                autocorrect: false,
+                                                style: TextStyle(
+                                                  color: Colors.grey.shade700,
+                                                  fontSize: 14,
+                                                ),
+                                                decoration: InputDecoration(
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                      color:
+                                                          Colors.blue.shade900,
+                                                    ),
+                                                  ),
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                      color:
+                                                          Colors.blue.shade900,
+                                                    ),
+                                                  ),
+                                                  labelStyle: TextStyle(
+                                                    color: Colors.blue.shade900,
+                                                  ),
+                                                  contentPadding:
+                                                      EdgeInsets.symmetric(
+                                                    vertical: 15.0,
+                                                    horizontal: 15,
+                                                  ),
+                                                  labelText: 'Phone Number',
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              if (_reseterrorMessage.isNotEmpty)
+                                                Text(
+                                                  _reseterrorMessage,
+                                                  style: TextStyle(
+                                                    color: Colors.red,
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                              SizedBox(
+                                                height: 20,
+                                              ),
+                                              GestureDetector(
+                                                  onTap: () {
+                                                    if (_phoneNumberController
+                                                            .text !=
+                                                        widget.phoneNumber) {
+                                                      setState(() {
+                                                        _hasError = true;
+                                                        _reseterrorMessage =
+                                                            "You can not reset another user's password";
+                                                        print(_errorMessage);
+                                                      });
+                                                    }
+                                                    ;
+                                                    _hasError
+                                                        ? print(
+                                                            _reseterrorMessage)
+                                                        : Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      OtpPage(
+                                                                phoneNumber: widget
+                                                                    .phoneNumber,
+                                                                isNewUser:
+                                                                    false,
+                                                              ),
+                                                            ),
+                                                          );
+                                                  },
+                                                  child: Container(
+                                                    color: Colors.blue.shade900,
+                                                    height: 50,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    child: Center(
+                                                      child: Text(
+                                                        "Reset Password",
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 14,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
                                 }),
                                 child: Text(
                                   "Forgot Password?",

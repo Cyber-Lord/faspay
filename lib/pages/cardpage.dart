@@ -168,7 +168,12 @@ class _CardPageState extends State<CardPage> {
         children: [
           check_card
               ? Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.only(
+                    top: 8.0,
+                    bottom: 8.0,
+                    left: 4.0,
+                    right: 4.0,
+                  ),
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
@@ -1155,14 +1160,6 @@ class _CardPageState extends State<CardPage> {
                                                 isGrey = false;
                                                 _generateVoucher();
                                                 VoucherBottomSheet(context);
-                                                // showModalBottomSheet(
-                                                //   context: context,
-                                                //   builder:
-                                                //       (BuildContext context) {
-                                                //     return VoucherBottomSheet(
-                                                //         context);
-                                                //   },
-                                                // );
                                               },
                                               icon: Icon(
                                                 // <-- Icon
@@ -1234,7 +1231,7 @@ class _CardPageState extends State<CardPage> {
   Future<void> _showWarningDialog(BuildContext context, bool isFrozen) async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: false, // user must tap a button to close the dialog
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Container(

@@ -322,6 +322,7 @@ class _PhoneScreenState extends State<PhoneScreen> {
       MaterialPageRoute(
           builder: (context) => OtpPage(
                 phoneNumber: _textEditingController.text,
+                isNewUser: true,
               )),
     );
   }

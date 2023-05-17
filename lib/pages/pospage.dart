@@ -37,6 +37,11 @@ class _POSPageState extends State<POSPage> {
       'lastSeen': DateTime.now().subtract(Duration(hours: 6)),
     },
   ];
+  List<String> _userList = [
+    '0801234',
+    '0901234',
+    '0701234',
+  ];
 
   final TextEditingController _controller = TextEditingController();
   final TextEditingController _pinController = TextEditingController();
@@ -144,6 +149,82 @@ class _POSPageState extends State<POSPage> {
     });
   }
 
+  void removeUser(int index) {
+    setState(() {
+      _userList.removeAt(index);
+    });
+  }
+
+  void usersDropDown() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Center(
+              child: Column(
+                children: [
+                  Text(
+                    'Users',
+                    style: TextStyle(
+                      color: Colors.blue.shade900,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: Colors.grey,
+                  ),
+                ],
+              ),
+            ),
+            content: Container(
+              width: double.maxFinite,
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: _userList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return ListTile(
+                    title: Text(
+                      _userList[index],
+                      style: TextStyle(
+                        color: Colors.blue.shade900,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete, color: Colors.red),
+                      onPressed: () {
+                        removeUser(index);
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  );
+                },
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  'Close',
+                  style: TextStyle(
+                    color: Colors.blue.shade900,
+                  ),
+                ),
+              ),
+            ],
+          );
+        });
+  }
+
   void _addUser() {
     showDialog(
         context: context,
@@ -203,7 +284,7 @@ class _POSPageState extends State<POSPage> {
                 TextFormField(
                   controller: _passwordController,
                   obscureText: true,
-                  keyboardType: TextInputType.phone,
+                  keyboardType: TextInputType.visiblePassword,
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
@@ -230,7 +311,7 @@ class _POSPageState extends State<POSPage> {
                 TextFormField(
                   controller: _confirmPasswordController,
                   obscureText: true,
-                  keyboardType: TextInputType.phone,
+                  keyboardType: TextInputType.visiblePassword,
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
@@ -884,7 +965,7 @@ class _POSPageState extends State<POSPage> {
                   color: Colors.grey.shade300,
                   thickness: 1,
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 5),
                 TextButton(
                   style: TextButton.styleFrom(
                     padding: EdgeInsets.zero,
@@ -915,7 +996,38 @@ class _POSPageState extends State<POSPage> {
                     ],
                   ),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 5),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                  ),
+                  onPressed: () {
+                    usersDropDown();
+                  },
+                  child: Column(
+                    children: [
+                      ListTile(
+                        leading: Icon(
+                          Icons.person_remove,
+                          color: Colors.blue.shade900,
+                        ),
+                        title: Text(
+                          'Remove User',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.blue.shade900,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward,
+                          color: Colors.blue.shade900,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 5),
                 TextButton(
                   style: TextButton.styleFrom(
                     padding: EdgeInsets.zero,
@@ -947,7 +1059,7 @@ class _POSPageState extends State<POSPage> {
                     ],
                   ),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 5),
                 TextButton(
                   style: TextButton.styleFrom(
                     padding: EdgeInsets.zero,
@@ -1540,7 +1652,7 @@ class _POSPageState extends State<POSPage> {
                   title: Text(
                     posTerminals[index]['name'],
                     style: TextStyle(
-                      fontSize: 16.0,
+                      fontSize: 14.0,
                       color: Colors.blue.shade900,
                       fontWeight: FontWeight.bold,
                     ),
@@ -1548,15 +1660,15 @@ class _POSPageState extends State<POSPage> {
                   subtitle: Text(
                     posTerminals[index]['location'],
                     style: TextStyle(
-                      fontSize: 14.0,
+                      fontSize: 13.0,
                       color: Colors.grey.shade600,
                     ),
                   ),
                   leading: CircleAvatar(
-                    backgroundColor: Colors.blue.shade900,
+                    backgroundColor: Colors.grey.shade300,
                     child: Icon(
-                      Icons.important_devices_sharp,
-                      color: Colors.white,
+                      Icons.tap_and_play,
+                      color: Colors.blue.shade900,
                       size: 25.0,
                     ),
                   ),

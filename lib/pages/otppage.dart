@@ -1,13 +1,19 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:faspay/pages/login.dart';
 import 'package:faspay/pages/registerScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class OtpPage extends StatefulWidget {
-  const OtpPage({Key? key, required this.phoneNumber}) : super(key: key);
+  const OtpPage({
+    Key? key,
+    required this.phoneNumber,
+    required this.isNewUser,
+  }) : super(key: key);
   final String phoneNumber;
+  final bool isNewUser;
 
   @override
   _OtpPageState createState() => _OtpPageState();
@@ -20,6 +26,12 @@ class _OtpPageState extends State<OtpPage> {
   int _remainingSeconds = 60;
   String hold_otp = "";
   bool show_preogress = false;
+  TextEditingController _oldPinController = TextEditingController();
+  TextEditingController _newPinController = TextEditingController();
+  TextEditingController _confirmPinController = TextEditingController();
+  String _errorMessage = '';
+  bool _isPinVisible = false;
+
   @override
   void initState() {
     super.initState();
@@ -27,6 +39,35 @@ class _OtpPageState extends State<OtpPage> {
       _controllers.add(TextEditingController());
     }
     _startTimer();
+  }
+
+  void _changePassword() {
+    String oldPin = _oldPinController.text;
+    String newPin = _newPinController.text;
+    String confirmPin = _confirmPinController.text;
+
+    if (oldPin.isEmpty || newPin.isEmpty || confirmPin.isEmpty) {
+      setState(() {
+        _errorMessage = 'Please enter all PINs';
+      });
+      return;
+    }
+
+    if (newPin.length != 4 || confirmPin.length != 4) {
+      setState(() {
+        _errorMessage = 'PINs must be 4 digits long';
+      });
+      return;
+    }
+
+    if (newPin != confirmPin) {
+      setState(() {
+        _errorMessage = 'New PIN and Confirm PIN do not match';
+      });
+      return;
+    }
+
+    Navigator.of(context).pop();
   }
 
   @override
@@ -272,7 +313,14 @@ class _OtpPageState extends State<OtpPage> {
         _to_reg_page(context);
       } else {
         reset_validation();
-        _showToast(context, "Invalid OTP");
+        _changeAccPassword(
+            context,
+            "Reset Password",
+            "Please kindly enter a new password for your account",
+            "New Password",
+            "Confirm New Password",
+            false);
+        // _showToast(context, "Invalid OTP");
       }
       setState(() {
         show_preogress = false;
@@ -291,6 +339,195 @@ class _OtpPageState extends State<OtpPage> {
           phoneNumber: widget.phoneNumber,
         ),
       ),
+    );
+  }
+
+  void _changeAccPassword(BuildContext context, String title, String message,
+      String label2, label3, bool isPin) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          // use StatefulBuilder to access setState inside the dialog
+          builder: (context, setState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              elevation: 5,
+              title: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        title,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue.shade900,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          "X",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Divider(
+                    height: 2,
+                    color: Colors.black,
+                  ),
+                ],
+              ),
+              content: Container(
+                width: MediaQuery.of(context).size.width,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text(
+                        message,
+                        style: TextStyle(
+                          fontSize: 12,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      TextFormField(
+                        controller: _newPinController,
+                        obscureText: !_isPinVisible,
+                        enableSuggestions: false,
+                        autocorrect: false,
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.blue.shade900,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.blue.shade900,
+                            ),
+                          ),
+                          labelStyle: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 12,
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 15.0, horizontal: 15),
+                          labelText: label2,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      TextFormField(
+                        controller: _confirmPinController,
+                        obscureText: !_isPinVisible,
+                        enableSuggestions: false,
+                        autocorrect: false,
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.blue.shade900,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.blue.shade900,
+                            ),
+                          ),
+                          labelStyle: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 12,
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 15.0,
+                            horizontal: 15,
+                          ),
+                          labelText: label3,
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      Row(
+                        children: [
+                          Checkbox(
+                            value: _isPinVisible,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                _isPinVisible = value ?? false;
+                              });
+                            },
+                          ),
+                          Text(
+                            _isPinVisible ? 'Hide' : 'Show',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue.shade900,
+                            ),
+                          ),
+                        ],
+                      ),
+                      if (_errorMessage.isNotEmpty)
+                        Text(
+                          _errorMessage,
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 12,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+              actions: <Widget>[
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Cancel'),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue.shade900,
+                  ),
+                  onPressed: (() {
+                    _changePassword();
+                    Navigator.of(context).pop();
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Login(
+                          phoneNumber: widget.phoneNumber,
+                          name: widget.phoneNumber.toString(),
+                        ),
+                      ),
+                    );
+                  }),
+                  child: Text('Save'),
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 

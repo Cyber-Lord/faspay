@@ -72,15 +72,6 @@ class _DashboardState extends State<Dashboard> {
 
   TextEditingController _amountController = TextEditingController();
   late double depositAmount = 0;
-  Future<void> _refreshData() async {
-    // Simulate a delay for fetching new data
-    await Future.delayed(Duration(seconds: 2));
-
-    setState(() {
-      // Update the data
-      initState();
-    });
-  }
 
   Future<void> generatePDF(BuildContext context, AccountHistory account) async {
     final pdf = pw.Document();
@@ -435,6 +426,7 @@ class _DashboardState extends State<Dashboard> {
     height = size.height;
     width = size.width;
     return RefreshIndicator(
+        color: Colors.blue.shade900,
         onRefresh: () async {
           await Future.delayed(Duration(seconds: 3));
           setState(() {
