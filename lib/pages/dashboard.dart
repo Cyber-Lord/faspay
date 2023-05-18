@@ -1205,14 +1205,13 @@ void showQRCode(BuildContext context, String data) {
             ),
             Expanded(
               child: Center(
-                child: QrImage(
-                  // embeddedImage: AssetImage('assets/images/logo.png'),
-                  data: data,
-                  version: QrVersions.auto,
-                  size: 200.0,
-                  foregroundColor: Colors.blue.shade900,
-                ),
-              ),
+                  child: QrImage(
+                data: data,
+                size: 200.0,
+                version: QrVersions.auto,
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.blue.shade900,
+              )),
             ),
             SizedBox(height: 10),
             GestureDetector(

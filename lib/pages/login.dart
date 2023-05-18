@@ -63,6 +63,155 @@ class _LoginState extends State<Login> {
     return null;
   }
 
+  void showError() {
+    setState(() {
+      _hasError = false;
+    });
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Error"),
+            content: Text("You can not reset another user's password"),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text("OK"))
+            ],
+          );
+        });
+  }
+
+  void _resetPassword(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+            title: Center(
+              child: Text(
+                "Reset Password",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue.shade900,
+                ),
+              ),
+            ),
+            content: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height / 3,
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "To reset your password, Please kindly enter your phone number below and follow the instructions that will be sent to the phone number.",
+                    style: TextStyle(
+                      fontFamily: "Times New Roman",
+                      fontSize: 12,
+                      color: Colors.grey.shade700,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    maxLength: 11,
+                    keyboardType: TextInputType.number,
+                    controller: _phoneNumberController,
+                    enableSuggestions: false,
+                    autocorrect: false,
+                    style: TextStyle(
+                      color: Colors.grey.shade700,
+                      fontSize: 14,
+                    ),
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.blue.shade900,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.blue.shade900,
+                        ),
+                      ),
+                      labelStyle: TextStyle(
+                        color: Colors.blue.shade900,
+                      ),
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 15.0,
+                        horizontal: 15,
+                      ),
+                      labelText: 'Phone Number',
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  if (_reseterrorMessage.isNotEmpty)
+                    Text(
+                      _reseterrorMessage,
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 12,
+                      ),
+                    ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  GestureDetector(
+                      onTap: () {
+                        if (_phoneNumberController.text != widget.phoneNumber) {
+                          setState(() {
+                            _hasError = true;
+                            _reseterrorMessage =
+                                "You can not reset another user's password";
+                            print(_errorMessage);
+                          });
+                        }
+                        ;
+
+                        !_hasError
+                            ? Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => OtpPage(
+                                    phoneNumber: widget.phoneNumber,
+                                    isNewUser: false,
+                                  ),
+                                ),
+                              )
+                            : showError();
+                        // _phoneNumberController.text = "";
+                      },
+                      child: Container(
+                        color: Colors.blue.shade900,
+                        height: 50,
+                        width: MediaQuery.of(context).size.width,
+                        child: Center(
+                          child: Text(
+                            "Reset Password",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      )),
+                ],
+              ),
+            ),
+          );
+        });
+      },
+    );
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -169,148 +318,7 @@ class _LoginState extends State<Login> {
                                 ),
                               TextButton(
                                 onPressed: (() {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: Center(
-                                          child: Text(
-                                            "Reset Password",
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.blue.shade900,
-                                            ),
-                                          ),
-                                        ),
-                                        content: Container(
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height /
-                                              3,
-                                          child: Column(
-                                            children: [
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              Text(
-                                                "To reset your password, Please kindly enter your phone number below and follow the instructions that will be sent to the phone number.",
-                                                style: TextStyle(
-                                                  fontFamily: "Times New Roman",
-                                                  fontSize: 12,
-                                                  color: Colors.grey.shade700,
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 20,
-                                              ),
-                                              TextFormField(
-                                                maxLength: 11,
-                                                keyboardType:
-                                                    TextInputType.number,
-                                                controller:
-                                                    _phoneNumberController,
-                                                enableSuggestions: false,
-                                                autocorrect: false,
-                                                style: TextStyle(
-                                                  color: Colors.grey.shade700,
-                                                  fontSize: 14,
-                                                ),
-                                                decoration: InputDecoration(
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      color:
-                                                          Colors.blue.shade900,
-                                                    ),
-                                                  ),
-                                                  focusedBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      color:
-                                                          Colors.blue.shade900,
-                                                    ),
-                                                  ),
-                                                  labelStyle: TextStyle(
-                                                    color: Colors.blue.shade900,
-                                                  ),
-                                                  contentPadding:
-                                                      EdgeInsets.symmetric(
-                                                    vertical: 15.0,
-                                                    horizontal: 15,
-                                                  ),
-                                                  labelText: 'Phone Number',
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              if (_reseterrorMessage.isNotEmpty)
-                                                Text(
-                                                  _reseterrorMessage,
-                                                  style: TextStyle(
-                                                    color: Colors.red,
-                                                    fontSize: 12,
-                                                  ),
-                                                ),
-                                              SizedBox(
-                                                height: 20,
-                                              ),
-                                              GestureDetector(
-                                                  onTap: () {
-                                                    if (_phoneNumberController
-                                                            .text !=
-                                                        widget.phoneNumber) {
-                                                      setState(() {
-                                                        _hasError = true;
-                                                        _reseterrorMessage =
-                                                            "You can not reset another user's password";
-                                                        print(_errorMessage);
-                                                      });
-                                                    }
-                                                    ;
-                                                    _hasError
-                                                        ? print(
-                                                            _reseterrorMessage)
-                                                        : Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder:
-                                                                  (context) =>
-                                                                      OtpPage(
-                                                                phoneNumber: widget
-                                                                    .phoneNumber,
-                                                                isNewUser:
-                                                                    false,
-                                                              ),
-                                                            ),
-                                                          );
-                                                  },
-                                                  child: Container(
-                                                    color: Colors.blue.shade900,
-                                                    height: 50,
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                            .size
-                                                            .width,
-                                                    child: Center(
-                                                      child: Text(
-                                                        "Reset Password",
-                                                        style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 14,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  )),
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  );
+                                  _resetPassword(context);
                                 }),
                                 child: Text(
                                   "Forgot Password?",
