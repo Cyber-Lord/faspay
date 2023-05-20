@@ -228,10 +228,9 @@ class _OtpPageState extends State<OtpPage> {
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide(
-                width: 1,
-                color: change_color == true
-                    ? Colors.green
-                    : Colors.red), //<-- SEE HERE
+              width: 1,
+              color: change_color == true ? Colors.green : Colors.grey,
+            ), //<-- SEE HERE
           ),
         ),
         onChanged: (value) {

@@ -71,14 +71,36 @@ class _LoginState extends State<Login> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Error"),
-            content: Text("You can not reset another user's password"),
+            title: Center(
+                child: Text(
+              "Error",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.red,
+              ),
+            )),
+            content: Text(
+              "You can not reset another user's password, Please close this window and enter your correct phone number.",
+              style: TextStyle(
+                fontFamily: "Times New Roman",
+                fontSize: 12,
+                color: Colors.grey.shade700,
+              ),
+            ),
             actions: [
               TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text("OK"))
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  "OK",
+                  style: TextStyle(
+                    color: Colors.blue.shade900,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             ],
           );
         });
@@ -120,14 +142,12 @@ class _LoginState extends State<Login> {
                     height: 20,
                   ),
                   TextFormField(
-                    maxLength: 11,
-                    keyboardType: TextInputType.number,
                     controller: _phoneNumberController,
-                    enableSuggestions: false,
-                    autocorrect: false,
+                    keyboardType: TextInputType.phone,
+                    maxLength: 11,
                     style: TextStyle(
-                      color: Colors.grey.shade700,
                       fontSize: 14,
+                      color: Colors.blue.shade900,
                     ),
                     decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
@@ -143,15 +163,24 @@ class _LoginState extends State<Login> {
                       labelStyle: TextStyle(
                         color: Colors.blue.shade900,
                       ),
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: 15.0,
-                        horizontal: 15,
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
+                      prefixText: "+234 - ",
+                      prefixStyle: TextStyle(
+                        color: Colors.blue.shade900,
                       ),
                       labelText: 'Phone Number',
                     ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Phone Number is required';
+                      }
+                      return null;
+                    },
+                    // onChanged: (value) => _phoneNumber = value,
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 5,
                   ),
                   if (_reseterrorMessage.isNotEmpty)
                     Text(
@@ -162,7 +191,7 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                   SizedBox(
-                    height: 20,
+                    height: 10,
                   ),
                   GestureDetector(
                       onTap: () {
@@ -171,7 +200,14 @@ class _LoginState extends State<Login> {
                             _hasError = true;
                             _reseterrorMessage =
                                 "You can not reset another user's password";
-                            print(_errorMessage);
+                            print(_reseterrorMessage);
+                          });
+                        }
+                        if (_phoneNumberController.text.isEmpty) {
+                          setState(() {
+                            _hasError = true;
+                            _reseterrorMessage = "Phone Number is required";
+                            print(_reseterrorMessage);
                           });
                         }
                         ;

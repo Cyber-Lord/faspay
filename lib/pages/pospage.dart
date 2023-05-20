@@ -9,28 +9,32 @@ class POSPage extends StatefulWidget {
 class _POSPageState extends State<POSPage> {
   List<Map<String, dynamic>> posTerminals = [
     {
-      'id': 001,
+      'id': 1,
+      'isLocked': false,
       'name': 'Shoprite Desk 1',
       'location': 'Lagos, Nigeria',
       'user': 'Zahra Adamu',
       'lastSeen': DateTime.now().subtract(Duration(hours: 2)),
     },
     {
-      'id': 002,
+      'id': 2,
+      'isLocked': false,
       'name': 'Shoprite Desk 2',
       'location': 'Lagos, Nigeria',
       'user': 'Adamu Umar',
       'lastSeen': DateTime.now().subtract(Duration(days: 1)),
     },
     {
-      'id': 003,
+      'id': 3,
+      'isLocked': false,
       'name': 'Shoprite Desk 3',
       'location': 'Abuja, Nigeria',
       'user': 'Abba Amrah',
       'lastSeen': DateTime.now().subtract(Duration(minutes: 30)),
     },
     {
-      'id': 004,
+      'id': 4,
+      'isLocked': false,
       'name': 'Shoprite Desk 4',
       'location': 'Abuja, Nigeria',
       'user': 'Amrah Abba',
@@ -93,6 +97,22 @@ class _POSPageState extends State<POSPage> {
     }
 
     Navigator.of(context).pop();
+  }
+
+  void lockDevice(int id) {
+    setState(() {
+      if (posTerminals[id]['isLocked'] == true) {
+        setState(() {
+          posTerminals[id]['isLocked'] = true;
+          isLocked = true;
+        });
+      } else if (posTerminals[id]['isLocked'] == false) {
+        setState(() {
+          posTerminals[id]['isLocked'] = false;
+          isLocked = false;
+        });
+      }
+    });
   }
 
   Future<void> _selectStartDate(BuildContext context) async {
@@ -937,297 +957,311 @@ class _POSPageState extends State<POSPage> {
       context: context,
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
-        return SafeArea(
-          child: Container(
-            padding: EdgeInsets.all(16),
-            height: MediaQuery.of(context).size.height / 2,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(16),
-                topRight: Radius.circular(16),
+        return StatefulBuilder(builder: (context, setState) {
+          return SafeArea(
+            child: Container(
+              padding: EdgeInsets.all(16),
+              height: MediaQuery.of(context).size.height / 2,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(16),
+                  topRight: Radius.circular(16),
+                ),
               ),
-            ),
-            child: Column(
-              children: [
-                Center(
-                  child: Text(
-                    "Device Settings",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue.shade900,
-                    ),
-                  ),
-                ),
-                Divider(
-                  color: Colors.grey.shade300,
-                  thickness: 1,
-                ),
-                SizedBox(height: 5),
-                TextButton(
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                  ),
-                  onPressed: () {
-                    _addUser();
-                  },
-                  child: Column(
-                    children: [
-                      ListTile(
-                        leading: Icon(
-                          Icons.person_add,
-                          color: Colors.blue.shade900,
-                        ),
-                        title: Text(
-                          'Add User',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.blue.shade900,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        trailing: Icon(
-                          Icons.arrow_forward,
-                          color: Colors.blue.shade900,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 5),
-                TextButton(
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                  ),
-                  onPressed: () {
-                    usersDropDown();
-                  },
-                  child: Column(
-                    children: [
-                      ListTile(
-                        leading: Icon(
-                          Icons.person_remove,
-                          color: Colors.blue.shade900,
-                        ),
-                        title: Text(
-                          'Remove User',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.blue.shade900,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        trailing: Icon(
-                          Icons.arrow_forward,
-                          color: Colors.blue.shade900,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 5),
-                TextButton(
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    _resetPIN(context, true);
-                  },
-                  child: Column(
-                    children: [
-                      ListTile(
-                        leading: Icon(
-                          Icons.pin,
-                          color: Colors.blue.shade900,
-                        ),
-                        title: Text(
-                          'Reset PIN',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.blue.shade900,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        trailing: Icon(
-                          Icons.arrow_forward,
-                          color: Colors.blue.shade900,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 5),
-                TextButton(
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      isLocked = !isLocked;
-                    });
-                    Navigator.of(context).pop();
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            content: Container(
-                              height: 100,
-                              width: 100,
-                              child: Column(
-                                children: [
-                                  Icon(
-                                    !isLocked ? Icons.lock : Icons.lock_open,
-                                    size: 50,
-                                    color: Colors.blue.shade900,
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    !isLocked
-                                        ? "Device Locked"
-                                        : "Device Unlocked",
-                                    style: TextStyle(
-                                      color: Colors.blue.shade900,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        });
-                  },
-                  child: Column(
-                    children: [
-                      ListTile(
-                        leading: Icon(
-                          isLocked ? Icons.lock : Icons.lock_open,
-                          color: Colors.blue.shade900,
-                        ),
-                        title: Text(
-                          isLocked ? 'Lock Device' : 'Unlock Device',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.blue.shade900,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        trailing: Icon(
-                          Icons.arrow_forward,
-                          color: Colors.blue.shade900,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 10),
-                Column(
-                  children: [
-                    ListTile(
-                      leading: Icon(
-                        Icons.send_to_mobile,
+              child: Column(
+                children: [
+                  Center(
+                    child: Text(
+                      "Device Settings",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                         color: Colors.blue.shade900,
                       ),
-                      title: Text(
-                        'Enable Transfer',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue.shade900,
+                    ),
+                  ),
+                  Divider(
+                    color: Colors.grey.shade300,
+                    thickness: 1,
+                  ),
+                  SizedBox(height: 5),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                    ),
+                    onPressed: () {
+                      _addUser();
+                    },
+                    child: Column(
+                      children: [
+                        ListTile(
+                          leading: Icon(
+                            Icons.person_add,
+                            color: Colors.blue.shade900,
+                          ),
+                          title: Text(
+                            'Add User',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.blue.shade900,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          trailing: Icon(
+                            Icons.arrow_forward,
+                            color: Colors.blue.shade900,
+                          ),
                         ),
-                      ),
-                      trailing: Switch(
-                        activeColor: Colors.blue.shade900,
-                        value: _isTransferEnabled,
-                        onChanged: (value) {
-                          setState(
-                            () {
-                              _isTransferEnabled = value;
-                            },
-                          );
-                          if (value) {
-                            Navigator.of(context).pop();
-                            _enterPIN(
-                              value,
-                              "Enable Transfer",
-                              "Please enter your transaction PIN to enable transfer on this device. Do note that once this is enabled, the device can be used to send money to third party users.",
-                              "Enable",
-                            );
-                          } else {
-                            Navigator.of(context).pop();
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Center(
-                                      child: Text(
-                                        "Success",
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.blue.shade900,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                    ),
+                    onPressed: () {
+                      usersDropDown();
+                    },
+                    child: Column(
+                      children: [
+                        ListTile(
+                          leading: Icon(
+                            Icons.person_remove,
+                            color: Colors.blue.shade900,
+                          ),
+                          title: Text(
+                            'Remove User',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.blue.shade900,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          trailing: Icon(
+                            Icons.arrow_forward,
+                            color: Colors.blue.shade900,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      _resetPIN(context, true);
+                    },
+                    child: Column(
+                      children: [
+                        ListTile(
+                          leading: Icon(
+                            Icons.pin,
+                            color: Colors.blue.shade900,
+                          ),
+                          title: Text(
+                            'Reset PIN',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.blue.shade900,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          trailing: Icon(
+                            Icons.arrow_forward,
+                            color: Colors.blue.shade900,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                    ),
+                    onPressed: () {
+                      print(posTerminals[index]['isLocked']);
+                      print(index);
+                      posTerminals[index]['isLocked']
+                          ? setState(() {
+                              isLocked = true;
+                              posTerminals[index]['isLocked'] = isLocked;
+                              // print(isLocked);
+                            })
+                          : setState(() {
+                              isLocked = false;
+                              posTerminals[index]['isLocked'] = isLocked;
+                              // print(isLocked);
+                            });
+
+                      Navigator.of(context).pop();
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              content: Container(
+                                height: 100,
+                                width: 100,
+                                child: Column(
+                                  children: [
+                                    Icon(
+                                      !isLocked ? Icons.lock : Icons.lock_open,
+                                      size: 50,
+                                      color: Colors.blue.shade900,
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      isLocked
+                                          ? "Device Locked"
+                                          : "Device Unlocked",
+                                      style: TextStyle(
+                                        color: Colors.blue.shade900,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    content: SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height /
-                                              3.3,
-                                      width: MediaQuery.of(context).size.width,
-                                      child: Column(
-                                        children: [
-                                          SizedBox(height: 15),
-                                          Icon(
-                                            Icons.check_circle,
+                                  ],
+                                ),
+                              ),
+                            );
+                          });
+                    },
+                    child: Column(
+                      children: [
+                        ListTile(
+                          leading: Icon(
+                            !isLocked ? Icons.lock : Icons.lock_open,
+                            color: Colors.blue.shade900,
+                          ),
+                          title: Text(
+                            !isLocked ? 'Lock Device' : 'Unlock Device',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.blue.shade900,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          trailing: Icon(
+                            Icons.arrow_forward,
+                            color: Colors.blue.shade900,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Column(
+                    children: [
+                      ListTile(
+                        leading: Icon(
+                          Icons.send_to_mobile,
+                          color: Colors.blue.shade900,
+                        ),
+                        title: Text(
+                          'Enable Transfer',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue.shade900,
+                          ),
+                        ),
+                        trailing: Switch(
+                          activeColor: Colors.blue.shade900,
+                          value: _isTransferEnabled,
+                          onChanged: (value) {
+                            setState(
+                              () {
+                                _isTransferEnabled = value;
+                              },
+                            );
+                            if (value) {
+                              Navigator.of(context).pop();
+                              _enterPIN(
+                                value,
+                                "Enable Transfer",
+                                "Please enter your transaction PIN to enable transfer on this device. Do note that once this is enabled, the device can be used to send money to third party users.",
+                                "Enable",
+                              );
+                            } else {
+                              Navigator.of(context).pop();
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Center(
+                                        child: Text(
+                                          "Success",
+                                          style: TextStyle(
+                                            fontSize: 18,
                                             color: Colors.blue.shade900,
-                                            size: 100,
+                                            fontWeight: FontWeight.bold,
                                           ),
-                                          SizedBox(height: 15),
-                                          Text(
-                                            "Transfer has been disabled on this device",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.grey.shade600,
-                                              // fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      content: SizedBox(
+                                        height:
+                                            MediaQuery.of(context).size.height /
+                                                3.3,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: Column(
+                                          children: [
+                                            SizedBox(height: 15),
+                                            Icon(
+                                              Icons.check_circle,
+                                              color: Colors.blue.shade900,
+                                              size: 100,
                                             ),
-                                          ),
-                                          SizedBox(height: 15),
-                                          Align(
-                                            alignment: Alignment.centerRight,
-                                            child: TextButton(
-                                              onPressed: (() {
-                                                Navigator.of(context).pop();
-                                              }),
-                                              child: Text(
-                                                "Done",
-                                                style: TextStyle(
-                                                  color: Colors.blue.shade900,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
+                                            SizedBox(height: 15),
+                                            Text(
+                                              "Transfer has been disabled on this device",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.grey.shade600,
+                                                // fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            SizedBox(height: 15),
+                                            Align(
+                                              alignment: Alignment.centerRight,
+                                              child: TextButton(
+                                                onPressed: (() {
+                                                  Navigator.of(context).pop();
+                                                }),
+                                                child: Text(
+                                                  "Done",
+                                                  style: TextStyle(
+                                                    color: Colors.blue.shade900,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                });
-                          }
-                        },
+                                    );
+                                  });
+                            }
+                          },
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        );
+          );
+        });
       },
     );
   }
