@@ -101,15 +101,13 @@ class _POSPageState extends State<POSPage> {
 
   void lockDevice(int id) {
     setState(() {
-      if (posTerminals[id]['isLocked'] == true) {
+      if (posTerminals[id]['isLocked'] == false) {
         setState(() {
           posTerminals[id]['isLocked'] = true;
-          isLocked = true;
         });
-      } else if (posTerminals[id]['isLocked'] == false) {
+      } else if (posTerminals[id]['isLocked'] == true) {
         setState(() {
           posTerminals[id]['isLocked'] = false;
-          isLocked = false;
         });
       }
     });
@@ -1086,20 +1084,20 @@ class _POSPageState extends State<POSPage> {
                       padding: EdgeInsets.zero,
                     ),
                     onPressed: () {
-                      print(posTerminals[index]['isLocked']);
-                      print(index);
-                      posTerminals[index]['isLocked']
-                          ? setState(() {
-                              isLocked = true;
-                              posTerminals[index]['isLocked'] = isLocked;
-                              // print(isLocked);
-                            })
-                          : setState(() {
-                              isLocked = false;
-                              posTerminals[index]['isLocked'] = isLocked;
-                              // print(isLocked);
-                            });
-
+                      // print(posTerminals[index]['isLocked']);
+                      // print(index);
+                      // posTerminals[index]['isLocked']
+                      //     ? setState(() {
+                      //         isLocked = true;
+                      //         posTerminals[index]['isLocked'] = isLocked;
+                      //         // print(isLocked);
+                      //       })
+                      //     : setState(() {
+                      //         isLocked = false;
+                      //         posTerminals[index]['isLocked'] = isLocked;
+                      //         // print(isLocked);
+                      //       });
+                      lockDevice(index);
                       Navigator.of(context).pop();
                       showDialog(
                           context: context,
@@ -1111,7 +1109,9 @@ class _POSPageState extends State<POSPage> {
                                 child: Column(
                                   children: [
                                     Icon(
-                                      !isLocked ? Icons.lock : Icons.lock_open,
+                                      posTerminals[index]['isLocked']
+                                          ? Icons.lock
+                                          : Icons.lock_open,
                                       size: 50,
                                       color: Colors.blue.shade900,
                                     ),
@@ -1119,9 +1119,9 @@ class _POSPageState extends State<POSPage> {
                                       height: 10,
                                     ),
                                     Text(
-                                      isLocked
+                                      posTerminals[index]['isLocked']
                                           ? "Device Locked"
-                                          : "Device Unlocked",
+                                          : "Device UnLocked",
                                       style: TextStyle(
                                         color: Colors.blue.shade900,
                                         fontWeight: FontWeight.bold,
@@ -1137,11 +1137,15 @@ class _POSPageState extends State<POSPage> {
                       children: [
                         ListTile(
                           leading: Icon(
-                            !isLocked ? Icons.lock : Icons.lock_open,
+                            posTerminals[index]['isLocked']
+                                ? Icons.lock_open
+                                : Icons.lock,
                             color: Colors.blue.shade900,
                           ),
                           title: Text(
-                            !isLocked ? 'Lock Device' : 'Unlock Device',
+                            posTerminals[index]['isLocked']
+                                ? 'Unlock Device'
+                                : 'Lock Device',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.blue.shade900,
