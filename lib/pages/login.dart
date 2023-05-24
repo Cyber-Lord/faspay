@@ -200,12 +200,14 @@ class _LoginState extends State<Login> {
                             _hasError = true;
                             _reseterrorMessage =
                                 "You can not reset another user's password";
+                            _phoneNumberController.text = "";
                             print(_reseterrorMessage);
                           });
                         }
                         if (_phoneNumberController.text.isEmpty) {
                           setState(() {
                             _hasError = true;
+                            _phoneNumberController.text = "";
                             _reseterrorMessage = "Phone Number is required";
                             print(_reseterrorMessage);
                           });
@@ -213,15 +215,20 @@ class _LoginState extends State<Login> {
                         ;
 
                         !_hasError
-                            ? Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => OtpPage(
-                                    phoneNumber: widget.phoneNumber,
-                                    isNewUser: false,
+                            ? setState(() {
+                                _phoneNumberController.text = "";
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => OtpPage(
+                                      phoneNumber: widget.phoneNumber,
+                                      isNewUser: false,
+                                    ),
                                   ),
-                                ),
-                              )
+                                );
+                                _hasError = false;
+                                _reseterrorMessage = "";
+                              })
                             : showError();
                         // _phoneNumberController.text = "";
                       },
@@ -302,45 +309,43 @@ class _LoginState extends State<Login> {
                             height: 15,
                           ),
                           TextFormField(
-                              controller: _textEditingController,
-                              obscureText: !_isPinVisible,
-                              enableSuggestions: false,
-                              autocorrect: false,
-                              style: TextStyle(
-                                color: Colors.grey.shade700,
-                                fontSize: 14,
-                              ),
-                              decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Colors.blue.shade900,
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Colors.blue.shade900,
-                                  ),
-                                ),
-                                labelStyle: TextStyle(
+                            controller: _textEditingController,
+                            obscureText: !_isPinVisible,
+                            enableSuggestions: false,
+                            autocorrect: false,
+                            style: TextStyle(
+                              color: Colors.grey.shade700,
+                              fontSize: 14,
+                            ),
+                            decoration: InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
                                   color: Colors.blue.shade900,
                                 ),
-                                contentPadding: EdgeInsets.symmetric(
-                                  vertical: 15.0,
-                                  horizontal: 15,
-                                ),
-                                labelText: 'Password',
                               ),
-                              onChanged: (value) {
-                                _onTextChanged();
-                              },
-                              validator: ((value) {
-                                print(value);
-                                _verifyPassword(value!);
-                                return null;
-                              })),
-                          // SizedBox(
-                          //   height: 5,
-                          // ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.blue.shade900,
+                                ),
+                              ),
+                              labelStyle: TextStyle(
+                                color: Colors.blue.shade900,
+                              ),
+                              contentPadding: EdgeInsets.symmetric(
+                                vertical: 15.0,
+                                horizontal: 15,
+                              ),
+                              labelText: 'Password',
+                            ),
+                            onChanged: (value) {
+                              _onTextChanged();
+                            },
+                            validator: ((value) {
+                              print(value);
+                              _verifyPassword(value!);
+                              return null;
+                            }),
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -417,16 +422,18 @@ class _LoginState extends State<Login> {
             ],
           ),
           Visibility(
-              visible: show_preogress,
-              child: Container(
-                  color: Colors.black.withOpacity(0.5),
-                  child: ListView(
-                    children: const [
-                      LinearProgressIndicator(
-                        semanticsLabel: 'Linear progress indicator',
-                      )
-                    ],
-                  ))),
+            visible: show_preogress,
+            child: Container(
+              color: Colors.black.withOpacity(0.5),
+              child: ListView(
+                children: const [
+                  LinearProgressIndicator(
+                    semanticsLabel: 'Linear progress indicator',
+                  )
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -437,8 +444,9 @@ class _LoginState extends State<Login> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-          builder: (context) =>
-              HomePage(phoneNumber: widget.phoneNumber, token: token)),
+        builder: (context) =>
+            HomePage(phoneNumber: widget.phoneNumber, token: token),
+      ),
     );
   }
 
