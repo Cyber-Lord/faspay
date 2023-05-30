@@ -113,10 +113,12 @@ class _POSPageState extends State<POSPage> {
     });
   }
 
-  Future<void> _selectStartDate(BuildContext context) async {
+  void _selectStartDate(BuildContext context) async {
     final DateTime? selectedDate = await showDatePicker(
       context: context,
-      initialDate: _startDate,
+      // initialDate: _startDate,
+      initialDate: DateTime.now(),
+
       firstDate: DateTime.now().subtract(Duration(days: 365)),
       lastDate: DateTime.now(),
     );
@@ -127,11 +129,13 @@ class _POSPageState extends State<POSPage> {
     }
   }
 
-  Future<void> _selectEndDate(BuildContext context) async {
+  void _selectEndDate(BuildContext context) async {
     final DateTime? selectedDate = await showDatePicker(
       context: context,
       initialDate: _endDate,
-      firstDate: DateTime.now().subtract(Duration(days: 365)),
+      firstDate: DateTime.now().subtract(
+        Duration(days: 365),
+      ),
       lastDate: DateTime.now(),
     );
     if (selectedDate != null && selectedDate != _endDate) {
@@ -408,182 +412,197 @@ class _POSPageState extends State<POSPage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Center(
-            child: Text(
-              'Request Statement',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue.shade900,
-              ),
-            ),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 10,
-              ),
-              Text(
-                'Select date range:',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey.shade600,
+        return StatefulBuilder(
+          builder: ((context, setState) {
+            return AlertDialog(
+              title: Center(
+                child: Text(
+                  'Request Statement',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue.shade900,
+                  ),
                 ),
               ),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SizedBox(
+                    height: 10,
+                  ),
                   Text(
-                    'Start Date:',
+                    'Select date range:',
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: Colors.grey.shade600,
                     ),
                   ),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.blue.shade900,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        side: BorderSide(
-                          color: Colors.blue.shade900,
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Start Date:',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey.shade600,
                         ),
                       ),
-                    ),
-                    onPressed: () => _selectStartDate(context),
-                    child: Text(
-                      '${_startDate.day}/${_startDate.month}/${_startDate.year}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'End Date:',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey.shade600,
-                    ),
-                  ),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.blue.shade900,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        side: BorderSide(
-                          color: Colors.blue.shade900,
-                        ),
-                      ),
-                    ),
-                    onPressed: () => _selectEndDate(context),
-                    child: Text(
-                      '${_endDate.day}/${_endDate.month}/${_endDate.year}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(
-                'Cancel',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        contentPadding:
-                            EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0.0),
-                        title: Center(
-                          child: Text(
-                            "Request Received",
-                            style: TextStyle(
-                              fontSize: 18,
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.blue.shade900,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            side: BorderSide(
                               color: Colors.blue.shade900,
-                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                        content: SizedBox(
-                          height: MediaQuery.of(context).size.height / 3,
-                          width: MediaQuery.of(context).size.width,
-                          child: Column(
-                            children: [
-                              SizedBox(height: 20),
-                              Icon(
-                                Icons.check_circle,
-                                color: Colors.blue.shade900,
-                                size: 80,
-                              ),
-                              SizedBox(height: 20),
-                              Text(
-                                'Statement request was successfully received. You will receive an email shortly.',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey.shade600,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 25,
-                              ),
-                              Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(),
-                                    child: Text(
-                                      'Close',
-                                      style: TextStyle(
-                                        color: Colors.blue.shade900,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  )),
-                            ],
+                        onPressed: () {
+                          setState(() {
+                            _selectStartDate(context);
+                          });
+                        },
+                        // onPressed: () => _selectStartDate(context),
+                        child: Text(
+                          '${_startDate.day}/${_startDate.month}/${_startDate.year}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                      );
-                    });
-              },
-              child: Text(
-                'Submit',
-                style: TextStyle(
-                  color: Colors.blue.shade900,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'End Date:',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.blue.shade900,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            side: BorderSide(
+                              color: Colors.blue.shade900,
+                            ),
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _selectEndDate(context);
+                          });
+                        },
+
+                        // onPressed: () => _selectEndDate(context),
+                        child: Text(
+                          '${_endDate.day}/${_endDate.month}/${_endDate.year}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            ),
-          ],
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            contentPadding:
+                                EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0.0),
+                            title: Center(
+                              child: Text(
+                                "Request Received",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.blue.shade900,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            content: SizedBox(
+                              height: MediaQuery.of(context).size.height / 3,
+                              width: MediaQuery.of(context).size.width,
+                              child: Column(
+                                children: [
+                                  SizedBox(height: 20),
+                                  Icon(
+                                    Icons.check_circle,
+                                    color: Colors.blue.shade900,
+                                    size: 80,
+                                  ),
+                                  SizedBox(height: 20),
+                                  Text(
+                                    'Statement request was successfully received. You will receive an email shortly.',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey.shade600,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 25,
+                                  ),
+                                  Align(
+                                      alignment: Alignment.bottomRight,
+                                      child: TextButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(),
+                                        child: Text(
+                                          'Close',
+                                          style: TextStyle(
+                                            color: Colors.blue.shade900,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      )),
+                                ],
+                              ),
+                            ),
+                          );
+                        });
+                  },
+                  child: Text(
+                    'Submit',
+                    style: TextStyle(
+                      color: Colors.blue.shade900,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }),
         );
       },
     );
@@ -1084,54 +1103,42 @@ class _POSPageState extends State<POSPage> {
                       padding: EdgeInsets.zero,
                     ),
                     onPressed: () {
-                      // print(posTerminals[index]['isLocked']);
-                      // print(index);
-                      // posTerminals[index]['isLocked']
-                      //     ? setState(() {
-                      //         isLocked = true;
-                      //         posTerminals[index]['isLocked'] = isLocked;
-                      //         // print(isLocked);
-                      //       })
-                      //     : setState(() {
-                      //         isLocked = false;
-                      //         posTerminals[index]['isLocked'] = isLocked;
-                      //         // print(isLocked);
-                      //       });
                       lockDevice(index);
                       Navigator.of(context).pop();
                       showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              content: Container(
-                                height: 100,
-                                width: 100,
-                                child: Column(
-                                  children: [
-                                    Icon(
-                                      posTerminals[index]['isLocked']
-                                          ? Icons.lock
-                                          : Icons.lock_open,
-                                      size: 50,
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            content: Container(
+                              height: 100,
+                              width: 100,
+                              child: Column(
+                                children: [
+                                  Icon(
+                                    posTerminals[index]['isLocked']
+                                        ? Icons.lock
+                                        : Icons.lock_open,
+                                    size: 50,
+                                    color: Colors.blue.shade900,
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    posTerminals[index]['isLocked']
+                                        ? "Device Locked"
+                                        : "Device UnLocked",
+                                    style: TextStyle(
                                       color: Colors.blue.shade900,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                      posTerminals[index]['isLocked']
-                                          ? "Device Locked"
-                                          : "Device UnLocked",
-                                      style: TextStyle(
-                                        color: Colors.blue.shade900,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            );
-                          });
+                            ),
+                          );
+                        },
+                      );
                     },
                     child: Column(
                       children: [
