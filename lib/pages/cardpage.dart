@@ -58,7 +58,7 @@ class _CardPageState extends State<CardPage> {
   final List<AccountHistory> _accountData = [];
 
   bool isGrey = false;
-
+bool card_is_active=false;
   double balance = 0;
   var size, height, width;
   final _formKey = GlobalKey<FormState>();
@@ -67,6 +67,7 @@ class _CardPageState extends State<CardPage> {
   late String _phoneNumber;
   late String _address;
   bool check_card = false;
+  bool page_loader=false;
 
   bool visable_card_request = false;
   bool show_preogress = false;
@@ -85,9 +86,10 @@ class _CardPageState extends State<CardPage> {
   String _action = "";
   int currentCardIndex = 0;
   String current_card_no = "xx";
+  String current_card_status="";
   int hold_index = 0;
   String trnx_mode = "";
-  double amount = 0.0;
+  double amount = 0.0,current_card_balance=0.0;
   bool isActive = false;
   TextEditingController _oldPinController = TextEditingController();
   TextEditingController _newPinController = TextEditingController();
@@ -99,6 +101,9 @@ class _CardPageState extends State<CardPage> {
   TextEditingController _voucherAmountController = TextEditingController();
   bool isFundCard = false;
   bool isWithdraw = false;
+  bool default_pin=false;
+  bool _new_pin=false;
+  bool _confirm_pin=false;
 
   void _changePin() {
     String oldPin = _oldPinController.text;
@@ -166,6 +171,7 @@ class _CardPageState extends State<CardPage> {
     return Scaffold(
       body: Stack(
         children: [
+
           check_card
               ? Padding(
                   padding: const EdgeInsets.only(
@@ -190,7 +196,9 @@ class _CardPageState extends State<CardPage> {
                                   setState(() {
                                     currentCardIndex = index;
                                     current_card_no = cardList[index].number;
-                                    print(current_card_no);
+                                    current_card_status=cardList[index].card_status;
+                                    current_card_balance=cardList[index].balance;
+                                    print("Card Balance"+current_card_balance.toString());
                                   });
                                 },
                                 onPanDown: (x) {
@@ -381,10 +389,16 @@ class _CardPageState extends State<CardPage> {
                                       isFundCard = true;
                                       isWithdraw = false;
                                       myindex = currentCardIndex;
+                                      _action = "card_top_up";
                                     });
                                     if (currentCardIndex == myindex) {
-                                      print(myindex);
-                                      _showDialog(context, balance, isFundCard);
+                                      current_card_status=cardList[currentCardIndex].card_status;
+                                     if(current_card_status=="Pending"){
+                                      _activate_card(context, true);
+                                     }else{
+                                       _showDialog(context, balance, isFundCard);
+                                     }
+
                                     }
                                   }),
                                   child: Text("Fund Card"),
@@ -399,11 +413,12 @@ class _CardPageState extends State<CardPage> {
                                       isWithdraw = true;
                                       isFundCard = false;
                                       myindex = currentCardIndex;
+                                      _action = "card_withdraw";
                                     });
                                     if (currentCardIndex == myindex) {
                                       print(myindex);
                                       _showDialog(
-                                          context, balance, !isWithdraw);
+                                          context, balance, isWithdraw);
                                     }
                                   }),
                                   child: Text("Withdraw"),
@@ -439,7 +454,7 @@ class _CardPageState extends State<CardPage> {
                             height: MediaQuery.of(context).size.height * 0.4,
                             width: MediaQuery.of(context).size.width,
                             // color: Colors.red,
-                            child: Expanded(
+
                               child: Padding(
                                 padding: const EdgeInsets.all(12.0),
                                 child: ListView.builder(
@@ -560,7 +575,7 @@ class _CardPageState extends State<CardPage> {
                                   },
                                 ),
                               ),
-                            ),
+
                           ),
                         ),
                       ],
@@ -572,7 +587,8 @@ class _CardPageState extends State<CardPage> {
                     left: 10,
                     right: 10,
                   ),
-                  child: Column(
+                  child: page_loader
+                 ? Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -651,7 +667,11 @@ class _CardPageState extends State<CardPage> {
                         ],
                       )
                     ],
-                  )),
+                  )
+                      : Column(
+
+                  )
+          ),
           Visibility(
             visible: visable_card_request,
             child: AnimatedOpacity(
@@ -1070,6 +1090,10 @@ class _CardPageState extends State<CardPage> {
                             current_card_no = cardList[currentCardIndex].number;
                             print("trancmode " + current_card_no);
                             transfer_fund(my_num, my_token);
+                          }else if(_action=="card_withdraw"){
+                            current_card_no = cardList[currentCardIndex].number;
+                            print("trancmode " + current_card_no);
+                            withdraw_fund(my_num, my_token);
                           }
 
                           //transfer_fund(my_num, my_token);
@@ -1193,7 +1217,18 @@ class _CardPageState extends State<CardPage> {
               ),
             ),
             visible: isGrey,
-          )
+          ),
+          Visibility(
+              visible: show_preogress,
+              child: Container(
+                  color: Colors.black.withOpacity(0.5),
+                  child: ListView(
+                    children: const [
+                      LinearProgressIndicator(
+                        semanticsLabel: 'Linear progress indicator',
+                      )
+                    ],
+                  ))),
         ],
       ),
       floatingActionButton: Container(
@@ -1515,6 +1550,304 @@ class _CardPageState extends State<CardPage> {
                   child: Text('Save'),
                 ),
               ],
+            );
+          },
+        );
+      },
+    );
+  }
+  void _activate_card(BuildContext context, bool isPIN) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          // use StatefulBuilder to access setState inside the dialog
+          builder: (context, setState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              elevation: 5,
+              title: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Activate Card',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue.shade900,
+                        ),
+                      ),
+                     Expanded(child: Align(
+                       alignment: Alignment.topRight,
+                       child:   GestureDetector(
+                         onTap: (){
+                           Navigator.of(context).pop();
+                         },
+                         child: Text(
+                             "X",
+                             style: TextStyle(
+                               fontSize: 16,
+                               fontWeight: FontWeight.bold,
+                               color: Colors.red,
+                             ),
+                           ),
+                       ),
+
+                     )),
+                    ],
+                  ),
+                  Divider(
+
+                  ),
+                ],
+              ),
+              content: Container(
+                width: MediaQuery.of(context).size.width,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    //crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text(
+                        "Before you fund your card, please enter the PIN from the card envelope and your preferred PIN below:",
+                        style: TextStyle(
+                          fontSize: 12,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      TextFormField(
+                        controller: _oldPinController,
+                        maxLength: isPIN ? 4 : 25,
+                        keyboardType:
+                        isPIN ? TextInputType.number : TextInputType.text,
+                        obscureText: !_isPinVisible,
+                        enableSuggestions: false,
+                        autocorrect: false,
+                        onChanged: (txt){
+                          if(txt.length==4){
+                            print("is ok");
+
+                            setState((){
+                              default_pin=true;
+                            });
+                          }else{
+
+                            print("not working");
+                           setState((){
+                             default_pin=false;
+                           });
+                          }
+                        },
+
+                       decoration:
+                       default_pin
+                        ? InputDecoration(
+
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.blue.shade900,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.blue.shade900,
+                            ),
+                          ),
+                          labelStyle: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 12,
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 15.0, horizontal: 15),
+                          labelText: 'Default PIN',
+                        )
+                      : InputDecoration(
+
+
+                      enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+
+                        color: Colors.red.shade900,
+                      ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    width: 2,
+                    color: Colors.red.shade900,
+                  ),
+                ),
+                labelStyle: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 12,
+                ),
+                contentPadding: EdgeInsets.symmetric(
+                    vertical: 15.0, horizontal: 15),
+                labelText: 'Default PIN',
+              ),
+
+
+                      ),
+
+                      TextFormField(
+                        maxLength: isPIN ? 4 : 25,
+                        keyboardType:
+                        isPIN ? TextInputType.number : TextInputType.text,
+                        controller: _newPinController,
+                        obscureText: !_isPinVisible,
+                        enableSuggestions: false,
+                        autocorrect: false,
+                        onChanged: (txt){
+                          if(txt.length==4){
+                            setState((){
+                              _new_pin=true;
+                            });
+                          }else{
+                            setState((){
+                              _new_pin=false;
+                            });
+                          }
+                        },
+
+                        decoration:
+                        _new_pin
+                            ? InputDecoration(
+
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.blue.shade900,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.blue.shade900,
+                            ),
+                          ),
+                          labelStyle: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 12,
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 15.0, horizontal: 15),
+                          labelText: 'Default PIN',
+                        )
+                            : InputDecoration(
+
+
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+
+                              color: Colors.red.shade900,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              width: 2,
+                              color: Colors.red.shade900,
+                            ),
+                          ),
+                          labelStyle: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 12,
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 15.0, horizontal: 15),
+                          labelText: 'Default PIN',
+                        ),
+                      ),
+
+                      TextFormField(
+                        maxLength: isPIN ? 4 : 25,
+                        keyboardType:
+                        isPIN ? TextInputType.number : TextInputType.text,
+                        controller: _confirmPinController,
+                        obscureText: !_isPinVisible,
+                        enableSuggestions: false,
+                        autocorrect: false,
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.blue.shade900,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.blue.shade900,
+                            ),
+                          ),
+                          labelStyle: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 12,
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 15.0,
+                            horizontal: 15,
+                          ),
+                          labelText: 'Confirm PIN',
+                        ),
+                      ),
+
+                      Row(
+                        children: [
+                          Checkbox(
+                            value: _isPinVisible,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                _isPinVisible = value ?? false;
+                              });
+                            },
+                          ),
+                          Text('Show PIN'),
+                        ],
+                      ),
+                      if (_errorMessage.isNotEmpty)
+                        Text(
+                          _errorMessage,
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 12,
+                          ),
+                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.all(6),
+                              child: Text('Cancel'),
+                            ),
+                          ),
+                          SizedBox(width: 10,),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue.shade900,
+                            ),
+                            onPressed: _changePin,
+                            child: Padding(
+                              padding: EdgeInsets.all(6),
+                              child: Text('Save'),
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+
+                  ),
+                ),
+              ),
+
             );
           },
         );
@@ -1877,13 +2210,21 @@ class _CardPageState extends State<CardPage> {
                               ),
                               SizedBox(height: 16.0),
                               ElevatedButton(
+                                
                                 style: ElevatedButton.styleFrom(
+
                                   backgroundColor: Colors.blue.shade900,
                                 ),
                                 onPressed: () {
-                                  Navigator.of(context).pop();
+                                 Navigator.of(context).pop();
+
+
+                                  generate_voucher(my_num, my_token,cardList[currentCardIndex].number);
                                 },
-                                child: Text('Activate Voucher'),
+                                child: Padding(
+                                  padding: EdgeInsets.all(10),
+                                  child:Text("Activate Voucher"),
+                                ),
                               ),
                             ],
                           ),
@@ -1919,11 +2260,70 @@ class _CardPageState extends State<CardPage> {
       });
     }
   }
+  Future generate_voucher(phone, token,account) async {
+    show_preogress = true;
+    FocusScope.of(context).requestFocus(new FocusNode());
+    var url = "https://a2ctech.net/api/faspay/_save_voucher.php";
+    var response;
+    response = await http.post(Uri.parse(url), body: {
+      "phone": phone,
+      "token": token,
+      "account": account,
+      "amount": _voucherAmountController.text,
+      "v_pin": _voucherPinController.text,
+      "v_code": _voucher,
+    });
 
+    var data = json.decode(response.body);
+    if (response.statusCode == 200) {
+      print(response.body);
+
+      if (data["status"] == "Done") {
+        // print("DONE!!!");
+        showSuccessAnimation_voucher( context, _voucher.toString(), _voucherPinController.text) ;
+        show_preogress = false;
+      _voucherAmountController.text="";
+    _voucherPinController.text="";
+      } else {
+        show_preogress = false;
+        showFailsAnimation(context);
+        // logout();
+      }
+      setState(() {});
+    }
+  }
   Future transfer_fund(phone, token) async {
     show_preogress = true;
     FocusScope.of(context).requestFocus(new FocusNode());
     var url = "https://a2ctech.net/api/faspay/internal_transfer.php";
+    var response;
+    response = await http.post(Uri.parse(url), body: {
+      "phone": phone,
+      "token": token,
+      "to": current_card_no,
+      "amount": amount.toString(),
+      "mode": trnx_mode,
+    });
+
+    var data = json.decode(response.body);
+    if (response.statusCode == 200) {
+      print(response.body);
+
+      if (data["status"] == "true") {
+        // print("DONE!!!");
+        showSuccessAnimation(context);
+        show_preogress = false;
+      } else {
+        show_preogress = false;
+        // logout();
+      }
+      setState(() {});
+    }
+  }
+  Future withdraw_fund(phone, token) async {
+    show_preogress = true;
+    FocusScope.of(context).requestFocus(new FocusNode());
+    var url = "https://a2ctech.net/api/faspay/withdraw_from_card.php";
     var response;
     response = await http.post(Uri.parse(url), body: {
       "phone": phone,
@@ -2180,6 +2580,150 @@ class _CardPageState extends State<CardPage> {
       },
     );
   }
+  void showSuccessAnimation_voucher(BuildContext context,String v_code,String v_pin) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            height: 270,
+            width: 200,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 10,
+                ),
+                Icon(
+                  Icons.check_circle,
+                  color: Colors.green,
+                  size: 80,
+                ),
+                SizedBox(height: 10),
+                Text(
+                  "Transaction Successful!",
+                  style: TextStyle(
+                    fontSize: 20,
+                    // fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Divider(),
+                Padding(padding: EdgeInsets.only(left: 10,right: 10,top: 10),
+                child:Row(
+                  children: [
+                    Text("Voucher Code: "),
+                    Text(v_code,style: TextStyle(fontWeight: FontWeight.bold),),
+                  ],
+                ),
+                ),
+                Padding(padding: EdgeInsets.only(left: 10,right: 10),
+                child:Row(
+
+                  children: [
+                    Text("Voucher PIN:     "),
+                    Text(v_pin,style: TextStyle(fontWeight: FontWeight.bold),),
+                  ],
+                ),
+                ),
+                Divider(),
+                SizedBox(
+                  height: 5,
+                ),
+                TextButton(
+                  onPressed: (() {
+                    Navigator.pop(context);
+                    cardList.clear();
+                    fetch_cards(my_num, my_token);
+                    setState(() {});
+                  }),
+                  child: Text(
+                    "OK",
+                    style: TextStyle(
+                      color: Colors.blue.shade900,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void showFailsAnimation(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            height: MediaQuery.of(context).size.height / 3,
+            width: 200,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 10,
+                ),
+                Icon(
+                  Icons.cancel,
+                  color: Colors.red,
+                  size: 80,
+                ),
+                SizedBox(height: 20),
+                Text(
+                  "Fail Try Again!",
+                  style: TextStyle(
+                    fontSize: 20,
+                    // fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Divider(),
+                SizedBox(
+                  height: 15,
+                ),
+                TextButton(
+                  onPressed: (() {
+                    Navigator.pop(context);
+                    cardList.clear();
+                    fetch_cards(my_num, my_token);
+                    setState(() {});
+                  }),
+                  child: Text(
+                    "OK",
+                    style: TextStyle(
+                      color: Colors.blue.shade900,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
 
   Future card_request(phone, token) async {
     show_preogress = true;
@@ -2233,11 +2777,13 @@ class _CardPageState extends State<CardPage> {
       for (var data in data) {
         if (data["card_checker"] == "false") {
           check_card = false;
+          page_loader=true;
         } else {
           cardList.add(new Card("Debit", data["account_no"], data["expire"],
-              double.parse(data["balance"][0]["balance"])));
+              double.parse(data["balance"][0]["balance"]),data["status"]));
           setState(() {
             check_card = true;
+            page_loader=true;
           });
         }
       }
@@ -2305,22 +2851,32 @@ class _CardPageState extends State<CardPage> {
                 ),
               ),
               onPressed: () {
-                if (amount > main_account_balance) {
-                  // Show error message
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Error: Amount is greater than balance'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                } else {
-                  _action = "card_top_up";
-                  _show_pin = isWithdraw;
-                  // _show_pin = true;
-
-                  Navigator.of(context).pop();
-                  // onAmountSelected(amount);
+                if (_action == "card_top_up") {
+                  if (amount > main_account_balance) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Error: Amount is greater than balance'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  } else {
+                    _show_pin = isWithdraw;
+                    Navigator.of(context).pop();
+                  }
+                }else if(_action=="card_withdraw"){
+                  if (amount > current_card_balance) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Error: Amount is greater than balance'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  } else {
+                    _show_pin = isWithdraw;
+                    Navigator.of(context).pop();
+                  }
                 }
+
               },
             ),
           ],
@@ -2335,6 +2891,7 @@ class Card {
   final String number;
   final String expiryDate;
   final double balance;
+  final String card_status;
 
-  Card(this.type, this.number, this.expiryDate, this.balance);
+  Card(this.type, this.number, this.expiryDate, this.balance,this.card_status);
 }
