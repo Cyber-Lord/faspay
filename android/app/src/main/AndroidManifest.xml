@@ -7,7 +7,7 @@
     
 
    <application
-        android:label="faspay"
+        android:label="FasPay"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

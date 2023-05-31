@@ -38,8 +38,9 @@ class _SplshscreenState extends State<Splshscreen> {
           children: [
             Image.asset(
               'assets/images/logo.png',
-              height: 200.0,
-              // color: Colors.blue.shade900,
+              height: 150.0,
+              width: 150.0,
+              fit: BoxFit.contain,
             ),
           ],
         ),

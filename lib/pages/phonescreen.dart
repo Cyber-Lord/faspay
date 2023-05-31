@@ -68,12 +68,19 @@ class _PhoneScreenState extends State<PhoneScreen> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            SizedBox(
+                              height: 20,
+                            ),
                             Center(
                               child: Image.asset(
                                 'assets/images/logo.png',
-                                height: 200.0,
+                                height: 150.0,
+                                width: 150.0,
                                 // color: Colors.blue.shade900,
                               ),
+                            ),
+                            SizedBox(
+                              height: 10,
                             ),
                             Center(
                               child: Text(
@@ -90,7 +97,7 @@ class _PhoneScreenState extends State<PhoneScreen> {
                             ),
                             Center(
                               child: Text(
-                                "To use Faspay, Please enter your mobile number",
+                                "To use FasPay, Please enter your mobile number",
                                 style: TextStyle(
                                   // fontFamily: "Times New Roman",
                                   fontSize: 14,

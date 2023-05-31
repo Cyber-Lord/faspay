@@ -58,7 +58,7 @@ class _CardPageState extends State<CardPage> {
   final List<AccountHistory> _accountData = [];
 
   bool isGrey = false;
-bool card_is_active=false;
+  bool card_is_active = false;
   double balance = 0;
   var size, height, width;
   final _formKey = GlobalKey<FormState>();
@@ -67,7 +67,7 @@ bool card_is_active=false;
   late String _phoneNumber;
   late String _address;
   bool check_card = false;
-  bool page_loader=false;
+  bool page_loader = false;
 
   bool visable_card_request = false;
   bool show_preogress = false;
@@ -86,10 +86,10 @@ bool card_is_active=false;
   String _action = "";
   int currentCardIndex = 0;
   String current_card_no = "xx";
-  String current_card_status="";
+  String current_card_status = "";
   int hold_index = 0;
   String trnx_mode = "";
-  double amount = 0.0,current_card_balance=0.0;
+  double amount = 0.0, current_card_balance = 0.0;
   bool isActive = false;
   TextEditingController _oldPinController = TextEditingController();
   TextEditingController _newPinController = TextEditingController();
@@ -101,9 +101,9 @@ bool card_is_active=false;
   TextEditingController _voucherAmountController = TextEditingController();
   bool isFundCard = false;
   bool isWithdraw = false;
-  bool default_pin=false;
-  bool _new_pin=false;
-  bool _confirm_pin=false;
+  bool default_pin = false;
+  bool _new_pin = false;
+  bool _confirm_pin = false;
 
   void _changePin() {
     String oldPin = _oldPinController.text;
@@ -171,7 +171,6 @@ bool card_is_active=false;
     return Scaffold(
       body: Stack(
         children: [
-
           check_card
               ? Padding(
                   padding: const EdgeInsets.only(
@@ -196,9 +195,12 @@ bool card_is_active=false;
                                   setState(() {
                                     currentCardIndex = index;
                                     current_card_no = cardList[index].number;
-                                    current_card_status=cardList[index].card_status;
-                                    current_card_balance=cardList[index].balance;
-                                    print("Card Balance"+current_card_balance.toString());
+                                    current_card_status =
+                                        cardList[index].card_status;
+                                    current_card_balance =
+                                        cardList[index].balance;
+                                    print("Card Balance" +
+                                        current_card_balance.toString());
                                   });
                                 },
                                 onPanDown: (x) {
@@ -392,13 +394,15 @@ bool card_is_active=false;
                                       _action = "card_top_up";
                                     });
                                     if (currentCardIndex == myindex) {
-                                      current_card_status=cardList[currentCardIndex].card_status;
-                                     if(current_card_status=="Pending"){
-                                      _activate_card(context, true);
-                                     }else{
-                                       _showDialog(context, balance, isFundCard);
-                                     }
-
+                                      current_card_status =
+                                          cardList[currentCardIndex]
+                                              .card_status;
+                                      if (current_card_status == "Pending") {
+                                        _activate_card(context, true);
+                                      } else {
+                                        _showDialog(
+                                            context, balance, isFundCard);
+                                      }
                                     }
                                   }),
                                   child: Text("Fund Card"),
@@ -417,8 +421,7 @@ bool card_is_active=false;
                                     });
                                     if (currentCardIndex == myindex) {
                                       print(myindex);
-                                      _showDialog(
-                                          context, balance, isWithdraw);
+                                      _showDialog(context, balance, isWithdraw);
                                     }
                                   }),
                                   child: Text("Withdraw"),
@@ -455,127 +458,121 @@ bool card_is_active=false;
                             width: MediaQuery.of(context).size.width,
                             // color: Colors.red,
 
-                              child: Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: ListView.builder(
-                                  physics: AlwaysScrollableScrollPhysics(),
-                                  itemCount: _accountData.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    final AccountHistory account =
-                                        _accountData[index];
-                                    return GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          account.isHidden = !account.isHidden;
-                                        });
-                                      },
-                                      child: Container(
-                                        margin: EdgeInsets.only(bottom: 8.0),
-                                        padding: EdgeInsets.all(16.0),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color:
-                                                  Colors.grey.withOpacity(0.3),
-                                              spreadRadius: 1,
-                                              blurRadius: 3,
-                                              offset: Offset(0, 2),
-                                            ),
-                                          ],
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  account.tittle_name,
-                                                  style: TextStyle(
-                                                    fontSize: 14.0,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  account.type,
-                                                  style: TextStyle(
-                                                    fontSize: 14.0,
-                                                    color: Colors.grey[600],
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  account.amount
-                                                      .toStringAsFixed(2),
-                                                  style: TextStyle(
-                                                    fontSize: 14.0,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: account.amount >= 0
-                                                        ? Colors.green
-                                                        : Colors.red,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(height: 8.0),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                      "Processed on:",
-                                                      style: TextStyle(
-                                                        fontSize: 12.0,
-                                                        color: Colors.grey[600],
-                                                      ),
-                                                    ),
-                                                    SizedBox(width: 4.0),
-                                                    Text(
-                                                      account.dte,
-                                                      style: TextStyle(
-                                                        fontSize: 12.0,
-                                                        color: Colors.grey[600],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              height: 5,
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  "Reference No: FASPAY/${account.trnx_id}",
-                                                  style: TextStyle(
-                                                    fontSize: 12.0,
-                                                    color: Colors.grey[600],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: ListView.builder(
+                                physics: AlwaysScrollableScrollPhysics(),
+                                itemCount: _accountData.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  final AccountHistory account =
+                                      _accountData[index];
+                                  return GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        account.isHidden = !account.isHidden;
+                                      });
+                                    },
+                                    child: Container(
+                                      margin: EdgeInsets.only(bottom: 8.0),
+                                      padding: EdgeInsets.all(16.0),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.3),
+                                            spreadRadius: 1,
+                                            blurRadius: 3,
+                                            offset: Offset(0, 2),
+                                          ),
+                                        ],
                                       ),
-                                    );
-                                  },
-                                ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                account.tittle_name,
+                                                style: TextStyle(
+                                                  fontSize: 14.0,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              Text(
+                                                account.type,
+                                                style: TextStyle(
+                                                  fontSize: 14.0,
+                                                  color: Colors.grey[600],
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              Text(
+                                                account.amount
+                                                    .toStringAsFixed(2),
+                                                style: TextStyle(
+                                                  fontSize: 14.0,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: account.amount >= 0
+                                                      ? Colors.green
+                                                      : Colors.red,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 8.0),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "Processed on:",
+                                                    style: TextStyle(
+                                                      fontSize: 12.0,
+                                                      color: Colors.grey[600],
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 4.0),
+                                                  Text(
+                                                    account.dte,
+                                                    style: TextStyle(
+                                                      fontSize: 12.0,
+                                                      color: Colors.grey[600],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                "Reference No: FASPAY/${account.trnx_id}",
+                                                style: TextStyle(
+                                                  fontSize: 12.0,
+                                                  color: Colors.grey[600],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
-
+                            ),
                           ),
                         ),
                       ],
@@ -588,90 +585,89 @@ bool card_is_active=false;
                     right: 10,
                   ),
                   child: page_loader
-                 ? Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.9,
-                              height: MediaQuery.of(context).size.height * 0.4,
-                              child: Image.asset(
-                                fit: BoxFit.contain,
-                                'assets/images/nfc.png',
-                              ),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.9,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.4,
+                                    child: Image.asset(
+                                      fit: BoxFit.contain,
+                                      'assets/images/nfc.png',
+                                    ),
+                                  ),
+                                ]),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "What is Fascard?",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: Colors.blue.shade900,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ]),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            "What is Fascard?",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: Colors.blue.shade900,
+                            SizedBox(
+                              height: 5,
                             ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Flexible(
-                            child: Text(
-                              "Fascard is an advanced NFC enabled debit card that facilitates quick payments using NFC technology. Fascard supports tap to pay, deposits and withdrawals. Order a Fascard today for free and enjoy speedy, safe and secure transactions.",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey.shade700,
-                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    "Fascard is an advanced NFC enabled debit card that facilitates quick payments using NFC technology. Fascard supports tap to pay, deposits and withdrawals. Order a Fascard today for free and enjoy speedy, safe and secure transactions.",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey.shade700,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          ElevatedButton.icon(
-                            onPressed: () {
-                              setState(() {
-                                visable_card_request = true;
-                              });
-                            },
-                            icon: Icon(
-                              // <-- Icon
-                              Icons.credit_card,
-                              size: 24.0,
+                            SizedBox(
+                              height: 10,
                             ),
-                            label: Text('Request Card'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors
-                                  .blue.shade900, // background (button) color
-                              foregroundColor:
-                                  Colors.white, // foreground (text) color
-                            ), // <-- Text
-                          ),
-                        ],
-                      )
-                    ],
-                  )
-                      : Column(
-
-                  )
-          ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                ElevatedButton.icon(
+                                  onPressed: () {
+                                    setState(() {
+                                      visable_card_request = true;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    // <-- Icon
+                                    Icons.credit_card,
+                                    size: 24.0,
+                                  ),
+                                  label: Text('Request Card'),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.blue
+                                        .shade900, // background (button) color
+                                    foregroundColor:
+                                        Colors.white, // foreground (text) color
+                                  ), // <-- Text
+                                ),
+                              ],
+                            )
+                          ],
+                        )
+                      : Column()),
           Visibility(
             visible: visable_card_request,
             child: AnimatedOpacity(
@@ -1090,7 +1086,7 @@ bool card_is_active=false;
                             current_card_no = cardList[currentCardIndex].number;
                             print("trancmode " + current_card_no);
                             transfer_fund(my_num, my_token);
-                          }else if(_action=="card_withdraw"){
+                          } else if (_action == "card_withdraw") {
                             current_card_no = cardList[currentCardIndex].number;
                             print("trancmode " + current_card_no);
                             withdraw_fund(my_num, my_token);
@@ -1556,6 +1552,7 @@ bool card_is_active=false;
       },
     );
   }
+
   void _activate_card(BuildContext context, bool isPIN) {
     showDialog(
       context: context,
@@ -1581,28 +1578,26 @@ bool card_is_active=false;
                           color: Colors.blue.shade900,
                         ),
                       ),
-                     Expanded(child: Align(
-                       alignment: Alignment.topRight,
-                       child:   GestureDetector(
-                         onTap: (){
-                           Navigator.of(context).pop();
-                         },
-                         child: Text(
-                             "X",
-                             style: TextStyle(
-                               fontSize: 16,
-                               fontWeight: FontWeight.bold,
-                               color: Colors.red,
-                             ),
-                           ),
-                       ),
-
-                     )),
+                      Expanded(
+                          child: Align(
+                        alignment: Alignment.topRight,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(
+                            "X",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red,
+                            ),
+                          ),
+                        ),
+                      )),
                     ],
                   ),
-                  Divider(
-
-                  ),
+                  Divider(),
                 ],
               ),
               content: Container(
@@ -1626,146 +1621,129 @@ bool card_is_active=false;
                         controller: _oldPinController,
                         maxLength: isPIN ? 4 : 25,
                         keyboardType:
-                        isPIN ? TextInputType.number : TextInputType.text,
+                            isPIN ? TextInputType.number : TextInputType.text,
                         obscureText: !_isPinVisible,
                         enableSuggestions: false,
                         autocorrect: false,
-                        onChanged: (txt){
-                          if(txt.length==4){
+                        onChanged: (txt) {
+                          if (txt.length == 4) {
                             print("is ok");
 
-                            setState((){
-                              default_pin=true;
+                            setState(() {
+                              default_pin = true;
                             });
-                          }else{
-
+                          } else {
                             print("not working");
-                           setState((){
-                             default_pin=false;
-                           });
+                            setState(() {
+                              default_pin = false;
+                            });
                           }
                         },
-
-                       decoration:
-                       default_pin
-                        ? InputDecoration(
-
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.blue.shade900,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.blue.shade900,
-                            ),
-                          ),
-                          labelStyle: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 12,
-                          ),
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 15.0, horizontal: 15),
-                          labelText: 'Default PIN',
-                        )
-                      : InputDecoration(
-
-
-                      enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-
-                        color: Colors.red.shade900,
+                        decoration: default_pin
+                            ? InputDecoration(
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.blue.shade900,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.blue.shade900,
+                                  ),
+                                ),
+                                labelStyle: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                ),
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 15.0, horizontal: 15),
+                                labelText: 'Default PIN',
+                              )
+                            : InputDecoration(
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.red.shade900,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    width: 2,
+                                    color: Colors.red.shade900,
+                                  ),
+                                ),
+                                labelStyle: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                ),
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 15.0, horizontal: 15),
+                                labelText: 'Default PIN',
+                              ),
                       ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    width: 2,
-                    color: Colors.red.shade900,
-                  ),
-                ),
-                labelStyle: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 12,
-                ),
-                contentPadding: EdgeInsets.symmetric(
-                    vertical: 15.0, horizontal: 15),
-                labelText: 'Default PIN',
-              ),
-
-
-                      ),
-
                       TextFormField(
                         maxLength: isPIN ? 4 : 25,
                         keyboardType:
-                        isPIN ? TextInputType.number : TextInputType.text,
+                            isPIN ? TextInputType.number : TextInputType.text,
                         controller: _newPinController,
                         obscureText: !_isPinVisible,
                         enableSuggestions: false,
                         autocorrect: false,
-                        onChanged: (txt){
-                          if(txt.length==4){
-                            setState((){
-                              _new_pin=true;
+                        onChanged: (txt) {
+                          if (txt.length == 4) {
+                            setState(() {
+                              _new_pin = true;
                             });
-                          }else{
-                            setState((){
-                              _new_pin=false;
+                          } else {
+                            setState(() {
+                              _new_pin = false;
                             });
                           }
                         },
-
-                        decoration:
-                        _new_pin
+                        decoration: _new_pin
                             ? InputDecoration(
-
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.blue.shade900,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.blue.shade900,
-                            ),
-                          ),
-                          labelStyle: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 12,
-                          ),
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 15.0, horizontal: 15),
-                          labelText: 'Default PIN',
-                        )
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.blue.shade900,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.blue.shade900,
+                                  ),
+                                ),
+                                labelStyle: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                ),
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 15.0, horizontal: 15),
+                                labelText: 'Default PIN',
+                              )
                             : InputDecoration(
-
-
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-
-                              color: Colors.red.shade900,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              width: 2,
-                              color: Colors.red.shade900,
-                            ),
-                          ),
-                          labelStyle: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 12,
-                          ),
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 15.0, horizontal: 15),
-                          labelText: 'Default PIN',
-                        ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.red.shade900,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    width: 2,
+                                    color: Colors.red.shade900,
+                                  ),
+                                ),
+                                labelStyle: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                ),
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 15.0, horizontal: 15),
+                                labelText: 'Default PIN',
+                              ),
                       ),
-
                       TextFormField(
                         maxLength: isPIN ? 4 : 25,
                         keyboardType:
-                        isPIN ? TextInputType.number : TextInputType.text,
+                            isPIN ? TextInputType.number : TextInputType.text,
                         controller: _confirmPinController,
                         obscureText: !_isPinVisible,
                         enableSuggestions: false,
@@ -1792,7 +1770,6 @@ bool card_is_active=false;
                           labelText: 'Confirm PIN',
                         ),
                       ),
-
                       Row(
                         children: [
                           Checkbox(
@@ -1829,7 +1806,9 @@ bool card_is_active=false;
                               child: Text('Cancel'),
                             ),
                           ),
-                          SizedBox(width: 10,),
+                          SizedBox(
+                            width: 10,
+                          ),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blue.shade900,
@@ -1843,11 +1822,9 @@ bool card_is_active=false;
                         ],
                       )
                     ],
-
                   ),
                 ),
               ),
-
             );
           },
         );
@@ -2210,20 +2187,18 @@ bool card_is_active=false;
                               ),
                               SizedBox(height: 16.0),
                               ElevatedButton(
-                                
                                 style: ElevatedButton.styleFrom(
-
                                   backgroundColor: Colors.blue.shade900,
                                 ),
                                 onPressed: () {
-                                 Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
 
-
-                                  generate_voucher(my_num, my_token,cardList[currentCardIndex].number);
+                                  generate_voucher(my_num, my_token,
+                                      cardList[currentCardIndex].number);
                                 },
                                 child: Padding(
                                   padding: EdgeInsets.all(10),
-                                  child:Text("Activate Voucher"),
+                                  child: Text("Activate Voucher"),
                                 ),
                               ),
                             ],
@@ -2260,7 +2235,8 @@ bool card_is_active=false;
       });
     }
   }
-  Future generate_voucher(phone, token,account) async {
+
+  Future generate_voucher(phone, token, account) async {
     show_preogress = true;
     FocusScope.of(context).requestFocus(new FocusNode());
     var url = "https://a2ctech.net/api/faspay/_save_voucher.php";
@@ -2280,10 +2256,11 @@ bool card_is_active=false;
 
       if (data["status"] == "Done") {
         // print("DONE!!!");
-        showSuccessAnimation_voucher( context, _voucher.toString(), _voucherPinController.text) ;
+        showSuccessAnimation_voucher(
+            context, _voucher.toString(), _voucherPinController.text);
         show_preogress = false;
-      _voucherAmountController.text="";
-    _voucherPinController.text="";
+        _voucherAmountController.text = "";
+        _voucherPinController.text = "";
       } else {
         show_preogress = false;
         showFailsAnimation(context);
@@ -2292,6 +2269,7 @@ bool card_is_active=false;
       setState(() {});
     }
   }
+
   Future transfer_fund(phone, token) async {
     show_preogress = true;
     FocusScope.of(context).requestFocus(new FocusNode());
@@ -2320,6 +2298,7 @@ bool card_is_active=false;
       setState(() {});
     }
   }
+
   Future withdraw_fund(phone, token) async {
     show_preogress = true;
     FocusScope.of(context).requestFocus(new FocusNode());
@@ -2580,7 +2559,9 @@ bool card_is_active=false;
       },
     );
   }
-  void showSuccessAnimation_voucher(BuildContext context,String v_code,String v_pin) {
+
+  void showSuccessAnimation_voucher(
+      BuildContext context, String v_code, String v_pin) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -2588,7 +2569,7 @@ bool card_is_active=false;
         return Dialog(
           backgroundColor: Colors.transparent,
           child: Container(
-            height: 270,
+            height: MediaQuery.of(context).size.height / 3,
             width: 200,
             decoration: BoxDecoration(
               color: Colors.white,
@@ -2597,43 +2578,50 @@ bool card_is_active=false;
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
-                  height: 10,
-                ),
-                Icon(
-                  Icons.check_circle,
-                  color: Colors.green,
-                  size: 80,
-                ),
-                SizedBox(height: 10),
-                Text(
-                  "Transaction Successful!",
-                  style: TextStyle(
-                    fontSize: 20,
-                    // fontWeight: FontWeight.bold,
+                Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                          // height: 10,
+                          ),
+                      Icon(
+                        Icons.check_circle,
+                        color: Colors.blue.shade900,
+                        size: 80,
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        "Successful",
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.blue.shade900,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Divider(),
+                      Row(
+                        children: [
+                          Text("Voucher Code: "),
+                          Text(
+                            v_code,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Text("Voucher PIN:     "),
+                          Text(
+                            v_pin,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                      Divider(),
+                    ],
                   ),
-                ),
-                Divider(),
-                Padding(padding: EdgeInsets.only(left: 10,right: 10,top: 10),
-                child:Row(
-                  children: [
-                    Text("Voucher Code: "),
-                    Text(v_code,style: TextStyle(fontWeight: FontWeight.bold),),
-                  ],
-                ),
-                ),
-                Padding(padding: EdgeInsets.only(left: 10,right: 10),
-                child:Row(
-
-                  children: [
-                    Text("Voucher PIN:     "),
-                    Text(v_pin,style: TextStyle(fontWeight: FontWeight.bold),),
-                  ],
-                ),
-                ),
-                Divider(),
-                SizedBox(
-                  height: 5,
                 ),
                 TextButton(
                   onPressed: (() {
@@ -2643,8 +2631,9 @@ bool card_is_active=false;
                     setState(() {});
                   }),
                   child: Text(
-                    "OK",
+                    "DONE",
                     style: TextStyle(
+                      fontSize: 20,
                       color: Colors.blue.shade900,
                       fontWeight: FontWeight.bold,
                     ),
@@ -2724,7 +2713,6 @@ bool card_is_active=false;
     );
   }
 
-
   Future card_request(phone, token) async {
     show_preogress = true;
     FocusScope.of(context).requestFocus(new FocusNode());
@@ -2777,13 +2765,13 @@ bool card_is_active=false;
       for (var data in data) {
         if (data["card_checker"] == "false") {
           check_card = false;
-          page_loader=true;
+          page_loader = true;
         } else {
           cardList.add(new Card("Debit", data["account_no"], data["expire"],
-              double.parse(data["balance"][0]["balance"]),data["status"]));
+              double.parse(data["balance"][0]["balance"]), data["status"]));
           setState(() {
             check_card = true;
-            page_loader=true;
+            page_loader = true;
           });
         }
       }
@@ -2863,7 +2851,7 @@ bool card_is_active=false;
                     _show_pin = isWithdraw;
                     Navigator.of(context).pop();
                   }
-                }else if(_action=="card_withdraw"){
+                } else if (_action == "card_withdraw") {
                   if (amount > current_card_balance) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -2876,7 +2864,6 @@ bool card_is_active=false;
                     Navigator.of(context).pop();
                   }
                 }
-
               },
             ),
           ],
@@ -2893,5 +2880,5 @@ class Card {
   final double balance;
   final String card_status;
 
-  Card(this.type, this.number, this.expiryDate, this.balance,this.card_status);
+  Card(this.type, this.number, this.expiryDate, this.balance, this.card_status);
 }

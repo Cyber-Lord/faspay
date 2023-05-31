@@ -275,12 +275,19 @@ class _LoginState extends State<Login> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          SizedBox(
+                            height: 20,
+                          ),
                           Center(
                             child: Image.asset(
                               'assets/images/logo.png',
-                              height: 200.0,
+                              height: 150.0,
+                              width: 150.0,
                               // color: Colors.blue.shade900,
                             ),
+                          ),
+                          SizedBox(
+                            height: 10,
                           ),
                           Center(
                             child: Text(
@@ -374,6 +381,7 @@ class _LoginState extends State<Login> {
                           Row(
                             children: [
                               Checkbox(
+                                checkColor: Colors.blue.shade900,
                                 value: _isPinVisible,
                                 onChanged: (bool? value) {
                                   setState(() {

@@ -705,135 +705,160 @@ class _DashboardState extends State<Dashboard> {
                   ),
                   Divider(),
                   Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: ListView.builder(
-                        physics: AlwaysScrollableScrollPhysics(),
-                        itemCount: _accountData.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          final AccountHistory account = _accountData[index];
-                          return GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                account.isHidden = !account.isHidden;
-                              });
-                            },
-                            child: Container(
-                              margin: EdgeInsets.only(bottom: 8.0),
-                              padding: EdgeInsets.all(16.0),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8.0),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.3),
-                                    spreadRadius: 1,
-                                    blurRadius: 3,
-                                    offset: Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        account.tittle_name,
-                                        style: TextStyle(
-                                          fontSize: 14.0,
-                                          fontWeight: FontWeight.bold,
+                    child: _accountData.length != 0
+                        ? Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: ListView.builder(
+                              physics: AlwaysScrollableScrollPhysics(),
+                              itemCount: _accountData.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                final AccountHistory account =
+                                    _accountData[index];
+                                return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      account.isHidden = !account.isHidden;
+                                    });
+                                  },
+                                  child: Container(
+                                    margin: EdgeInsets.only(bottom: 8.0),
+                                    padding: EdgeInsets.all(16.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.3),
+                                          spreadRadius: 1,
+                                          blurRadius: 3,
+                                          offset: Offset(0, 2),
                                         ),
-                                      ),
-                                      Text(
-                                        account.type,
-                                        style: TextStyle(
-                                          fontSize: 14.0,
-                                          color: Colors.grey[600],
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        account.amount.toStringAsFixed(2),
-                                        style: TextStyle(
-                                          fontSize: 14.0,
-                                          fontWeight: FontWeight.bold,
-                                          color: account.amount >= 0
-                                              ? Colors.green
-                                              : Colors.red,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 8.0),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Processed on:",
-                                            style: TextStyle(
-                                              fontSize: 12.0,
-                                              color: Colors.grey[600],
+                                      ],
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              account.tittle_name,
+                                              style: TextStyle(
+                                                fontSize: 14.0,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
-                                          ),
-                                          SizedBox(width: 4.0),
-                                          Text(
-                                            account.dte,
-                                            style: TextStyle(
-                                              fontSize: 12.0,
-                                              color: Colors.grey[600],
+                                            Text(
+                                              account.type,
+                                              style: TextStyle(
+                                                fontSize: 14.0,
+                                                color: Colors.grey[600],
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "Reference No: FASPAY/${account.trnx_id}",
-                                        style: TextStyle(
-                                          fontSize: 12.0,
-                                          color: Colors.grey[600],
+                                            Text(
+                                              account.amount.toStringAsFixed(2),
+                                              style: TextStyle(
+                                                fontSize: 14.0,
+                                                fontWeight: FontWeight.bold,
+                                                color: account.amount >= 0
+                                                    ? Colors.green
+                                                    : Colors.red,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          IconButton(
-                                            icon: Icon(
-                                              Icons.picture_as_pdf,
-                                              color: Colors.red,
+                                        SizedBox(height: 8.0),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "Processed on:",
+                                                  style: TextStyle(
+                                                    fontSize: 12.0,
+                                                    color: Colors.grey[600],
+                                                  ),
+                                                ),
+                                                SizedBox(width: 4.0),
+                                                Text(
+                                                  account.dte,
+                                                  style: TextStyle(
+                                                    fontSize: 12.0,
+                                                    color: Colors.grey[600],
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                            onPressed: () =>
-                                                generatePDF(context, account),
-                                          ),
-                                          // IconButton(
-                                          //   onPressed: () {
-                                          //     Share.share(
-                                          //         'Here is my account history: ${account.name}, ${account.amount}');
-                                          //   },
-                                          //   icon: Icon(Icons.share),
-                                          // ),
-                                        ],
-                                      ),
-                                    ],
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              "Reference No: FASPAY/${account.trnx_id}",
+                                              style: TextStyle(
+                                                fontSize: 12.0,
+                                                color: Colors.grey[600],
+                                              ),
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                IconButton(
+                                                  icon: Icon(
+                                                    Icons.picture_as_pdf,
+                                                    color: Colors.red,
+                                                  ),
+                                                  onPressed: () => generatePDF(
+                                                      context, account),
+                                                ),
+                                                // IconButton(
+                                                //   onPressed: () {
+                                                //     Share.share(
+                                                //         'Here is my account history: ${account.name}, ${account.amount}');
+                                                //   },
+                                                //   icon: Icon(Icons.share),
+                                                // ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ],
-                              ),
+                                );
+                              },
                             ),
-                          );
-                        },
-                      ),
-                    ),
+                          )
+                        : Column(
+                            children: [
+                              SizedBox(
+                                height: 40,
+                              ),
+                              Icon(
+                                Icons.history,
+                                size: 80,
+                                color: Colors.blue.shade900,
+                              ),
+                              Center(
+                                child: Text(
+                                  "No Recent Transactions",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.blue.shade900,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                   ),
                 ],
               ),
