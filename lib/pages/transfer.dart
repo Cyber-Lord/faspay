@@ -60,7 +60,12 @@ class _TransferState extends State<Transfer> {
     return Scaffold(
       backgroundColor: Color(0xFFf1f1f9),
       appBar: AppBar(
-        title: Text("To FasPay"),
+        title: Text(
+          "Transfer",
+          style: TextStyle(
+            fontSize: 18,
+          ),
+        ),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -257,17 +262,18 @@ class _TransferState extends State<Transfer> {
                                                               .spaceBetween,
                                                       children: [
                                                         Text(
-                                                          account.name +
-                                                              "(" +
-                                                              account
-                                                                  .account_no_his +
-                                                              ")",
+                                                          account.name,
+                                                          // +
+                                                          //     "(" +
+                                                          //     account
+                                                          //         .account_no_his +
+                                                          //     ")",
                                                           style: TextStyle(
                                                             fontSize: 14.0,
-                                                            color:
-                                                                Colors.black87,
+                                                            color: Colors
+                                                                .grey[700],
                                                             fontWeight:
-                                                                FontWeight.w600,
+                                                                FontWeight.bold,
                                                           ),
                                                         ),
                                                         Text(

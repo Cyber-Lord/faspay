@@ -32,8 +32,7 @@ class _SplshscreenState extends State<Splshscreen> {
     return Scaffold(
       body: Center(
         child: Column(
-          mainAxisAlignment:
-              MainAxisAlignment.center, //Center Row contents horizontally,
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image.asset(
