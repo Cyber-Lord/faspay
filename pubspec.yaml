@@ -57,6 +57,7 @@ dependencies:
   flutter_svg: ^0.23.0+1
   confirmation_success: ^0.0.2
   timezone: ^0.8.0
+  flutter_custom_tabs: ^1.0.4
   
 
 

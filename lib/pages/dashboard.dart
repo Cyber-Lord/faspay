@@ -22,6 +22,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'custome_tab.dart';
+
 class AccountHistory {
   String sender_name;
   String rcva_name;
@@ -1026,13 +1028,10 @@ class _DashboardState extends State<Dashboard> {
                       backgroundColor: Colors.blue.shade900,
                     ),
                     onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DepositMoneyPage(depositAmount),
-                        ),
-                      );
+                      setState(() {
+                        show_preogress = true;
+                      });
+                      card_deposit();
                     },
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -1112,6 +1111,38 @@ class _DashboardState extends State<Dashboard> {
         Navigator.of(context).pop();
         showQRCode(context, data["code"]);
       } else {}
+      setState(() {
+        show_preogress = false;
+      });
+    } else {
+      print(response.statusCode);
+    }
+  }
+  Future card_deposit() async {
+    var url = "https://a2ctech.net/api/faspay/card_deposit.php";
+    var response;
+    response = await http.post(Uri.parse(url), body: {
+      "phone": my_num,
+      "token": my_token,
+      "amount": depositAmount.toString(),
+    });
+
+    var data = json.decode(response.body);
+    if (response.statusCode == 200) {
+      print(response.body);
+      print(data["status"]);
+      if (data["status"] == "true") {
+        Navigator.of(context).pop();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            //builder: (context) => DepositMoneyPage(depositAmount),
+            builder: (context) => Custome_tba(trnx_id: data["trnx_id"],),
+          ),
+        );
+      } else {
+
+      }
       setState(() {
         show_preogress = false;
       });
@@ -1279,4 +1310,5 @@ void showQRCode(BuildContext context, String data) {
     backgroundColor: Colors.transparent,
     isScrollControlled: true,
   );
+
 }
