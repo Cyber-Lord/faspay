@@ -38,6 +38,7 @@ class AccountHistory {
   String rcva_o_name;
   String Beneficiary_account;
   String tittle_name;
+  String mode_of_trnx;
 
   AccountHistory({
     required this.sender_name,
@@ -52,6 +53,7 @@ class AccountHistory {
     required this.rcva_o_name,
     required this.Beneficiary_account,
     required this.tittle_name,
+    required this.mode_of_trnx,
     this.isHidden = true,
   });
 }
@@ -809,18 +811,30 @@ class _DashboardState extends State<Dashboard> {
                                                 color: Colors.grey[600],
                                               ),
                                             ),
+
                                             Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.end,
                                               children: [
-                                                IconButton(
-                                                  icon: Icon(
-                                                    Icons.picture_as_pdf,
-                                                    color: Colors.red,
-                                                  ),
-                                                  onPressed: () => generatePDF(
-                                                      context, account),
-                                                ),
+                                                if(account.mode_of_trnx=="Card Deposit")...[
+                                                  IconButton(
+                                                    icon: Icon(
+                                                      Icons.wallet,
+                                                      color: Colors.green,
+                                                    ),
+                                                    onPressed: (){}
+                                                  )
+                                                ]else...[
+                                                  IconButton(
+                                                    icon: Icon(
+                                                      Icons.picture_as_pdf,
+                                                      color: Colors.red,
+                                                    ),
+                                                    onPressed: () => generatePDF(
+                                                        context, account),
+                                                  )
+                                                ]
+                                                ,
                                                 // IconButton(
                                                 //   onPressed: () {
                                                 //     Share.share(
@@ -1168,6 +1182,38 @@ class _DashboardState extends State<Dashboard> {
         //print(data["rcver"][0]["f_name"]);
         String my_account = my_num.substring(1);
         if (my_account == data["rcver_account"]) {
+          if(data["mode_of_trnx"]=="Card Deposit"){
+            _accountData.add(new AccountHistory(
+                sender_name: "System Deposit",
+                rcva_name: "System Deposit",
+                amount: double.parse(data["amount"]),
+                type: data["trnx_type"],
+                dte: data["dte"],
+                trnx_id: data["tranx_id"],
+                sender_s_name: "System Deposit",
+                sender_o_name: "System Deposit",
+                rcva_s_name: "System Deposit",
+                rcva_o_name: "System Deposit",
+                Beneficiary_account: "System Deposit",
+                tittle_name: "Card Deposit",
+                mode_of_trnx: data["mode_of_trnx"]));
+          }else{
+            _accountData.add(new AccountHistory(
+                sender_name: data["sender"][0]["f_name"],
+                rcva_name: data["rcver"][0]["f_name"],
+                amount: double.parse(data["amount"]),
+                type: data["trnx_type"],
+                dte: data["dte"],
+                trnx_id: data["tranx_id"],
+                sender_s_name: data["sender"][0]["s_name"],
+                sender_o_name: data["sender"][0]["o_name"],
+                rcva_s_name: data["rcver"][0]["s_name"],
+                rcva_o_name: data["rcver"][0]["o_name"],
+                Beneficiary_account: data["rcver_account"],
+                tittle_name: data["sender"][0]["f_name"],
+             mode_of_trnx: data["mode_of_trnx"]));
+          }
+        }else {
           _accountData.add(new AccountHistory(
               sender_name: data["sender"][0]["f_name"],
               rcva_name: data["rcver"][0]["f_name"],
@@ -1180,21 +1226,8 @@ class _DashboardState extends State<Dashboard> {
               rcva_s_name: data["rcver"][0]["s_name"],
               rcva_o_name: data["rcver"][0]["o_name"],
               Beneficiary_account: data["rcver_account"],
-              tittle_name: data["sender"][0]["f_name"]));
-        } else {
-          _accountData.add(new AccountHistory(
-              sender_name: data["sender"][0]["f_name"],
-              rcva_name: data["rcver"][0]["f_name"],
-              amount: double.parse(data["amount"]),
-              type: data["trnx_type"],
-              dte: data["dte"],
-              trnx_id: data["tranx_id"],
-              sender_s_name: data["sender"][0]["s_name"],
-              sender_o_name: data["sender"][0]["o_name"],
-              rcva_s_name: data["rcver"][0]["s_name"],
-              rcva_o_name: data["rcver"][0]["o_name"],
-              Beneficiary_account: data["rcver_account"],
-              tittle_name: data["rcver"][0]["f_name"]));
+              tittle_name: data["rcver"][0]["f_name"],
+              mode_of_trnx: data["mode_of_trnx"]));
         }
       }
 
