@@ -528,6 +528,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.0"
+  pinput:
+    dependency: "direct main"
+    description:
+      name: pinput
+      sha256: "75210739f49ace3a6498018811906c825581967978f4b7cd3f07c5b586b48557"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0"
   platform:
     dependency: transitive
     description:

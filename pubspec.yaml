@@ -58,6 +58,7 @@ dependencies:
   confirmation_success: ^0.0.2
   timezone: ^0.8.0
   flutter_custom_tabs: ^1.0.4
+  pinput: 1.2.0
   
 
 

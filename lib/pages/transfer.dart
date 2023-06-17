@@ -857,17 +857,22 @@ class _TransferState extends State<Transfer> {
         //print(my_num.substring(1));
         String my_account = my_num.substring(1);
         if (my_account == data["rcver_account"]) {
-          _accountData.add(new AccountHistory(
-              name: data["sender"][0]["f_name"] +
-                  " " +
-                  data["sender"][0]["s_name"] +
-                  " " +
-                  data["sender"][0]["o_name"],
-              amount: double.parse(data["amount"]),
-              type: data["trnx_type"],
-              dte: data["dte"],
-              trnx_id: data["tranx_id"],
-              account_no_his: data["sender"][0]["phone"]));
+          if(data["mode_of_trnx"]=="Card Deposit"){
+
+          }else{
+            _accountData.add(new AccountHistory(
+                name: data["sender"][0]["f_name"] +
+                    " " +
+                    data["sender"][0]["s_name"] +
+                    " " +
+                    data["sender"][0]["o_name"],
+                amount: double.parse(data["amount"]),
+                type: data["trnx_type"],
+                dte: data["dte"],
+                trnx_id: data["tranx_id"],
+                account_no_his: data["sender"][0]["phone"]));
+          }
+
         } else {
           _accountData.add(new AccountHistory(
               name: data["rcver"][0]["f_name"] +

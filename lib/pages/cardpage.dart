@@ -15,6 +15,8 @@ import 'package:printing/printing.dart';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_pin_code_widget/flutter_pin_code_widget.dart';
+import 'package:pinput/pin_put/pin_put.dart';
+
 
 class AccountHistory {
   String sender_name;
@@ -57,21 +59,38 @@ class CardPage extends StatefulWidget {
 class _CardPageState extends State<CardPage> {
   final List<AccountHistory> _accountData = [];
 
-  bool isGrey = false;
-  bool card_is_active = false;
-  double balance = 0;
-  var size, height, width;
   final _formKey = GlobalKey<FormState>();
+
+  var size, height, width;
+
   late String _fullName;
   late String _email;
   late String _phoneNumber;
   late String _address;
+
   bool check_card = false;
   bool page_loader = false;
-
   bool visable_card_request = false;
   bool show_preogress = false;
+  bool isGrey = false;
+  bool card_is_active = false;
+  bool _show_pin = false;
+  bool isFundCard = false;
+  bool isWithdraw = false;
+  bool default_pin = false;
+  bool _new_pin = false;
+  bool _confirm_pin = false;
+  bool _isPinVisible = false;
+  bool isActive = false;
+  bool show_card_activation_panel=false;
+  bool isDefault_pin=false;
+  bool invalid_default_pin=false;
+  bool _pin_create_succss=false;
+
   double main_account_balance = 0;
+  double balance = 0;
+  double amount = 0.0, current_card_balance = 0.0;
+
   TextEditingController txt_full_name = TextEditingController();
   TextEditingController txt_mail = TextEditingController();
   TextEditingController txt_phone = TextEditingController();
@@ -79,31 +98,29 @@ class _CardPageState extends State<CardPage> {
   TextEditingController txt_lga = TextEditingController();
   TextEditingController txt_ward = TextEditingController();
   TextEditingController txt_near_by = TextEditingController();
-  bool _show_pin = false;
-  String my_num = "", my_token = "";
-  String trnx_pin = "111111";
-  List<Card> cardList = [];
-  String _action = "";
-  int currentCardIndex = 0;
-  String current_card_no = "xx";
-  String current_card_status = "";
-  int hold_index = 0;
-  String trnx_mode = "";
-  double amount = 0.0, current_card_balance = 0.0;
-  bool isActive = false;
   TextEditingController _oldPinController = TextEditingController();
   TextEditingController _newPinController = TextEditingController();
   TextEditingController _confirmPinController = TextEditingController();
-  String _errorMessage = '';
-  bool _isPinVisible = false;
-  String? _voucher;
   TextEditingController _voucherPinController = TextEditingController();
   TextEditingController _voucherAmountController = TextEditingController();
-  bool isFundCard = false;
-  bool isWithdraw = false;
-  bool default_pin = false;
-  bool _new_pin = false;
-  bool _confirm_pin = false;
+  TextEditingController set_new_pin=TextEditingController();
+
+  String my_num = "", my_token = "";
+  String trnx_pin = "";
+  String _action = "";
+  String current_card_no = "xx";
+  String current_card_status = "";
+  String trnx_mode = "";
+  String _errorMessage = '';
+  String? _voucher;
+  String _first_pin="";
+  String _second_pin="";
+  String pin_tittle="Enter 4-digit Default PIN";
+
+  List<Card> cardList = [];
+
+  int hold_index = 0;
+  int currentCardIndex = 0;
 
   void _changePin() {
     String oldPin = _oldPinController.text;
@@ -398,7 +415,8 @@ class _CardPageState extends State<CardPage> {
                                           cardList[currentCardIndex]
                                               .card_status;
                                       if (current_card_status == "Pending") {
-                                        _activate_card(context, true);
+                                        show_card_activation_panel=true;
+                                       // _activate_card(context, true);
                                       } else {
                                         _showDialog(
                                             context, balance, isFundCard);
@@ -1048,6 +1066,7 @@ class _CardPageState extends State<CardPage> {
               ),
             ),
           ),
+          // transaction pin
           Visibility(
             visible: _show_pin,
             child: Container(
@@ -1105,6 +1124,7 @@ class _CardPageState extends State<CardPage> {
               ),
             ),
           ),
+          // card request
           Visibility(
             child: GestureDetector(
               onTap: () {
@@ -1214,6 +1234,159 @@ class _CardPageState extends State<CardPage> {
             ),
             visible: isGrey,
           ),
+          // set card pin
+          Visibility(
+            visible: show_card_activation_panel,
+              child:  Container(
+                color: Colors.white,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(padding: EdgeInsets.all(40),
+                      child: Material(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Padding(
+                          padding: EdgeInsets.all(20),
+                          child:
+                          Container(
+                            width: width,
+                            child: Column(
+                              children: [
+                                Icon(Icons.lock,size: 80,color: Colors.blue.shade900,),
+                                SizedBox(height: 10,),
+                                Text("Card Activation",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                                SizedBox(height: 10,),
+                                Text("Before you fund your card, please enter the PIN from the card envelope and your preferred PIN below",),
+                                SizedBox(height: 15,),
+
+                                PinPut(
+                                  controller: set_new_pin,
+                                  // focusNode: focu,
+                                  autofocus: true,
+                                  keyboardAppearance: Brightness.light,
+                                  obscureText: "*",
+                                  onChanged: (v){
+
+                                    if(v.length==4){
+                                      if(v==cardList[currentCardIndex].card_pin){
+                                        setState(() {
+                                          isDefault_pin=true;
+                                          _first_pin="";
+                                          set_new_pin.clear();
+                                          print("xcccc");
+                                          pin_tittle="Enter a new 4-digit PIN";
+                                          invalid_default_pin=false;
+                                        });
+                                      }else if(isDefault_pin==true){
+
+                                        if(_first_pin==""){
+                                          print("1st pin");
+                                          _first_pin=v;
+                                          set_new_pin.clear();
+                                          print(_first_pin);
+                                          setState(() {
+                                            pin_tittle="Confirm 4-digit PIN";
+                                          });
+                                        }else if(_first_pin.isNotEmpty && _second_pin==""){
+                                          _second_pin=v;
+                                          if(_first_pin==_second_pin){
+                                            print("correct pin");
+
+                                            save_new_pin(cardList[currentCardIndex].number);
+                                            setState(() {
+                                              show_preogress=true;
+
+                                              FocusScope.of(context).requestFocus(new FocusNode());
+                                            });
+                                          }else{
+                                            setState(() {
+                                              pin_tittle="Enter 4-digit PIN";
+                                              set_new_pin.clear();
+                                              _first_pin="";
+                                              _second_pin="";
+                                              print("not correct");
+                                            });
+                                          }
+                                        }else if(_first_pin.isNotEmpty && _second_pin.isNotEmpty){
+                                          _second_pin=v;
+                                          if(_first_pin==_second_pin){
+                                            print("correct pin");
+                                            save_new_pin(cardList[currentCardIndex].number);
+                                            setState(() {
+                                              pin_tittle="Please wait";
+                                              FocusScope.of(context).requestFocus(new FocusNode());
+                                              show_preogress=true;
+                                            });
+                                          }else{
+                                            setState(() {
+                                              pin_tittle="Enter 4-digit PIN";
+                                              set_new_pin.clear();
+                                              _first_pin="";
+                                              _second_pin="";
+                                              print("not correct");
+                                            });
+                                          }
+                                        }
+                                        v="";
+
+                                      }else{
+                                       setState(() {
+                                         invalid_default_pin=true;
+                                         set_new_pin.clear();
+                                         print("invalid Default pin");
+                                       });
+                                      }
+
+                                    }
+                                  },
+                                  textStyle: TextStyle(
+                                      color:Colors.black,
+                                      fontFamily: "Gilroy Bold",
+                                      fontSize: height / 40),
+                                  fieldsCount: 4,
+                                  eachFieldWidth: width / 6.5,
+                                  withCursor: false,
+                                  submittedFieldDecoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      border: Border.all(color: Colors.blue))
+                                      .copyWith(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      border: Border.all(color: Colors.blue)),
+                                  selectedFieldDecoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      border: Border.all(color: Colors.blue)),
+                                  followingFieldDecoration: BoxDecoration(
+                                    border: Border.all(color: Colors.blue),
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ).copyWith(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                ),
+                                Text(pin_tittle,style: TextStyle(fontSize: 16),),
+                                if(invalid_default_pin==true)...[
+                                  Text("Invalid Default PIN",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: Colors.red),)
+                                ]
+                              ],
+                            ),
+                          ),
+                        ),
+                        color: Colors.white,
+                      ),
+
+
+                    ),
+
+                  ],
+                ),
+              ),
+          ),
+          //show success icon
+
+          //progress bar
           Visibility(
               visible: show_preogress,
               child: Container(
@@ -1258,7 +1431,53 @@ class _CardPageState extends State<CardPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
+  Widget done_widget(){
+    return GestureDetector(
+      onTap: (){
+        setState(() {
+          _pin_create_succss=false;
+        });
+      },
+      child:       Container(
+        color: Colors.black.withOpacity(0.5),
+        child: Center(
+          child: Material(
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.white,
+            child: Icon(Icons.done,size: 100,),
+          ),
+        ),
+      ),
+    );
 
+  }
+  Future save_new_pin(account) async {
+    var url = "https://a2ctech.net/api/faspay/_set_card_pin.php";
+    var response;
+    response = await http.post(Uri.parse(url), body: {
+      "phone": my_num,
+      "token": my_token,
+      "pin": _first_pin,
+      "account": account,
+    });
+
+    var data = json.decode(response.body);
+    if (response.statusCode == 200) {
+      print(response.body);
+      print(data["status"]);
+      if (data["status"] == "true") {
+       // _pin_create_succss=true;
+        //get_customer_details(my_num, my_token);
+      } else {
+
+      }
+      setState(() {
+        show_preogress = false;
+      });
+    } else {
+      print(response.statusCode);
+    }
+  }
   Future<void> _showWarningDialog(BuildContext context, bool isFrozen) async {
     return showDialog<void>(
       context: context,
@@ -2388,19 +2607,24 @@ class _CardPageState extends State<CardPage> {
         //print(data["rcver"][0]["f_name"]);
         String my_account = my_num.substring(1);
         if (my_account == data["rcver_account"]) {
-          _accountData.add(new AccountHistory(
-              sender_name: data["sender"][0]["f_name"],
-              rcva_name: data["rcver"][0]["f_name"],
-              amount: double.parse(data["amount"]),
-              type: data["trnx_type"],
-              dte: data["dte"],
-              trnx_id: data["tranx_id"],
-              sender_s_name: data["sender"][0]["s_name"],
-              sender_o_name: data["sender"][0]["o_name"],
-              rcva_s_name: data["rcver"][0]["s_name"],
-              rcva_o_name: data["rcver"][0]["o_name"],
-              Beneficiary_account: data["rcver_account"],
-              tittle_name: data["sender"][0]["f_name"]));
+          if(data["mode_of_trnx"]=="Card Deposit"){
+
+          }else{
+            _accountData.add(new AccountHistory(
+                sender_name: data["sender"][0]["f_name"],
+                rcva_name: data["rcver"][0]["f_name"],
+                amount: double.parse(data["amount"]),
+                type: data["trnx_type"],
+                dte: data["dte"],
+                trnx_id: data["tranx_id"],
+                sender_s_name: data["sender"][0]["s_name"],
+                sender_o_name: data["sender"][0]["o_name"],
+                rcva_s_name: data["rcver"][0]["s_name"],
+                rcva_o_name: data["rcver"][0]["o_name"],
+                Beneficiary_account: data["rcver_account"],
+                tittle_name: data["sender"][0]["f_name"]));
+          }
+
         } else {
           _accountData.add(new AccountHistory(
               sender_name: data["sender"][0]["f_name"],
@@ -2768,7 +2992,7 @@ class _CardPageState extends State<CardPage> {
           page_loader = true;
         } else {
           cardList.add(new Card("Debit", data["account_no"], data["expire"],
-              double.parse(data["balance"][0]["balance"]), data["status"]));
+              double.parse(data["balance"][0]["balance"]), data["status"],data["card_pin"]));
           setState(() {
             check_card = true;
             page_loader = true;
@@ -2879,6 +3103,7 @@ class Card {
   final String expiryDate;
   final double balance;
   final String card_status;
+  final String card_pin;
 
-  Card(this.type, this.number, this.expiryDate, this.balance, this.card_status);
+  Card(this.type, this.number, this.expiryDate, this.balance, this.card_status,this.card_pin);
 }
