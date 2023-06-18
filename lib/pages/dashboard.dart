@@ -25,7 +25,6 @@ import 'package:path_provider/path_provider.dart';
 import 'custome_tab.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 
-
 class AccountHistory {
   String sender_name;
   String rcva_name;
@@ -75,20 +74,20 @@ class _DashboardState extends State<Dashboard> {
   double balance = 0;
   String my_num = "", my_token = "";
   String name = "";
-  String first_pin="";
-  String _second_pin="";
-  String pin_tittle="Enter 4-digit PIN";
-  bool trnx_pin_status=true;
-  bool _pin_create_succss=false;
+  String first_pin = "";
+  String _second_pin = "";
+  String pin_subTitle = "Enter a 4-digit PIN";
+  bool trnx_pin_status = true;
+  bool _pin_create_succss = false;
 
   TextEditingController _amountController = TextEditingController();
-   TextEditingController set_new_pin=TextEditingController();
+  TextEditingController set_new_pin = TextEditingController();
   late double depositAmount = 0;
 
   Future<void> generatePDF(BuildContext context, AccountHistory account) async {
     final pdf = pw.Document();
 
-    final assetImg = await rootBundle.load('assets/images/logo.png');
+    final assetImg = await rootBundle.load('assets/images/logo.svg');
     final img = PdfImage.file(
       pdf.document,
       bytes: assetImg.buffer.asUint8List(),
@@ -819,30 +818,29 @@ class _DashboardState extends State<Dashboard> {
                                                 color: Colors.grey[600],
                                               ),
                                             ),
-
                                             Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.end,
                                               children: [
-                                                if(account.mode_of_trnx=="Card Deposit")...[
+                                                if (account.mode_of_trnx ==
+                                                    "Card Deposit") ...[
                                                   IconButton(
-                                                    icon: Icon(
-                                                      Icons.wallet,
-                                                      color: Colors.green,
-                                                    ),
-                                                    onPressed: (){}
-                                                  )
-                                                ]else...[
+                                                      icon: Icon(
+                                                        Icons.wallet,
+                                                        color: Colors.green,
+                                                      ),
+                                                      onPressed: () {})
+                                                ] else ...[
                                                   IconButton(
                                                     icon: Icon(
                                                       Icons.picture_as_pdf,
                                                       color: Colors.red,
                                                     ),
-                                                    onPressed: () => generatePDF(
-                                                        context, account),
+                                                    onPressed: () =>
+                                                        generatePDF(
+                                                            context, account),
                                                   )
-                                                ]
-                                                ,
+                                                ],
                                                 // IconButton(
                                                 //   onPressed: () {
                                                 //     Share.share(
@@ -886,106 +884,143 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ],
               ),
-              if(trnx_pin_status)...[
-
-              ]else...[
+              if (trnx_pin_status)
+                ...[]
+              else ...[
                 Container(
                   color: Colors.white,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Padding(padding: EdgeInsets.all(40),
+                      Padding(
+                        padding: EdgeInsets.all(40),
                         child: Material(
                           borderRadius: BorderRadius.circular(10),
                           child: Padding(
                             padding: EdgeInsets.all(20),
-                            child:
-                            Container(
+                            child: Container(
                               width: width,
                               child: Column(
                                 children: [
-                                  Icon(Icons.lock,size: 80,color: Colors.blue.shade900,),
-                                  SizedBox(height: 10,),
-                                  Text("One more thing,",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
-                                  SizedBox(height: 10,),
-                                  Text("Please kindly set a transaction PIN below",),
-                                  SizedBox(height: 15,),
-
+                                  Icon(
+                                    Icons.lock,
+                                    size: 80,
+                                    color: Colors.blue.shade900,
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    "One more thing,",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                      color: Colors.grey.shade700,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    "To get started, please kindly set a transaction PIN below.",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.grey.shade700,
+                                      fontSize: 13,
+                                      textBaseline: TextBaseline.alphabetic,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
                                   PinPut(
                                     controller: set_new_pin,
                                     // focusNode: focu,
                                     autofocus: true,
                                     keyboardAppearance: Brightness.light,
                                     obscureText: "*",
-                                    onChanged: (v){
-
-                                      if(v.length==4){
-                                        if(first_pin==""){
-                                          first_pin=v;
+                                    onChanged: (value) {
+                                      if (value.length == 4) {
+                                        if (first_pin == "") {
+                                          first_pin = value;
                                           set_new_pin.clear();
                                           print(first_pin);
                                           setState(() {
-                                            pin_tittle="Confirm 4-digit PIN";
+                                            pin_subTitle =
+                                                "Confirm 4-digit PIN";
                                           });
-                                        }else if(first_pin.isNotEmpty && _second_pin==""){
-                                          _second_pin=v;
-                                          if(first_pin==_second_pin){
+                                        } else if (first_pin.isNotEmpty &&
+                                            _second_pin == "") {
+                                          _second_pin = value;
+                                          if (first_pin == _second_pin) {
                                             print("correct pin");
                                             save_new_pin();
                                             setState(() {
-                                              show_preogress=true;
-                                              FocusScope.of(context).requestFocus(new FocusNode());
+                                              show_preogress = true;
+                                              FocusScope.of(context)
+                                                  .requestFocus(
+                                                      new FocusNode());
                                             });
-                                          }else{
+                                          } else {
                                             setState(() {
-                                              pin_tittle="Enter 4-digit PIN";
+                                              pin_subTitle =
+                                                  "Enter a 4-digit PIN";
                                               set_new_pin.clear();
-                                              first_pin="";
-                                              _second_pin="";
+                                              first_pin = "";
+                                              _second_pin = "";
                                               print("not correct");
                                             });
                                           }
-                                        }else if(first_pin.isNotEmpty && _second_pin.isNotEmpty){
-                                          _second_pin=v;
-                                          if(first_pin==_second_pin){
+                                        } else if (first_pin.isNotEmpty &&
+                                            _second_pin.isNotEmpty) {
+                                          _second_pin = value;
+                                          if (first_pin == _second_pin) {
                                             print("correct pin");
                                             save_new_pin();
                                             setState(() {
-                                              pin_tittle="Please wait";
-                                              FocusScope.of(context).requestFocus(new FocusNode());
-                                              show_preogress=true;
+                                              pin_subTitle = "Please wait";
+                                              FocusScope.of(context)
+                                                  .requestFocus(
+                                                      new FocusNode());
+                                              show_preogress = true;
                                             });
-                                          }else{
+                                          } else {
                                             setState(() {
-                                              pin_tittle="Enter 4-digit PIN";
+                                              pin_subTitle =
+                                                  "Enter a 4-digit PIN";
                                               set_new_pin.clear();
-                                              first_pin="";
-                                              _second_pin="";
+                                              first_pin = "";
+                                              _second_pin = "";
                                               print("not correct");
                                             });
                                           }
                                         }
-                                        v="";
+                                        value = "";
                                       }
                                     },
                                     textStyle: TextStyle(
-                                        color:Colors.black,
+                                        color: Colors.black,
                                         fontFamily: "Gilroy Bold",
                                         fontSize: height / 40),
                                     fieldsCount: 4,
                                     eachFieldWidth: width / 6.5,
                                     withCursor: false,
                                     submittedFieldDecoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(10.0),
-                                        border: Border.all(color: Colors.blue))
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            border:
+                                                Border.all(color: Colors.blue))
                                         .copyWith(
-                                        borderRadius: BorderRadius.circular(10.0),
-                                        border: Border.all(color: Colors.blue)),
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            border:
+                                                Border.all(color: Colors.blue)),
                                     selectedFieldDecoration: BoxDecoration(
                                         color: Colors.white,
-                                        borderRadius: BorderRadius.circular(10.0),
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
                                         border: Border.all(color: Colors.blue)),
                                     followingFieldDecoration: BoxDecoration(
                                       border: Border.all(color: Colors.blue),
@@ -995,27 +1030,31 @@ class _DashboardState extends State<Dashboard> {
                                       borderRadius: BorderRadius.circular(10.0),
                                     ),
                                   ),
-                                  Text(pin_tittle,style: TextStyle(fontSize: 16),)
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    pin_subTitle,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey.shade700,
+                                    ),
+                                  )
                                 ],
                               ),
                             ),
                           ),
                           color: Colors.white,
                         ),
-
-
                       ),
-
                     ],
                   ),
                 ),
               ],
-              if(_pin_create_succss)...[
-                done_widget(),
-              ]else...[
-
-              ],
-
+              if (_pin_create_succss) ...[
+                SuccessContainer(),
+              ] else
+                ...[],
               Visibility(
                   visible: show_preogress,
                   child: Container(
@@ -1031,26 +1070,68 @@ class _DashboardState extends State<Dashboard> {
           ),
         ));
   }
-Widget done_widget(){
+
+  Widget SuccessContainer() {
     return GestureDetector(
-      onTap: (){
-setState(() {
-  _pin_create_succss=false;
-});
+      onTap: () {
+        setState(() {
+          _pin_create_succss = false;
+        });
       },
-      child:       Container(
+      child: Container(
         color: Colors.black.withOpacity(0.5),
         child: Center(
           child: Material(
             borderRadius: BorderRadius.circular(20),
             color: Colors.white,
-            child: Icon(Icons.done,size: 100,),
+            child: Container(
+              height: MediaQuery.of(context).size.height / 3.4,
+              width: MediaQuery.of(context).size.width / 1.5,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "Success",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.blue.shade900,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Icon(
+                      Icons.check_circle,
+                      size: 100,
+                      color: Colors.blue.shade900,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "Your PIN has been set successfully. Tap outside the box to continue.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.blue.shade900,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
         ),
       ),
     );
+  }
 
-}
   Future get_customer_details(phone, token) async {
     show_preogress = true;
     FocusScope.of(context).requestFocus(new FocusNode());
@@ -1070,10 +1151,10 @@ setState(() {
         balance = double.parse(bal);
         accNo = data["phone"];
 
-        if(data["trnx_pin_status"]=="true"){
-    trnx_pin_status=true;
-        }else{
-    trnx_pin_status=false;
+        if (data["trnx_pin_status"] == "true") {
+          trnx_pin_status = true;
+        } else {
+          trnx_pin_status = false;
         }
         show_preogress = false;
         fetch_transaction();
@@ -1204,7 +1285,6 @@ setState(() {
                       backgroundColor: Colors.blue.shade900,
                     ),
                     onPressed: () {
-
                       setState(() {
                         show_preogress = true;
                       });
@@ -1296,6 +1376,7 @@ setState(() {
       print(response.statusCode);
     }
   }
+
   Future save_new_pin() async {
     var url = "https://a2ctech.net/api/faspay/_set_transaction_pin.php";
     var response;
@@ -1310,11 +1391,9 @@ setState(() {
       print(response.body);
       print(data["status"]);
       if (data["status"] == "true") {
-        _pin_create_succss=true;
+        _pin_create_succss = true;
         get_customer_details(my_num, my_token);
-      } else {
-
-      }
+      } else {}
       setState(() {
         show_preogress = false;
       });
@@ -1322,6 +1401,7 @@ setState(() {
       print(response.statusCode);
     }
   }
+
   Future card_deposit() async {
     var url = "https://a2ctech.net/api/faspay/card_deposit.php";
     var response;
@@ -1336,10 +1416,8 @@ setState(() {
       print(response.body);
       print(data["status"]);
       if (data["status"] == "true") {
-        _launchURL( context, data["trnx_id"]);
-      } else {
-
-      }
+        _launchURL(context, data["trnx_id"]);
+      } else {}
       setState(() {
         show_preogress = false;
       });
@@ -1365,7 +1443,7 @@ setState(() {
         //print(data["rcver"][0]["f_name"]);
         String my_account = my_num.substring(1);
         if (my_account == data["rcver_account"]) {
-          if(data["mode_of_trnx"]=="Card Deposit"){
+          if (data["mode_of_trnx"] == "Card Deposit") {
             _accountData.add(new AccountHistory(
                 sender_name: "System Deposit",
                 rcva_name: "System Deposit",
@@ -1380,7 +1458,7 @@ setState(() {
                 Beneficiary_account: "System Deposit",
                 tittle_name: "Card Deposit",
                 mode_of_trnx: data["mode_of_trnx"]));
-          }else{
+          } else {
             _accountData.add(new AccountHistory(
                 sender_name: data["sender"][0]["f_name"],
                 rcva_name: data["rcver"][0]["f_name"],
@@ -1394,9 +1472,9 @@ setState(() {
                 rcva_o_name: data["rcver"][0]["o_name"],
                 Beneficiary_account: data["rcver_account"],
                 tittle_name: data["sender"][0]["f_name"],
-             mode_of_trnx: data["mode_of_trnx"]));
+                mode_of_trnx: data["mode_of_trnx"]));
           }
-        }else {
+        } else {
           _accountData.add(new AccountHistory(
               sender_name: data["sender"][0]["f_name"],
               rcva_name: data["rcver"][0]["f_name"],
@@ -1422,12 +1500,13 @@ setState(() {
     }
   }
 }
+
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-Future<void> _launchURL(BuildContext context,String trnx_id) async {
+Future<void> _launchURL(BuildContext context, String trnx_id) async {
   final theme = Theme.of(context);
   try {
     await launch(
-      'https://myphp0101.azurewebsites.net/?ref='+trnx_id,
+      'https://myphp0101.azurewebsites.net/?ref=' + trnx_id,
       customTabsOption: CustomTabsOption(
         toolbarColor: theme.primaryColor,
         enableDefaultShare: true,
@@ -1454,7 +1533,6 @@ Future<void> _launchURL(BuildContext context,String trnx_id) async {
     debugPrint(e.toString());
   }
 }
-
 
 void _showToast(BuildContext context, String msg) {
   final scaffold = ScaffoldMessenger.of(context);
@@ -1558,5 +1636,4 @@ void showQRCode(BuildContext context, String data) {
     backgroundColor: Colors.transparent,
     isScrollControlled: true,
   );
-
 }

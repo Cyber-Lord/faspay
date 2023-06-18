@@ -281,8 +281,8 @@ class _LoginState extends State<Login> {
                           Center(
                             child: Image.asset(
                               'assets/images/logo.png',
-                              height: 150.0,
-                              width: 150.0,
+                              height: 120.0,
+                              width: 120.0,
                               // color: Colors.blue.shade900,
                             ),
                           ),
@@ -304,7 +304,7 @@ class _LoginState extends State<Login> {
                           ),
                           Center(
                             child: Text(
-                              "To use FasPay, please enter your account password",
+                              "To use AlleyPay, please enter your account password",
                               style: TextStyle(
                                 fontFamily: "Times New Roman",
                                 fontSize: 14,

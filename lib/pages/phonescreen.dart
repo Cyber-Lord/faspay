@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:faspay/pages/otppage.dart';
 import 'package:faspay/pages/registerScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 
 import 'login.dart';
@@ -48,8 +49,13 @@ class _PhoneScreenState extends State<PhoneScreen> {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            "Welcome to faspay",
+            "Welcome",
             textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w400,
+              color: Colors.white,
+            ),
           ),
         ),
         body: Stack(
@@ -74,8 +80,8 @@ class _PhoneScreenState extends State<PhoneScreen> {
                             Center(
                               child: Image.asset(
                                 'assets/images/logo.png',
-                                height: 150.0,
-                                width: 150.0,
+                                height: 120.0,
+                                width: 120.0,
                                 // color: Colors.blue.shade900,
                               ),
                             ),
@@ -97,9 +103,10 @@ class _PhoneScreenState extends State<PhoneScreen> {
                             ),
                             Center(
                               child: Text(
-                                "To use FasPay, Please enter your mobile number",
+                                textAlign: TextAlign.center,
+                                "To use AlleyPay, Please enter your mobile number.",
                                 style: TextStyle(
-                                  // fontFamily: "Times New Roman",
+                                  fontFamily: "Times New Roman",
                                   fontSize: 14,
                                   color: Colors.grey.shade700,
                                 ),
@@ -239,7 +246,7 @@ class _PhoneScreenState extends State<PhoneScreen> {
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Text(
-                                        "An account associated with this phone number was found on FasPay.",
+                                        "An account associated with this phone number was found on AlleyPay.",
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           fontSize: 14,
