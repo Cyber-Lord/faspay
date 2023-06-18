@@ -1015,7 +1015,7 @@ class _DashboardState extends State<Dashboard> {
               ]else...[
 
               ],
-              
+
               Visibility(
                   visible: show_preogress,
                   child: Container(

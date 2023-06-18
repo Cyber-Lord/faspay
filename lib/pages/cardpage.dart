@@ -6,6 +6,7 @@ import 'package:faspay/pages/homepage.dart';
 import 'package:faspay/pages/phonescreen.dart';
 import 'package:faspay/pages/resetpinpage.dart';
 import 'package:faspay/pages/setpinpage.dart';
+import 'package:faspay/pages/variables.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:confirmation_success/confirmation_success.dart';
@@ -86,6 +87,8 @@ class _CardPageState extends State<CardPage> {
   bool isDefault_pin=false;
   bool invalid_default_pin=false;
   bool _pin_create_succss=false;
+  bool finished_page_load=false;
+  bool change_card_pin=false;
 
   double main_account_balance = 0;
   double balance = 0;
@@ -116,6 +119,8 @@ class _CardPageState extends State<CardPage> {
   String _first_pin="";
   String _second_pin="";
   String pin_tittle="Enter 4-digit Default PIN";
+
+
 
   List<Card> cardList = [];
 
@@ -1235,156 +1240,26 @@ class _CardPageState extends State<CardPage> {
             visible: isGrey,
           ),
           // set card pin
+          if(finished_page_load==true)...[
+            Visibility(
+              visible: show_card_activation_panel,
+              child:pin( context,set_new_pin,Variable.cardactivation,Variable.car_message,cardList[currentCardIndex].card_pin,Variable.set_card_pin_url),
+
+            ),
+          ],
+          // change card pin
+          if(finished_page_load==true)...[
           Visibility(
-            visible: show_card_activation_panel,
-              child:  Container(
-                color: Colors.white,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(padding: EdgeInsets.all(40),
-                      child: Material(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Padding(
-                          padding: EdgeInsets.all(20),
-                          child:
-                          Container(
-                            width: width,
-                            child: Column(
-                              children: [
-                                Icon(Icons.lock,size: 80,color: Colors.blue.shade900,),
-                                SizedBox(height: 10,),
-                                Text("Card Activation",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
-                                SizedBox(height: 10,),
-                                Text("Before you fund your card, please enter the PIN from the card envelope and your preferred PIN below",),
-                                SizedBox(height: 15,),
-
-                                PinPut(
-                                  controller: set_new_pin,
-                                  // focusNode: focu,
-                                  autofocus: true,
-                                  keyboardAppearance: Brightness.light,
-                                  obscureText: "*",
-                                  onChanged: (v){
-
-                                    if(v.length==4){
-                                      if(v==cardList[currentCardIndex].card_pin){
-                                        setState(() {
-                                          isDefault_pin=true;
-                                          _first_pin="";
-                                          set_new_pin.clear();
-                                          print("xcccc");
-                                          pin_tittle="Enter a new 4-digit PIN";
-                                          invalid_default_pin=false;
-                                        });
-                                      }else if(isDefault_pin==true){
-
-                                        if(_first_pin==""){
-                                          print("1st pin");
-                                          _first_pin=v;
-                                          set_new_pin.clear();
-                                          print(_first_pin);
-                                          setState(() {
-                                            pin_tittle="Confirm 4-digit PIN";
-                                          });
-                                        }else if(_first_pin.isNotEmpty && _second_pin==""){
-                                          _second_pin=v;
-                                          if(_first_pin==_second_pin){
-                                            print("correct pin");
-
-                                            save_new_pin(cardList[currentCardIndex].number);
-                                            setState(() {
-                                              show_preogress=true;
-
-                                              FocusScope.of(context).requestFocus(new FocusNode());
-                                            });
-                                          }else{
-                                            setState(() {
-                                              pin_tittle="Enter 4-digit PIN";
-                                              set_new_pin.clear();
-                                              _first_pin="";
-                                              _second_pin="";
-                                              print("not correct");
-                                            });
-                                          }
-                                        }else if(_first_pin.isNotEmpty && _second_pin.isNotEmpty){
-                                          _second_pin=v;
-                                          if(_first_pin==_second_pin){
-                                            print("correct pin");
-                                            save_new_pin(cardList[currentCardIndex].number);
-                                            setState(() {
-                                              pin_tittle="Please wait";
-                                              FocusScope.of(context).requestFocus(new FocusNode());
-                                              show_preogress=true;
-                                            });
-                                          }else{
-                                            setState(() {
-                                              pin_tittle="Enter 4-digit PIN";
-                                              set_new_pin.clear();
-                                              _first_pin="";
-                                              _second_pin="";
-                                              print("not correct");
-                                            });
-                                          }
-                                        }
-                                        v="";
-
-                                      }else{
-                                       setState(() {
-                                         invalid_default_pin=true;
-                                         set_new_pin.clear();
-                                         print("invalid Default pin");
-                                       });
-                                      }
-
-                                    }
-                                  },
-                                  textStyle: TextStyle(
-                                      color:Colors.black,
-                                      fontFamily: "Gilroy Bold",
-                                      fontSize: height / 40),
-                                  fieldsCount: 4,
-                                  eachFieldWidth: width / 6.5,
-                                  withCursor: false,
-                                  submittedFieldDecoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      border: Border.all(color: Colors.blue))
-                                      .copyWith(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      border: Border.all(color: Colors.blue)),
-                                  selectedFieldDecoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      border: Border.all(color: Colors.blue)),
-                                  followingFieldDecoration: BoxDecoration(
-                                    border: Border.all(color: Colors.blue),
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ).copyWith(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                ),
-                                Text(pin_tittle,style: TextStyle(fontSize: 16),),
-                                if(invalid_default_pin==true)...[
-                                  Text("Invalid Default PIN",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: Colors.red),)
-                                ]
-                              ],
-                            ),
-                          ),
-                        ),
-                        color: Colors.white,
-                      ),
-
-
-                    ),
-
-                  ],
-                ),
-              ),
+            visible: change_card_pin,
+              child: pin(
+                  context,
+                  set_new_pin,
+                  Variable.reset_pin_title,
+                  Variable.reset_pin_info,
+                  cardList[currentCardIndex].card_pin,
+                  Variable.set_card_pin_url),
           ),
-          //show success icon
+               ],
 
           //progress bar
           Visibility(
@@ -1451,8 +1326,9 @@ class _CardPageState extends State<CardPage> {
     );
 
   }
-  Future save_new_pin(account) async {
-    var url = "https://a2ctech.net/api/faspay/_set_card_pin.php";
+  Future save_new_pin(account, var url) async {
+
+    //"https://a2ctech.net/api/faspay/_set_card_pin.php"
     var response;
     response = await http.post(Uri.parse(url), body: {
       "phone": my_num,
@@ -1468,6 +1344,7 @@ class _CardPageState extends State<CardPage> {
       if (data["status"] == "true") {
        // _pin_create_succss=true;
         //get_customer_details(my_num, my_token);
+
       } else {
 
       }
@@ -1565,7 +1442,157 @@ class _CardPageState extends State<CardPage> {
       },
     );
   }
+  Widget pin(BuildContext context,TextEditingController pin,String tittle,String msg,String old_pin,var url){
+//https://a2ctech.net/api/faspay/_set_card_pin.php
+   return Container(
+         color: Colors.white,
+         child: Column(
+           mainAxisAlignment: MainAxisAlignment.center,
+           crossAxisAlignment: CrossAxisAlignment.center,
+           children: [
+             Padding(padding: EdgeInsets.all(40),
+               child: Material(
+                 borderRadius: BorderRadius.circular(10),
+                 child: Padding(
+                   padding: EdgeInsets.all(20),
+                   child:
+                   Container(
+                     width: width,
+                     child: Column(
+                       children: [
+                         Icon(Icons.lock,size: 80,color: Colors.blue.shade900,),
+                         SizedBox(height: 10,),
+                         Text(tittle,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                         SizedBox(height: 10,),
+                         Text(msg,),
+                         SizedBox(height: 15,),
 
+                         PinPut(
+                           controller: pin,
+                           // focusNode: focu,
+                           autofocus: true,
+                           keyboardAppearance: Brightness.light,
+                           obscureText: "*",
+                           onChanged: (v){
+
+                             if(v.length==4){
+                               if(v==old_pin){
+                                 setState(() {
+                                   isDefault_pin=true;
+                                   _first_pin="";
+                                   pin.clear();
+                                   print("xcccc");
+                                   pin_tittle="Enter a new 4-digit PIN";
+                                   invalid_default_pin=false;
+                                 });
+                               }else if(isDefault_pin==true){
+
+                                 if(_first_pin==""){
+                                   print("1st pin");
+                                   _first_pin=v;
+                                   pin.clear();
+                                   print(_first_pin);
+                                   setState(() {
+                                     pin_tittle="Confirm 4-digit PIN";
+                                   });
+                                 }else if(_first_pin.isNotEmpty && _second_pin==""){
+                                   _second_pin=v;
+                                   if(_first_pin==_second_pin){
+                                     print("correct pin");
+
+                                     save_new_pin(cardList[currentCardIndex].number,url);
+                                     setState(() {
+                                       show_preogress=true;
+
+                                       FocusScope.of(context).requestFocus(new FocusNode());
+                                     });
+                                   }else{
+                                     setState(() {
+                                       pin_tittle="Enter 4-digit PIN";
+                                       pin.clear();
+                                       _first_pin="";
+                                       _second_pin="";
+                                       print("not correct");
+                                     });
+                                   }
+                                 }else if(_first_pin.isNotEmpty && _second_pin.isNotEmpty){
+                                   _second_pin=v;
+                                   if(_first_pin==_second_pin){
+                                     print("correct pin");
+                                     save_new_pin(cardList[currentCardIndex].number,url);
+                                     setState(() {
+                                       pin_tittle="Please wait";
+                                       FocusScope.of(context).requestFocus(new FocusNode());
+                                       show_preogress=true;
+                                     });
+                                   }else{
+                                     setState(() {
+                                       pin_tittle="Enter 4-digit PIN";
+                                       pin.clear();
+                                       _first_pin="";
+                                       _second_pin="";
+                                       print("not correct");
+                                     });
+                                   }
+                                 }
+                                 v="";
+
+                               }else{
+
+                                 setState(() {
+                                   invalid_default_pin=true;
+                                   pin.clear();
+                                   print("invalid Default pin");
+                                 });
+                               }
+
+                             }
+                           },
+                           textStyle: TextStyle(
+                               color:Colors.black,
+                               fontFamily: "Gilroy Bold",
+                               fontSize: height / 40),
+                           fieldsCount: 4,
+                           eachFieldWidth: width / 6.5,
+                           withCursor: false,
+                           submittedFieldDecoration: BoxDecoration(
+                               color: Colors.white,
+                               borderRadius: BorderRadius.circular(10.0),
+                               border: Border.all(color: Colors.blue))
+                               .copyWith(
+                               borderRadius: BorderRadius.circular(10.0),
+                               border: Border.all(color: Colors.blue)),
+                           selectedFieldDecoration: BoxDecoration(
+                               color: Colors.white,
+                               borderRadius: BorderRadius.circular(10.0),
+                               border: Border.all(color: Colors.blue)),
+                           followingFieldDecoration: BoxDecoration(
+                             border: Border.all(color: Colors.blue),
+                             color: Colors.white,
+                             borderRadius: BorderRadius.circular(10.0),
+                           ).copyWith(
+                             borderRadius: BorderRadius.circular(10.0),
+                           ),
+                         ),
+                         Text(pin_tittle,style: TextStyle(fontSize: 16),),
+                         if(invalid_default_pin==true)...[
+                           Text("Invalid Default PIN",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: Colors.red),)
+                         ]
+                       ],
+                     ),
+                   ),
+                 ),
+                 color: Colors.white,
+               ),
+
+
+             ),
+
+           ],
+         ),
+       );
+
+  }
   void _changePIN(BuildContext context, bool isPIN) {
     showDialog(
       context: context,
@@ -2252,7 +2279,11 @@ class _CardPageState extends State<CardPage> {
                       backgroundColor: Colors.blue.shade900,
                     ),
                     onPressed: () {
-                      _changePIN(context, true);
+                      setState(() {
+                        Navigator.of(context).pop();
+                        change_card_pin=true;
+                      });
+                     // _changePIN(context, true);
                     },
                     child: Text('Reset PIN'),
                   ),
@@ -2573,6 +2604,7 @@ class _CardPageState extends State<CardPage> {
         print(bal);
         main_account_balance = double.parse(bal);
         show_preogress = false;
+        finished_page_load=true;
       } else {
         show_preogress = false;
         logout();
