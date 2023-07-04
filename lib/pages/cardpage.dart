@@ -88,6 +88,7 @@ class _CardPageState extends State<CardPage> {
   bool _pin_create_succss = false;
   bool finished_page_load = false;
   bool change_card_pin = false;
+  bool show_success_widget=false;
 
   double main_account_balance = 0;
   double balance = 0;
@@ -110,7 +111,7 @@ class _CardPageState extends State<CardPage> {
   String my_num = "", my_token = "";
   String trnx_pin = "";
   String _action = "";
-  String current_card_no = "xx";
+  String current_card_no = "0";
   String current_card_status = "";
   String trnx_mode = "";
   String _errorMessage = '';
@@ -1183,7 +1184,7 @@ class _CardPageState extends State<CardPage> {
                                             TextButton.icon(
                                               onPressed: () {
                                                 _showDebitCardSettings(
-                                                    context, isActive);
+                                                    context, cardList[currentCardIndex].card_status);
                                                 isGrey = false;
                                               },
                                               icon: Icon(
@@ -1265,6 +1266,10 @@ class _CardPageState extends State<CardPage> {
             ),
           ],
 
+          Visibility(
+            visible: show_success_widget,
+              child: SuccessContainer(),
+          ),
           //progress bar
           Visibility(
               visible: show_preogress,
@@ -1349,9 +1354,11 @@ class _CardPageState extends State<CardPage> {
       print(response.body);
       print(data["status"]);
       if (data["status"] == "true") {
-        // _pin_create_succss=true;
-        //get_customer_details(my_num, my_token);
-
+ setState(() {
+   show_success_widget=true;
+   show_card_activation_panel=false;
+   change_card_pin=false;
+ });
       } else {}
       setState(() {
         show_preogress = false;
@@ -1360,7 +1367,66 @@ class _CardPageState extends State<CardPage> {
       print(response.statusCode);
     }
   }
-
+  Widget SuccessContainer() {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          show_success_widget = false;
+        });
+      },
+      child: Container(
+        color: Colors.black.withOpacity(0.5),
+        child: Center(
+          child: Material(
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.white,
+            child: Container(
+              height: MediaQuery.of(context).size.height / 3.4,
+              width: MediaQuery.of(context).size.width / 1.5,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "Success",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.blue.shade900,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Icon(
+                      Icons.check_circle,
+                      size: 100,
+                      color: Colors.blue.shade900,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "Your PIN has been set successfully. Tap outside the box to continue.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.blue.shade900,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
   Future<void> _showWarningDialog(BuildContext context, bool isFrozen) async {
     return showDialog<void>(
       context: context,
@@ -1427,6 +1493,12 @@ class _CardPageState extends State<CardPage> {
                 setState(
                   () {
                     isActive = !isActive;
+                    if(isFrozen==true){
+                      _freeze_and_unfreeze_card("Active");
+                    }else{
+                      _freeze_and_unfreeze_card("Freeze");
+                    }
+
                   },
                 );
                 Navigator.of(context).pop();
@@ -1531,8 +1603,7 @@ class _CardPageState extends State<CardPage> {
                                 if (_first_pin == _second_pin) {
                                   print("correct pin");
 
-                                  save_new_pin(
-                                      cardList[currentCardIndex].number, url);
+                                  save_new_pin(cardList[currentCardIndex].number, url);
                                   setState(() {
                                     show_preogress = true;
 
@@ -1553,8 +1624,7 @@ class _CardPageState extends State<CardPage> {
                                 _second_pin = v;
                                 if (_first_pin == _second_pin) {
                                   print("correct pin");
-                                  save_new_pin(
-                                      cardList[currentCardIndex].number, url);
+                                  save_new_pin(cardList[currentCardIndex].number, url);
                                   setState(() {
                                     pin_title = "Please wait";
                                     FocusScope.of(context)
@@ -2183,7 +2253,13 @@ class _CardPageState extends State<CardPage> {
     );
   }
 
-  void _showDebitCardSettings(BuildContext context, bool isFrozen) {
+  void _showDebitCardSettings(BuildContext context, String status) {
+    bool isFrozen;
+    if(status=="Freeze"){
+      isFrozen=true;
+    }else{
+      isFrozen=false;
+    }
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -3078,6 +3154,34 @@ class _CardPageState extends State<CardPage> {
         }
       }
       get_customer_details(phone, token);
+    }
+  }
+  Future _freeze_and_unfreeze_card(String take_action) async {
+    var url = "https://a2ctech.net/api/faspay/_freez_card.php";
+    var response;
+    response = await http.post(Uri.parse(url), body: {
+      "phone": my_num,
+      "token": my_token,
+      "action": take_action,
+      "account": cardList[currentCardIndex].number,
+    });
+
+    var data = json.decode(response.body);
+    if (response.statusCode == 200) {
+      print(response.body);
+      print(data["status"]);
+      if (data["status"] == "true") {
+        setState(() {
+          my_session();
+
+        });
+        // get_customer_details(my_num, my_token);
+      } else {}
+      setState(() {
+
+      });
+    } else {
+      print(response.statusCode);
     }
   }
 

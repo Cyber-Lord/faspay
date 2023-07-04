@@ -1052,7 +1052,7 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ],
               if (_pin_create_succss) ...[
-                SuccessContainer(),
+                SuccessContainer(context),
               ] else
                 ...[],
               Visibility(
@@ -1071,11 +1071,12 @@ class _DashboardState extends State<Dashboard> {
         ));
   }
 
-  Widget SuccessContainer() {
+  Widget SuccessContainer(BuildContext context) {
     return GestureDetector(
       onTap: () {
         setState(() {
           _pin_create_succss = false;
+          update_session(context);
         });
       },
       child: Container(
@@ -1391,8 +1392,11 @@ class _DashboardState extends State<Dashboard> {
       print(response.body);
       print(data["status"]);
       if (data["status"] == "true") {
-        _pin_create_succss = true;
-        get_customer_details(my_num, my_token);
+ setState(() {
+   _pin_create_succss = true;
+
+ });
+       // get_customer_details(my_num, my_token);
       } else {}
       setState(() {
         show_preogress = false;
@@ -1499,6 +1503,20 @@ class _DashboardState extends State<Dashboard> {
       print(response.statusCode);
     }
   }
+  Future<void> update_session(BuildContext context) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.setString("trnx_pin_active", "true");
+    goto_dashboard( context, "false");
+  }
+  void goto_dashboard(BuildContext context,String is_pen_set) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            HomePage(phoneNumber: '', token: 'token', checkPin: "true",),
+      ),
+    );
+  }
 }
 
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -1604,7 +1622,7 @@ void showQRCode(BuildContext context, String data) {
                   MaterialPageRoute(
                     builder: (context) => HomePage(
                       phoneNumber: "",
-                      token: "",
+                      token: "", checkPin: '',
                     ),
                   ),
                 );
@@ -1636,4 +1654,5 @@ void showQRCode(BuildContext context, String data) {
     backgroundColor: Colors.transparent,
     isScrollControlled: true,
   );
+
 }

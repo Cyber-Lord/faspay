@@ -99,7 +99,8 @@ title: Text("Payment"),
                                               MaterialPageRoute(
                                                   builder: (context) => HomePage(
                                                     phoneNumber: "",
-                                                    token: "",
+                                                    token: "", checkPin: '',
+
                                                   )),
                                             );
                                           },
@@ -307,7 +308,7 @@ title: Text("Payment"),
   void goto_dashbord(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => HomePage(phoneNumber: "phoneNumber", token: "token")),
+      MaterialPageRoute(builder: (context) => HomePage(phoneNumber: "phoneNumber", token: "token", checkPin: '',)),
     );
   }
   void goto_rescan(BuildContext context) {

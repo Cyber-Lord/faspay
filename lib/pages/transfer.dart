@@ -74,7 +74,7 @@ class _TransferState extends State<Transfer> {
               MaterialPageRoute(
                 builder: (context) => HomePage(
                   phoneNumber: '',
-                  token: '',
+                  token: '', checkPin: '',
                 ),
               ),
             );
@@ -750,7 +750,7 @@ class _TransferState extends State<Transfer> {
                       MaterialPageRoute(
                         builder: (context) => HomePage(
                           phoneNumber: my_num,
-                          token: my_token,
+                          token: my_token, checkPin: '',
                         ),
                       ),
                     );

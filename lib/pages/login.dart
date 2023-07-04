@@ -22,6 +22,7 @@ class _LoginState extends State<Login> {
   bool show_preogress = false;
   bool surgest_login = false;
   bool correct_pass_checker = false;
+  bool trnx_pin_active=false;
 
   String token = "";
   String _errorMessage = '';
@@ -448,12 +449,12 @@ class _LoginState extends State<Login> {
   }
 
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-  void goto_dashboard(BuildContext context) {
+  void goto_dashboard(BuildContext context,String is_pen_set) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (context) =>
-            HomePage(phoneNumber: widget.phoneNumber, token: token),
+            HomePage(phoneNumber: widget.phoneNumber, token: token, checkPin: is_pen_set,),
       ),
     );
   }
@@ -473,7 +474,9 @@ class _LoginState extends State<Login> {
         SharedPreferences pref = await SharedPreferences.getInstance();
         pref.setString("phone", widget.phoneNumber);
         pref.setString("token", token);
-        goto_dashboard(context);
+        pref.setString("trnx_pin_active", data["trnx_pin_active"]);
+        //trnx_pin_active=data["trnx_pin_active"];
+        goto_dashboard(context,data["trnx_pin_active"]);
         // _showToast(context,"Invalid Login Details");/
       }
     } else {

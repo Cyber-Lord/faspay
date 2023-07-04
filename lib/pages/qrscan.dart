@@ -144,7 +144,7 @@ class _QRScannerState extends State<QRScanner> {
                                                 MaterialPageRoute(
                                                     builder: (context) => HomePage(
                                                       phoneNumber: "",
-                                                      token: "",
+                                                      token: "", checkPin: '',
                                                     )),
                                               );
                                             },

@@ -52,6 +52,7 @@ class _SplshscreenState extends State<Splshscreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var phone = prefs.getString("phone");
     var tokn = prefs.getString("token");
+    var trnx_pin_active=prefs.getString("trnx_pin_active");
     // my_num=email!;
 
     //print(my_num);
@@ -76,12 +77,12 @@ class _SplshscreenState extends State<Splshscreen> {
           context,
           MaterialPageRoute(
             builder: (context) => HomePage(
-                phoneNumber: my_num.toString(), token: token.toString()),
+                phoneNumber: my_num.toString(), token: token.toString(), checkPin: trnx_pin_active.toString(),),
           ),
         ),
       );
     }
 
-    print(my_num.toString() + token.toString());
+    print(my_num.toString() + trnx_pin_active.toString());
   }
 }

@@ -68,7 +68,7 @@ class _BankTransferPageState extends State<BankTransferPage> {
               MaterialPageRoute(
                 builder: (context) => HomePage(
                   phoneNumber: "",
-                  token: "",
+                  token: "", checkPin: '',
                 ),
               ),
             );

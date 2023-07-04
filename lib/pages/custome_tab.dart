@@ -35,7 +35,7 @@ class _Custome_tbaState extends State<Custome_tba> {
               context,
               MaterialPageRoute(
                 builder: (context) =>
-                    HomePage(phoneNumber: '', token: 'token'),
+                    HomePage(phoneNumber: '', token: 'token', checkPin: '',),
               ),
             );
           },

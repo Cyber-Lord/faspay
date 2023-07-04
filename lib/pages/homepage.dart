@@ -11,10 +11,11 @@ import 'package:faspay/pages/dashboard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key, required this.phoneNumber, required this.token})
+  const HomePage({Key? key, required this.phoneNumber, required this.token, required this.checkPin})
       : super(key: key);
   final String phoneNumber;
   final String token;
+  final String checkPin;
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -26,28 +27,38 @@ class _HomePageState extends State<HomePage> {
   late String _email;
   late String _phoneNumber;
   late String _address;
+  String trnx_pin_active="false";
 
   int _currentIndex = 0;
   String my_num = "", my_token = "";
   void initState() {
     my_session();
     super.initState();
+    trnx_pin_active=widget.checkPin;
+print(widget.checkPin.toString()+" kala sak");
   }
 
   final List<Widget> _children = [
+
+
     Dashboard(),
     CardPage(),
     POSPage(),
   ];
 
-  void onTabTapped(int index) {
+  void onTabTapped(int index,String ispin_active) {
     setState(() {
-      _currentIndex = index;
+      if(ispin_active=="false"){
+      }else{
+        _currentIndex = index;
+      }
+
     });
   }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         elevation: 10,
@@ -55,20 +66,25 @@ class _HomePageState extends State<HomePage> {
           icon: Icon(Icons.person),
           color: Colors.white,
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => UserProfile(
-                  email: "John@doe.com",
-                  name: "John Doe",
-                  // tier: VerificationTier.basic,
-                  tier: VerificationTier.advanced,
-                  bvn: "1234567890",
-                  dob: "01/01/2000",
-                  phoneNumber: my_num,
+            if(trnx_pin_active=="false"){
+
+            }else{
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => UserProfile(
+                    email: "John@doe.com",
+                    name: "John Doe",
+                    // tier: VerificationTier.basic,
+                    tier: VerificationTier.advanced,
+                    bvn: "1234567890",
+                    dob: "01/01/2000",
+                    phoneNumber: my_num,
+                  ),
                 ),
-              ),
-            );
+              );
+            }
+
           },
         ),
         actions: [
@@ -77,10 +93,15 @@ class _HomePageState extends State<HomePage> {
           ),
           IconButton(
             onPressed: (() {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => QRScanner()),
-              );
+              if(trnx_pin_active=="false"){
+
+              }else{
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => QRScanner()),
+                );
+              }
+
             }),
             icon: Icon(
               Icons.qr_code_scanner_sharp,
@@ -91,10 +112,15 @@ class _HomePageState extends State<HomePage> {
           ),
           IconButton(
             onPressed: (() {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SupportPage()),
-              );
+              if(trnx_pin_active=="false"){
+
+              }else{
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SupportPage()),
+                );
+              }
+
             }),
             icon: Icon(
               Icons.support_agent_sharp,
@@ -108,10 +134,14 @@ class _HomePageState extends State<HomePage> {
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.blue.shade900,
-        onTap: onTabTapped,
+
+       onTap: (_currentIndex){
+         onTabTapped(_currentIndex,trnx_pin_active);
+       },
         fixedColor: Colors.white,
         unselectedItemColor: Colors.grey,
         currentIndex: _currentIndex,
+
         items: [
           BottomNavigationBarItem(
             icon: Icon(
@@ -144,6 +174,9 @@ class _HomePageState extends State<HomePage> {
     WidgetsFlutterBinding.ensureInitialized();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var phone = prefs.getString("phone");
+//    trnx_pin_active=prefs.getString("trnx_pin_active")!;
+    print("pem pem"+trnx_pin_active.toString()
+    );
 
     print(my_num);
     if (phone == null) {

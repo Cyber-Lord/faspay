@@ -34,7 +34,7 @@ class _WithdrawalFormState extends State<WithdrawalForm> {
               MaterialPageRoute(
                 builder: (context) => HomePage(
                   phoneNumber: "",
-                  token: "",
+                  token: "", checkPin: ''
                 ),
               ),
             );

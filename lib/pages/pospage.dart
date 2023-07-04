@@ -1,6 +1,11 @@
+import 'dart:convert';
+
+import 'package:faspay/pages/phonescreen.dart';
 import 'package:flutter/material.dart';
 import 'package:passcode_screen/keyboard.dart';
-
+import 'utils/reusable_widget.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 class POSPage extends StatefulWidget {
   @override
   _POSPageState createState() => _POSPageState();
@@ -57,6 +62,8 @@ class _POSPageState extends State<POSPage> {
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _accountName = TextEditingController();
+
 
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -65,10 +72,16 @@ class _POSPageState extends State<POSPage> {
 
   bool _isPinVisible = false;
   bool _isTransferEnabled = false;
+  bool bool_terminal_request=true;
   DateTime _startDate = DateTime.now().subtract(Duration(days: 30));
   DateTime _endDate = DateTime.now();
   bool isLocked = false;
+
   String _errorMessage = '';
+  String my_num = "", my_token = "";
+
+  var size, height, width;
+  final _formKey = GlobalKey<FormState>();
 
   void _changePin() {
     String oldPin = _oldPinController.text;
@@ -790,7 +803,7 @@ class _POSPageState extends State<POSPage> {
             ),
           ),
           content: Container(
-            height: MediaQuery.of(context).size.height / 1.9,
+            height: MediaQuery.of(context).size.height / 1.8,
             width: MediaQuery.of(context).size.width,
             child: Column(
               children: [
@@ -825,7 +838,35 @@ class _POSPageState extends State<POSPage> {
                       vertical: 15.0,
                       horizontal: 15,
                     ),
-                    labelText: "Full Name",
+                    labelText: "Account Name",
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                  controller: _fullNameController,
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.blue.shade900,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.blue.shade900,
+                      ),
+                    ),
+                    labelStyle: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 12,
+                    ),
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: 15.0,
+                      horizontal: 15,
+                    ),
+                    labelText: "Contact Name",
                   ),
                 ),
                 SizedBox(
@@ -1681,55 +1722,287 @@ class _POSPageState extends State<POSPage> {
       },
     );
   }
-
+  @override
+  void initState() {
+    my_session();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
+    size = MediaQuery.of(context).size;
+    height = size.height;
+    width = size.width;
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: ListView.builder(
-          itemCount: posTerminals.length,
-          itemBuilder: (BuildContext context, int index) {
-            return GestureDetector(
-              onTap: () => _showPOS(posTerminals[index]['name'], index),
-              child: Card(
-                child: ListTile(
-                  title: Text(
-                    posTerminals[index]['name'],
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      color: Colors.blue.shade900,
-                      fontWeight: FontWeight.bold,
+        child: Stack(
+          children: [
+            ListView.builder(
+              itemCount: posTerminals.length,
+              itemBuilder: (BuildContext context, int index) {
+                return GestureDetector(
+                  onTap: () => _showPOS(posTerminals[index]['name'], index),
+                  child: Card(
+                    child: ListTile(
+                      title: Text(
+                        posTerminals[index]['name'],
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          color: Colors.blue.shade900,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        posTerminals[index]['location'],
+                        style: TextStyle(
+                          fontSize: 13.0,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                      leading: CircleAvatar(
+                        backgroundColor: Colors.grey.shade300,
+                        child: Icon(
+                          Icons.tap_and_play,
+                          color: Colors.blue.shade900,
+                          size: 25.0,
+                        ),
+                      ),
                     ),
                   ),
-                  subtitle: Text(
-                    posTerminals[index]['location'],
-                    style: TextStyle(
-                      fontSize: 13.0,
-                      color: Colors.grey.shade600,
-                    ),
-                  ),
-                  leading: CircleAvatar(
-                    backgroundColor: Colors.grey.shade300,
-                    child: Icon(
-                      Icons.tap_and_play,
-                      color: Colors.blue.shade900,
-                      size: 25.0,
+                );
+              },
+            ),
+            Visibility(
+              visible: bool_terminal_request,
+              child: AnimatedOpacity(
+                opacity: bool_terminal_request ? 1.0 : 0.0,
+                duration: const Duration(milliseconds: 500),
+                child: Container(
+                  color: Colors.white,
+                  //color: Colors.black.withOpacity(0.5),
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Material(
+                      borderRadius: BorderRadius.circular(10),
+                      //color: Colors.white,
+                      child: Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const SizedBox(width: 32.0),
+                                Text(
+                                  "Delivery Information",
+                                  style: TextStyle(
+                                    color: Colors.blue.shade900,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                                GestureDetector(
+                                  child: Icon(Icons.close),
+                                  onTap: () {
+                                    setState(() {
+                                      bool_terminal_request = false;
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                            Divider(
+                              thickness: 2,
+                              color: Colors.grey.shade100,
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "Request POS",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
+                            ),
+                            Text(
+                              "Please kindly enter the following details. Doing so will enable us to process your request.",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 12,
+                              ),
+                            ),
+                            Material(
+                              borderRadius: BorderRadius.circular(7),
+                              color: Colors.grey.shade100,
+                              child: Padding(
+                                padding: EdgeInsets.all(10),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text("Balance:",style: TextStyle(fontWeight: FontWeight.bold),),
+                                        Text("200.2")
+                                      ],
+                                    ),
+                                    Text("Insufficient Funds",style: TextStyle(color: Colors.red,fontSize: 13),)
+                                    
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Flexible(
+                                child: Material(
+
+                                  color: Colors.white,
+                                 // height: height - 315,
+                                  child: ListView(
+                                    children: [
+                                      Form(
+                                        key: _formKey,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                            children: [
+                                              Textform(_accountName,"Account Name","Please enter your Account name",TextInputType.text),
+
+                                              SizedBox(height: 16),
+                                              Textform(_addressController,"Location","Please enter your POS Location",TextInputType.text),
+                                              SizedBox(height: 16),
+                                              Textform(_fullNameController,"Contact Name","Please enter your full name",TextInputType.text),
+                                              SizedBox(height: 16),
+                                              Textform(_phoneNumberController,"Contact Phone No","Please enter your phone No",TextInputType.phone),
+                                              SizedBox(height: 16),
+                                              GestureDetector(
+                                                onTap: (() {
+                                                  // showSuccess(context);
+                                                  if (_formKey.currentState!
+                                                      .validate()) {
+                                                    _formKey.currentState!.save();
+                                                    // Submit
+                                                    print(_accountName.text);
+                                                    print(_fullNameController.text);
+                                                    print(_phoneNumberController.text);
+                                                    print(_addressController.text);
+                                                    // card_request(my_num, my_token);
+                                                  } else {}
+                                                }),
+                                                child: Container(
+                                                  color: Colors.blue.shade900,
+                                                  height: 50,
+                                                  child: Center(
+                                                      child: Text(
+                                                        "Submit",
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 14,
+                                                          fontWeight: FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ),
+
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ))
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
-            );
-          },
+            ),
+          ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
+
+      floatingActionButton: bool_terminal_request ?null:FloatingActionButton(
         onPressed: () {
-          _requestPOS();
+         // _requestPOS();
+          setState(() {
+            bool_terminal_request=true;
+          });
         },
         child: Icon(Icons.add),
         backgroundColor: Colors.blue.shade900,
       ),
     );
   }
+
+  Future _terminal_request_submit(String tml_account_name,String location,String contact_name,String contact_phone) async {
+    var url = "https://a2ctech.net/api/faspay/_freez_card.php";
+    var response;
+    response = await http.post(Uri.parse(url), body: {
+      //main_account 	tml_account_name 	location 	contact_name 	contact_phone
+      "phone": my_num,
+      "token": my_token,
+      "tml_account_name": tml_account_name,
+      "location": location,
+      "contact_name": contact_name,
+      "contact_phone": contact_phone,
+    });
+
+    var data = json.decode(response.body);
+    if (response.statusCode == 200) {
+      print(response.body);
+      print(data["status"]);
+      if (data["status"] == "true") {
+        setState(() {
+          my_session();
+
+        });
+        // get_customer_details(my_num, my_token);
+      } else {}
+      setState(() {
+
+      });
+    } else {
+      print(response.statusCode);
+    }
+  }
+  Future<void> my_session() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var phone = prefs.getString("phone");
+    var tokn = prefs.getString("token");
+
+    if (phone == null) {
+      logout();
+    } else {
+      // get_payment_request(phone, tokn);
+      //get_customer_details(phone, my_token);
+      setState(() {
+        my_num = phone!;
+        my_token = tokn!;
+
+      });
+    }
+  }
+  Future<void> logout() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove("phone");
+
+    goto_phone_screen(context);
+  }
+  void goto_phone_screen(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => PhoneScreen()),
+    );
+  }
+
 }

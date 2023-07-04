@@ -136,7 +136,7 @@ class _SetPinPageState extends State<SetPinPage> {
                     MaterialPageRoute(
                       builder: (context) => HomePage(
                         phoneNumber: "",
-                        token: "",
+                        token: "", checkPin: '',
                       ),
                     ),
                   );
