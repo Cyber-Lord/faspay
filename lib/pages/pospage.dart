@@ -2066,68 +2066,12 @@ void btn_cancel_new_user(){
 
     }
   }
-  Future fetchTerminals() async {
-    //show_preogress = true;
-    FocusScope.of(context).requestFocus(new FocusNode());
-    var url = "https://a2ctech.net/api/faspay/terminals.php";
-    var response;
-    response = await http.post(Uri.parse(url), body: {
-      "phone": my_num,
-      "token": my_token,
-    });
 
-    var data = json. decode(response.body);
-    if (response.statusCode == 200) {
-      print(response.body);
-      posTerminals= json.decode(response.body).cast<Map<String, dynamic>>();
-
-    }
-  }
 //>>>>>>>>>>>>>>>>>>>
-  void fetchData() async {
-    try {
-      List<Map<String, dynamic>> fetchedData = await fetchPosTerminals();
-      setState(() {
-        posTerminals = fetchedData;
-      });
-    } catch (error) {
-      print('Error occurred while fetching data: $error');
-    }
-  }//
-  Future<List<Map<String, dynamic>>> fetchPosTerminals() async {
-    final response = await http.get(Uri.parse('https://a2ctech.net/api/faspay/terminals.php'));
 
-    if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);
-      print(data);
-      final List<Map<String, dynamic>> terminals = data.cast<Map<String, dynamic>>();
-      return terminals;
-    } else {
-      throw Exception('Failed to fetch POS terminals');
-    }
-  }
-
-  Future<List<Map<String, dynamic>>> fetchPosTerminals_x() async {
-    final response = await http.get(Uri.parse('https://a2ctech.net/api/faspay/terminals.php'));
-
-    if (response.statusCode == 200) {
-      final List<dynamic> jsonData = json.decode(response.body);
-
-      return jsonData.map((terminal) => terminal as Map<String, dynamic>).toList();
-    } else {
-      throw Exception('Failed to fetch POS terminals');
-    }
-  }
   void fetchDataFromWeb() async {
-    final url = 'https://a2ctech.net/api/faspay/terminals.php'; // Replace with the URL of your JSON data
-   // List<Map<String, dynamic>> posTerminals = [];
-
     try {
-
       //*************************************************
-      String jsonData =
-          '[{"id":"181","isLocked":false,"name":"Chinvo Tech","location":"Lagos, Nigeria","user":"Zahra Adamu","lastSeen":"dte"},{"id":"1","isLocked":false,"name":"A2C Tech","location":"Lagos, Nigeria","user":"Zahra Adamu","lastSeen":"dte"},{"id":"2","isLocked":false,"name":"A2C TECH","location":"Lagos, Nigeria","user":"Zahra Adamu","lastSeen":"dte"}]';
-      //print(response.body);
       var url = "https://a2ctech.net/api/faspay/terminals.php";
       var response;
       response = await http.post(Uri.parse(url), body: {
@@ -2137,15 +2081,9 @@ void btn_cancel_new_user(){
 
       var data = json.decode(response.body);
       if (response.statusCode == 200) {
-        /// If the request is successful, parse the JSON data
-
-        // Parse the JSON string into a List<Map<String, dynamic>>
         posTerminals = (json.decode(response.body) as List)
             .map((item) => item as Map<String, dynamic>)
             .toList();
-        // Now you have the data in the posTerminals list
-        print("the phone"+my_num.toString()+" the token "+my_token);
-        print(data);
       } else {
         print(response.statusCode);
       }
@@ -2153,9 +2091,7 @@ void btn_cancel_new_user(){
     } catch (e) {
       print('Error occurred while fetching data: $e');
     }
-
   }
-
 //>>>>>>>>>>>>>>>>>>>
 }
 class Terminals{
