@@ -59,6 +59,8 @@ dependencies:
   timezone: ^0.8.0
   flutter_custom_tabs: ^1.0.4
   pinput: 1.2.0
+  encrypt: ^5.0.0
+
   
 
 

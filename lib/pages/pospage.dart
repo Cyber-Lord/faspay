@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:faspay/pages/phonescreen.dart';
@@ -6,46 +7,16 @@ import 'package:passcode_screen/keyboard.dart';
 import 'utils/reusable_widget.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:encrypt/encrypt.dart';
 class POSPage extends StatefulWidget {
   @override
   _POSPageState createState() => _POSPageState();
 }
 
 class _POSPageState extends State<POSPage> {
-  List<Map<String, dynamic>> posTerminals = [
-    {
-      'id': 1,
-      'isLocked': false,
-      'name': 'Shoprite Desk 1',
-      'location': 'Lagos, Nigeria',
-      'user': 'Zahra Adamu',
-      'lastSeen': DateTime.now().subtract(Duration(hours: 2)),
-    },
-    {
-      'id': 2,
-      'isLocked': false,
-      'name': 'Shoprite Desk 2',
-      'location': 'Lagos, Nigeria',
-      'user': 'Adamu Umar',
-      'lastSeen': DateTime.now().subtract(Duration(days: 1)),
-    },
-    {
-      'id': 3,
-      'isLocked': false,
-      'name': 'Shoprite Desk 3',
-      'location': 'Abuja, Nigeria',
-      'user': 'Abba Amrah',
-      'lastSeen': DateTime.now().subtract(Duration(minutes: 30)),
-    },
-    {
-      'id': 4,
-      'isLocked': false,
-      'name': 'Shoprite Desk 4',
-      'location': 'Abuja, Nigeria',
-      'user': 'Amrah Abba',
-      'lastSeen': DateTime.now().subtract(Duration(hours: 6)),
-    },
-  ];
+
+  List<Map<String, dynamic>> posTerminals=[];
+
   List<String> _userList = [
     '0801234',
     '0901234',
@@ -63,22 +34,36 @@ class _POSPageState extends State<POSPage> {
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _accountName = TextEditingController();
+  final TextEditingController _trnx_pin_controller=TextEditingController();
+
+  //new user controller
+
 
 
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  bool _passwordsMatch = true;
 
-  bool _isPinVisible = false;
-  bool _isTransferEnabled = false;
-  bool bool_terminal_request=true;
   DateTime _startDate = DateTime.now().subtract(Duration(days: 30));
   DateTime _endDate = DateTime.now();
+
   bool isLocked = false;
+  bool show_preogress = false;
+  bool _passwordsMatch = true;
+  bool _isPinVisible = false;
+  bool _isTransferEnabled = false;
+  bool bool_terminal_request=false;
+  bool insufficient_Funds=false;
+  bool invalid_trnx_pin=false;
+  bool show_trnx_panel=false;
 
   String _errorMessage = '';
   String my_num = "", my_token = "";
+  String user_id="";
+  String trnx_pin="";
+
+  double terminal_price=0;
+  double hold_balance=0;
 
   var size, height, width;
   final _formKey = GlobalKey<FormState>();
@@ -290,6 +275,10 @@ class _POSPageState extends State<POSPage> {
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                Textform(_accountName,"First Name","",TextInputType.text),
+                SizedBox(height: 16.0),
+                Textform(_accountName,"Surname","",TextInputType.text),
+                SizedBox(height: 16.0),
                 TextFormField(
                   controller: _phoneController,
                   keyboardType: TextInputType.phone,
@@ -385,18 +374,9 @@ class _POSPageState extends State<POSPage> {
               ],
             ),
             actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              TextButton(
+              Textbtn(btn_cancel_new_user,"Cancel",Colors.red,16,true),
+              Textbtn(btn_submit_new_user,"Register",Colors.blue.shade900,16,true),
+             /* TextButton(
                 onPressed: _passwordsMatch
                     ? () {
                         final phone = _phoneController.text;
@@ -415,7 +395,7 @@ class _POSPageState extends State<POSPage> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
+              ),*/
             ],
           );
         });
@@ -1355,7 +1335,7 @@ class _POSPageState extends State<POSPage> {
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
-                    ),
+                    ),//
                     IconButton(
                       onPressed: () {
                         Navigator.of(context).pop();
@@ -1722,10 +1702,14 @@ class _POSPageState extends State<POSPage> {
       },
     );
   }
+
   @override
   void initState() {
     my_session();
     super.initState();
+    //
+   // fetchData();
+
   }
   @override
   Widget build(BuildContext context) {
@@ -1733,9 +1717,7 @@ class _POSPageState extends State<POSPage> {
     height = size.height;
     width = size.width;
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Stack(
+      body: Stack(
           children: [
             ListView.builder(
               itemCount: posTerminals.length,
@@ -1847,11 +1829,13 @@ class _POSPageState extends State<POSPage> {
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         Text("Balance:",style: TextStyle(fontWeight: FontWeight.bold),),
-                                        Text("200.2")
+                                        Text("NGN"+hold_balance.toString())
                                       ],
                                     ),
-                                    Text("Insufficient Funds",style: TextStyle(color: Colors.red,fontSize: 13),)
-                                    
+                                    if(insufficient_Funds)...[
+                                      Text("Insufficient Funds",style: TextStyle(color: Colors.red,fontSize: 13),)
+                                    ]
+
                                   ],
                                 ),
                               ),
@@ -1880,36 +1864,8 @@ class _POSPageState extends State<POSPage> {
                                               SizedBox(height: 16),
                                               Textform(_phoneNumberController,"Contact Phone No","Please enter your phone No",TextInputType.phone),
                                               SizedBox(height: 16),
-                                              GestureDetector(
-                                                onTap: (() {
-                                                  // showSuccess(context);
-                                                  if (_formKey.currentState!
-                                                      .validate()) {
-                                                    _formKey.currentState!.save();
-                                                    // Submit
-                                                    print(_accountName.text);
-                                                    print(_fullNameController.text);
-                                                    print(_phoneNumberController.text);
-                                                    print(_addressController.text);
-                                                    // card_request(my_num, my_token);
-                                                  } else {}
-                                                }),
-                                                child: Container(
-                                                  color: Colors.blue.shade900,
-                                                  height: 50,
-                                                  child: Center(
-                                                      child: Text(
-                                                        "Submit",
-                                                        style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 14,
-                                                          fontWeight: FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                    ),
+                                              Full_eleveted_width_button(btn_submit,Colors.blue.shade900,Colors.white,"Submit",insufficient_Funds?false:true),
 
-                                                ),
-                                              ),
                                             ],
                                           ),
                                         ),
@@ -1925,15 +1881,43 @@ class _POSPageState extends State<POSPage> {
                 ),
               ),
             ),
+
+           Visibility(
+             visible: show_trnx_panel,
+               child: pin_widget(
+                 transaction_pin_function,
+                 context,
+                   _trnx_pin_controller,
+                 "Transaction PIN",
+                 "Enter your transaction to complete",
+                   invalid_trnx_pin?false:true,
+                 "url",
+                 width,
+                 height
+               )
+           ),
+
+           //Progress bar
+            Visibility(
+                visible: show_preogress,
+                child: Container(
+                    color: Colors.black.withOpacity(0.5),
+                    child: ListView(
+                      children: const [
+                        LinearProgressIndicator(
+                          semanticsLabel: 'Linear progress indicator',
+                        )
+                      ],
+                    ))),
           ],
         ),
-      ),
 
       floatingActionButton: bool_terminal_request ?null:FloatingActionButton(
         onPressed: () {
          // _requestPOS();
           setState(() {
             bool_terminal_request=true;
+
           });
         },
         child: Icon(Icons.add),
@@ -1941,9 +1925,50 @@ class _POSPageState extends State<POSPage> {
       ),
     );
   }
+  void transaction_pin_function(String value){
 
+if(value.length==4){
+  if(value==trnx_pin){
+    setState(() {
+      show_preogress=true;
+      invalid_trnx_pin=false;
+      FocusScope.of(context).requestFocus(new FocusNode());
+       _terminal_request_submit(_accountName.text,_addressController.text,_fullNameController.text,_phoneNumberController.text);
+      _trnx_pin_controller.clear();
+    });
+  }else{
+    setState(() {
+      invalid_trnx_pin=true;
+      _trnx_pin_controller.clear();
+    });
+  }
+  //_trnx_pin_controller.clear();
+
+}
+  }
+void btn_submit(){
+    setState(() {
+      //
+      if (_formKey.currentState!
+          .validate()) {
+        _formKey.currentState!.save();
+        setState(() {
+          FocusScope.of(context).requestFocus(new FocusNode());
+          show_trnx_panel=true;
+        });
+
+      } else {}
+    });
+}
+void btn_submit_new_user(){
+
+}
+void btn_cancel_new_user(){
+  Navigator.of(context).pop();
+}
   Future _terminal_request_submit(String tml_account_name,String location,String contact_name,String contact_phone) async {
-    var url = "https://a2ctech.net/api/faspay/_freez_card.php";
+    show_preogress = true;
+    var url = "https://a2ctech.net/api/faspay/_request_terminal.php";
     var response;
     response = await http.post(Uri.parse(url), body: {
       //main_account 	tml_account_name 	location 	contact_name 	contact_phone
@@ -1953,18 +1978,21 @@ class _POSPageState extends State<POSPage> {
       "location": location,
       "contact_name": contact_name,
       "contact_phone": contact_phone,
+      "user_id": user_id,
+      "terminal_price": terminal_price.toString(),
     });
 
     var data = json.decode(response.body);
     if (response.statusCode == 200) {
       print(response.body);
-      print(data["status"]);
-      if (data["status"] == "true") {
+      if (data["success"] == "true") {
         setState(() {
-          my_session();
-
+         // my_session();
+          get_customer_details(my_num, my_token);
+          show_preogress = false;
+          show_trnx_panel=false;
+          bool_terminal_request=false;
         });
-        // get_customer_details(my_num, my_token);
       } else {}
       setState(() {
 
@@ -1983,11 +2011,11 @@ class _POSPageState extends State<POSPage> {
       logout();
     } else {
       // get_payment_request(phone, tokn);
-      //get_customer_details(phone, my_token);
+      get_customer_details(phone, tokn);
       setState(() {
         my_num = phone!;
         my_token = tokn!;
-
+        fetchDataFromWeb();
       });
     }
   }
@@ -2005,4 +2033,139 @@ class _POSPageState extends State<POSPage> {
     );
   }
 
+  Future get_customer_details(phone, token) async {
+    show_preogress = true;
+    FocusScope.of(context).requestFocus(new FocusNode());
+    var url = "https://a2ctech.net/api/faspay/user_details.php";
+    var response;
+    response = await http.post(Uri.parse(url), body: {
+      "phone": phone,
+      "token": token,
+    });
+
+    var data = json.decode(response.body);
+    if (response.statusCode == 200) {
+      print(response.body);
+      if (data["status"] == "true") {
+        setState(() {
+          hold_balance= double.parse(data["balance"]);
+          print(data["price_list"][1]["name"]);
+          user_id=data["user_id"];
+          terminal_price=double.parse(data["price_list"][1]["amount"]);
+          trnx_pin=data["trnxPin"];
+
+          if(hold_balance<terminal_price){
+            insufficient_Funds=true;
+          }
+        });
+        show_preogress = false;
+      } else {
+        show_preogress = false;
+        logout();
+      }
+
+    }
+  }
+  Future fetchTerminals() async {
+    //show_preogress = true;
+    FocusScope.of(context).requestFocus(new FocusNode());
+    var url = "https://a2ctech.net/api/faspay/terminals.php";
+    var response;
+    response = await http.post(Uri.parse(url), body: {
+      "phone": my_num,
+      "token": my_token,
+    });
+
+    var data = json. decode(response.body);
+    if (response.statusCode == 200) {
+      print(response.body);
+      posTerminals= json.decode(response.body).cast<Map<String, dynamic>>();
+
+    }
+  }
+//>>>>>>>>>>>>>>>>>>>
+  void fetchData() async {
+    try {
+      List<Map<String, dynamic>> fetchedData = await fetchPosTerminals();
+      setState(() {
+        posTerminals = fetchedData;
+      });
+    } catch (error) {
+      print('Error occurred while fetching data: $error');
+    }
+  }//
+  Future<List<Map<String, dynamic>>> fetchPosTerminals() async {
+    final response = await http.get(Uri.parse('https://a2ctech.net/api/faspay/terminals.php'));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      print(data);
+      final List<Map<String, dynamic>> terminals = data.cast<Map<String, dynamic>>();
+      return terminals;
+    } else {
+      throw Exception('Failed to fetch POS terminals');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> fetchPosTerminals_x() async {
+    final response = await http.get(Uri.parse('https://a2ctech.net/api/faspay/terminals.php'));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonData = json.decode(response.body);
+
+      return jsonData.map((terminal) => terminal as Map<String, dynamic>).toList();
+    } else {
+      throw Exception('Failed to fetch POS terminals');
+    }
+  }
+  void fetchDataFromWeb() async {
+    final url = 'https://a2ctech.net/api/faspay/terminals.php'; // Replace with the URL of your JSON data
+   // List<Map<String, dynamic>> posTerminals = [];
+
+    try {
+
+      //*************************************************
+      String jsonData =
+          '[{"id":"181","isLocked":false,"name":"Chinvo Tech","location":"Lagos, Nigeria","user":"Zahra Adamu","lastSeen":"dte"},{"id":"1","isLocked":false,"name":"A2C Tech","location":"Lagos, Nigeria","user":"Zahra Adamu","lastSeen":"dte"},{"id":"2","isLocked":false,"name":"A2C TECH","location":"Lagos, Nigeria","user":"Zahra Adamu","lastSeen":"dte"}]';
+      //print(response.body);
+      var url = "https://a2ctech.net/api/faspay/terminals.php";
+      var response;
+      response = await http.post(Uri.parse(url), body: {
+        "phone": my_num,
+        "token": my_token,
+      });
+
+      var data = json.decode(response.body);
+      if (response.statusCode == 200) {
+        /// If the request is successful, parse the JSON data
+
+        // Parse the JSON string into a List<Map<String, dynamic>>
+        posTerminals = (json.decode(response.body) as List)
+            .map((item) => item as Map<String, dynamic>)
+            .toList();
+        // Now you have the data in the posTerminals list
+        print("the phone"+my_num.toString()+" the token "+my_token);
+        print(data);
+      } else {
+        print(response.statusCode);
+      }
+//*********************************
+    } catch (e) {
+      print('Error occurred while fetching data: $e');
+    }
+
+  }
+
+//>>>>>>>>>>>>>>>>>>>
+}
+class Terminals{
+  final String id;
+  final String isLocked;
+  final String name;
+  final double location;
+  final String user;
+  final String lastSeen;
+
+  Terminals(this.id, this.isLocked, this.name, this.location, this.user,
+      this.lastSeen);
 }

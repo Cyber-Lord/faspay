@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:pinput/pin_put/pin_put.dart';
 
 typedef void MyCallback();
+typedef TextChangedCallback = void Function(String);
+
+
 Widget TextField_function(TextEditingController txt_field,String hint){
   return  TextField(
     controller: txt_field,
@@ -70,18 +74,136 @@ Widget Textform(TextEditingController frm_id,String placeholder,String requireme
     },
   );
 }
-Widget Full_eleveted_width_button(MyCallback callback,Color background,Color text_color,String title){
+Widget Full_eleveted_width_button(MyCallback callback,Color background,Color text_color,String title,bool btn_status){
   return     ElevatedButton(
     style: ElevatedButton.styleFrom(
       primary: background,
       minimumSize: const Size.fromHeight(50), // NEW
     ),
-    onPressed: () {
-      callback();
-    },
+
+    onPressed: btn_status?callback:null,
     child:Text(
       title,
-      style: TextStyle(fontSize: 24,color: text_color),
+      style: TextStyle(fontSize: 19,color: text_color,fontWeight: FontWeight.bold),
     ),
   );
 }
+Widget Textbtn(MyCallback callback,String tittle,Color text_color,double font_size,bool enableButton){
+  return TextButton(
+    onPressed: enableButton?callback:null,
+    child: Text(
+      tittle,
+      style: TextStyle(
+        color: enableButton?text_color:Colors.grey.shade200,
+        fontSize: font_size,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+  );
+}
+Widget pin_widget(TextChangedCallback onTextChanged,BuildContext context, TextEditingController pinController,
+    String title,String message,bool invalid_trnx_pin, var url,var width,var height) {
+  return Container(
+    color: Colors.white,
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Padding(
+          padding: EdgeInsets.all(40),
+          child: Material(
+            borderRadius: BorderRadius.circular(10),
+            child: Padding(
+              padding: EdgeInsets.all(20),
+              child: Container(
+                width: width,
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.lock,
+                      size: 80,
+                      color: Colors.blue.shade900,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      title,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      message,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    PinPut(
+                      controller: pinController,
+                      // focusNode: focu,
+                      autofocus: true,
+                      keyboardAppearance: Brightness.light,
+                      obscureText: "*",
+                      onChanged: onTextChanged,
+                      textStyle: TextStyle(
+                          color: Colors.black,
+                          fontFamily: "Gilroy Bold",
+                          fontSize: height / 40),
+                      fieldsCount: 4,
+                      eachFieldWidth: width / 6.5,
+                      withCursor: false,
+                      submittedFieldDecoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.0),
+                          border: Border.all(color: Colors.blue))
+                          .copyWith(
+                          borderRadius: BorderRadius.circular(10.0),
+                          border: Border.all(color: Colors.blue)),
+                      selectedFieldDecoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.0),
+                          border: Border.all(color: Colors.blue)),
+                      followingFieldDecoration: BoxDecoration(
+                        border: Border.all(color: Colors.blue),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10.0),
+                      ).copyWith(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+
+                      if(!invalid_trnx_pin)...[
+                        Text(
+                          "Invalid Transaction PIN",
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red),
+                        )
+              ]
+
+
+                  ],
+                ),
+              ),
+            ),
+            color: Colors.white,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
