@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:faspay/pages/phonescreen.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +38,11 @@ class _POSPageState extends State<POSPage> {
   final TextEditingController _trnx_pin_controller=TextEditingController();
 
   //new user controller
+  final TextEditingController _new_user_f_name=TextEditingController();
+  final TextEditingController _new_user_s_name=TextEditingController();
+  final TextEditingController _new_user_phone=TextEditingController();
+  final TextEditingController _new_user_pass=TextEditingController();
+  final TextEditingController _new_user_confirm_pass=TextEditingController();
 
 
 
@@ -56,14 +62,34 @@ class _POSPageState extends State<POSPage> {
   bool insufficient_Funds=false;
   bool invalid_trnx_pin=false;
   bool show_trnx_panel=false;
+  bool show_user_alreadyExit=false;
+  bool show_new_operator_added=false;
+  bool terminal_load_index=false;
+  bool show_pin_widget_for_new_user=false;
+  bool hide_terminal_request=false;
+  bool terminal_status=false;
+  bool default_pin_is_correct=false;
+  bool confim_new_pin=false;
+  bool activate_new_terminal_pin=false;
 
   String _errorMessage = '';
   String my_num = "", my_token = "";
   String user_id="";
   String trnx_pin="";
+  String _new_user_notification="default text";
+  String terminal_id="";
+  String new_pin_msg="Enter a Default Activation PIN";
+  String new_pin_tittle="Activate Your Terminal";
+  String new_pin_err_msg="Invalid Default Pin";
+  String hold_new_pin="";
+  String hold_new_pin_confirmation="";
+
 
   double terminal_price=0;
   double hold_balance=0;
+
+  int terminal_index=-1;
+  int new_pin_counta=0;
 
   var size, height, width;
   final _formKey = GlobalKey<FormState>();
@@ -175,7 +201,18 @@ class _POSPageState extends State<POSPage> {
     });
   }
 
-  void usersDropDown() {
+  void usersDropDown(int inde) {
+    //>>>>>>>>>>>>>>>>>>>>
+    String num="07064986532";
+    int counta=posTerminals[inde]['user'].length;
+    for(int x=0;x<counta;x++){
+      print(x);
+      print(posTerminals[inde]['user'][x]["f_name"]);
+      if(num==posTerminals[inde]['user'][x]["phone"]){
+        print("get the number");
+      }
+    }
+    //>>>>>>>>>>>>>>>>>>
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -206,11 +243,11 @@ class _POSPageState extends State<POSPage> {
               width: double.maxFinite,
               child: ListView.builder(
                 shrinkWrap: true,
-                itemCount: _userList.length,
+                itemCount: counta,// posTerminals[index]['name']
                 itemBuilder: (BuildContext context, int index) {
                   return ListTile(
                     title: Text(
-                      _userList[index],
+                      posTerminals[inde]['user'][index]["f_name"]+"( "+posTerminals[inde]['user'][index]["phone"]+" )",
                       style: TextStyle(
                         color: Colors.blue.shade900,
                         fontSize: 14,
@@ -220,7 +257,7 @@ class _POSPageState extends State<POSPage> {
                     trailing: IconButton(
                       icon: Icon(Icons.delete, color: Colors.red),
                       onPressed: () {
-                        removeUser(index);
+                        print(posTerminals[inde]['user'][index]["phone"]);
                         Navigator.of(context).pop();
                       },
                     ),
@@ -245,138 +282,158 @@ class _POSPageState extends State<POSPage> {
         });
   }
 
-  void _addUser() {
+  void _addUser(BuildContext context,int index) {
+    bool boolCheckDatas = true;
+    bool everything_is_ok=false;
+    bool dialog_bg_and_progress_bar=false;
+    bool isUserXit=false;
+
+
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
-            title: Center(
-              child: Column(
-                children: [
-                  Text(
-                    'Register User',
-                    style: TextStyle(
-                      color: Colors.blue.shade900,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+          return StatefulBuilder(
+              builder: (context,setState){
+               return AlertDialog(
+                 backgroundColor: dialog_bg_and_progress_bar ?Colors.grey.shade400:null,
+                  title: Center(
+                    child: Column(
+                      children: [
+                        Text(
+                          'Register User',
+                          style: TextStyle(
+                            color: Colors.blue.shade900,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+
+                      ],
                     ),
                   ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Divider(
-                    height: 1,
-                    thickness: 1,
-                    color: Colors.grey,
-                  ),
-                ],
-              ),
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Textform(_accountName,"First Name","",TextInputType.text),
-                SizedBox(height: 16.0),
-                Textform(_accountName,"Surname","",TextInputType.text),
-                SizedBox(height: 16.0),
-                TextFormField(
-                  controller: _phoneController,
-                  keyboardType: TextInputType.phone,
-                  decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.blue.shade900,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.blue.shade900,
-                      ),
-                    ),
-                    labelStyle: TextStyle(
-                      color: Colors.grey.shade600,
-                      fontSize: 12,
-                    ),
-                    contentPadding: EdgeInsets.symmetric(
-                      vertical: 15.0,
-                      horizontal: 15,
-                    ),
-                    labelText: 'Phone Number',
-                  ),
-                ),
-                SizedBox(height: 16.0),
-                TextFormField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  keyboardType: TextInputType.visiblePassword,
-                  decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.blue.shade900,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.blue.shade900,
-                      ),
-                    ),
-                    labelStyle: TextStyle(
-                      color: Colors.grey.shade600,
-                      fontSize: 12,
-                    ),
-                    contentPadding: EdgeInsets.symmetric(
-                      vertical: 15.0,
-                      horizontal: 15,
-                    ),
-                    labelText: 'Password',
-                  ),
-                ),
-                SizedBox(height: 16.0),
-                TextFormField(
-                  controller: _confirmPasswordController,
-                  obscureText: true,
-                  keyboardType: TextInputType.visiblePassword,
-                  decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.blue.shade900,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.blue.shade900,
-                      ),
-                    ),
-                    labelStyle: TextStyle(
-                      color: Colors.grey.shade600,
-                      fontSize: 12,
-                    ),
-                    contentPadding: EdgeInsets.symmetric(
-                      vertical: 15.0,
-                      horizontal: 15,
-                    ),
-                    labelText: 'Confirm Password',
-                  ),
-                  onChanged: (value) {
-                    setState(() {
-                      _passwordsMatch = value == _passwordController.text;
-                    });
-                  },
-                ),
-                SizedBox(height: 8.0),
-                if (!_passwordsMatch)
-                  Text(
-                    'Passwords do not match.',
-                    style: TextStyle(
-                      color: Colors.red,
+                  content: SingleChildScrollView(
+                    child: Stack(
+                      children: [
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Divider(
+                              height: 1,
+                              thickness: 1,
+                              color: Colors.grey,
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Textform(_new_user_f_name,"First Name","",TextInputType.text,false),
+                            SizedBox(height: 16.0),
+                            Textform(_new_user_s_name,"Surname","",TextInputType.text,false),
+                            SizedBox(height: 16.0),
+                            Textform(_new_user_phone,"phone Number","",TextInputType.phone,false),
+                            SizedBox(height: 16.0),
+                            Textform(_new_user_pass,"password","",TextInputType.text,true),
+                            SizedBox(height: 16.0),
+                            Textform(_new_user_confirm_pass,"confirm password","",TextInputType.text,true),
+                            SizedBox(height: 8.0),
+
+                            if (!boolCheckDatas)
+                              Text(
+                                _new_user_notification,
+                                style: TextStyle(
+                                  color: Colors.red,
+                                ),
+                              ),
+                          ],
+                        ),
+                        Visibility(
+                            visible: dialog_bg_and_progress_bar,
+                            child: Container(
+
+                                color: Colors.black.withOpacity(0.5),
+                                child:LinearProgressIndicator(
+                                      semanticsLabel: 'Linear progress indicator',
+                                    )
+                                )),
+                      ],
                     ),
                   ),
-              ],
-            ),
-            actions: [
-              Textbtn(btn_cancel_new_user,"Cancel",Colors.red,16,true),
-              Textbtn(btn_submit_new_user,"Register",Colors.blue.shade900,16,true),
-             /* TextButton(
+                  actions: [
+                    Textbtn(btn_cancel_new_user,"Cancel",Colors.red,16,true,boolCheckDatas),
+
+                    TextButton(
+                      onPressed: (){
+                      if(everything_is_ok){
+
+                      }else{
+                        if(_new_user_f_name.text.isEmpty){
+                          setState(() {
+                            _new_user_notification = "Enter a first name";
+                            boolCheckDatas = false;
+                            everything_is_ok=false;
+                          });
+                        }else if(_new_user_s_name.text.isEmpty){
+                          setState(() {
+                            _new_user_notification = "Enter a Surname";
+                            boolCheckDatas = false;
+                            everything_is_ok=false;
+                          });
+                        }else if(_new_user_phone.text.isEmpty) {
+                          setState(() {
+                            _new_user_notification = "Enter a phone Number";
+                            boolCheckDatas = false;
+                            everything_is_ok=false;
+                          });
+                        }else{
+
+                          if(_new_user_phone.text.length==11){
+                            //>>>>>>>>>>>>>>>>>>>>>>>>>>
+                              if(_new_user_pass.text.isEmpty){
+                                setState((){
+                                  _new_user_notification = "Enter a Password";
+                                  boolCheckDatas = false;
+                                  everything_is_ok=false;
+                                });
+                              }else{
+                                if(_new_user_pass.text==_new_user_confirm_pass.text){
+                                  String status;
+                                  setState((){
+                                    everything_is_ok=true;
+                                    boolCheckDatas = true;
+                                    dialog_bg_and_progress_bar=true;
+                                    Navigator.of(context).pop();
+                                    Navigator.of(context).pop();
+                                    hide_terminal_request=true;
+                                    show_pin_widget_for_new_user=true;
+                                    terminal_index=index;
+                                   // _new_operator_submit(_new_user_phone.text,_new_user_pass.text,_new_user_f_name.text,_new_user_s_name.text,index);
+                                  });
+                                }else{
+                                  setState((){
+                                    _new_user_notification = "Password mismatch";
+                                    boolCheckDatas = false;
+                                    everything_is_ok=false;
+                                  });
+                                }
+                              }
+
+                            //>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+                          }else{
+                            setState(() {
+                              _new_user_notification = "Invalid phone number";
+                              boolCheckDatas = false;
+                              everything_is_ok=false;
+                            });
+                          }
+                        }
+
+                      }
+
+                        },
+                         child: Text("Register",style: TextStyle(color: Colors.blue.shade900,fontSize: 16,fontWeight: FontWeight.bold),)
+                         )
+                    /* TextButton(
                 onPressed: _passwordsMatch
                     ? () {
                         final phone = _phoneController.text;
@@ -396,8 +453,9 @@ class _POSPageState extends State<POSPage> {
                   ),
                 ),
               ),*/
-            ],
-          );
+                  ],
+                );
+              });
         });
   }
 
@@ -990,7 +1048,16 @@ class _POSPageState extends State<POSPage> {
     );
   }
 
-  void _managePOS(int index) {
+  void _managePOS(int index,BuildContext context) {
+    if(posTerminals[index]['status']=="Pending"){
+      setState(() {
+        terminal_status=false;
+      });
+    }else{
+      setState(() {
+        terminal_status=true;
+      });
+    }
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -1030,7 +1097,7 @@ class _POSPageState extends State<POSPage> {
                       padding: EdgeInsets.zero,
                     ),
                     onPressed: () {
-                      _addUser();
+                      _addUser(context,index);
                     },
                     child: Column(
                       children: [
@@ -1061,17 +1128,17 @@ class _POSPageState extends State<POSPage> {
                       padding: EdgeInsets.zero,
                     ),
                     onPressed: () {
-                      usersDropDown();
+                      usersDropDown(index);
                     },
                     child: Column(
                       children: [
                         ListTile(
                           leading: Icon(
-                            Icons.person_remove,
+                            Icons.people,
                             color: Colors.blue.shade900,
                           ),
                           title: Text(
-                            'Remove User',
+                            'Operators',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.blue.shade900,
@@ -1092,18 +1159,30 @@ class _POSPageState extends State<POSPage> {
                       padding: EdgeInsets.zero,
                     ),
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      if(posTerminals[index]['status']=="Pending"){
+                        print("new Activate");
+                        setState((){
+                          Navigator.of(context).pop();
+                          activate_new_terminal_pin=true;
+                          hide_terminal_request=true;
+                        });
+                      }else{
+                        print("device is active");
+                      }
+                      /*
+                             Navigator.of(context).pop();
                       _resetPIN(context, true);
+                       */
                     },
                     child: Column(
                       children: [
                         ListTile(
                           leading: Icon(
-                            Icons.pin,
+                            terminal_status?Icons.pin:Icons.point_of_sale_sharp,
                             color: Colors.blue.shade900,
                           ),
                           title: Text(
-                            'Reset PIN',
+                            terminal_status?'Reset PIN':"Activate Terminal",
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.blue.shade900,
@@ -1298,7 +1377,7 @@ class _POSPageState extends State<POSPage> {
     );
   }
 
-  void _showPOS(String terminalName, int index) {
+  void _showPOS(String terminalName, int index,BuildContext context) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -1384,26 +1463,7 @@ class _POSPageState extends State<POSPage> {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Device Manager : ",
-                      style: TextStyle(
-                        color: Colors.grey.shade700,
-                        fontSize: 14,
-                      ),
-                    ),
-                    Text(
-                      posTerminals[index]['user'],
-                      style: TextStyle(
-                        color: Colors.blue.shade900,
-                        fontSize: 14,
-                        // fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
+
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -1438,7 +1498,9 @@ class _POSPageState extends State<POSPage> {
                     ),
                     onPressed: () {
                       Navigator.of(context).pop();
-                      _managePOS(index);
+                      _managePOS(index,context);
+                      terminal_id=posTerminals[index]['terminal_id'];
+
                     },
                     child: Text('Manage Device'),
                   ),
@@ -1723,7 +1785,7 @@ class _POSPageState extends State<POSPage> {
               itemCount: posTerminals.length,
               itemBuilder: (BuildContext context, int index) {
                 return GestureDetector(
-                  onTap: () => _showPOS(posTerminals[index]['name'], index),
+                  onTap: () => _showPOS(posTerminals[index]['name'], index,context),
                   child: Card(
                     child: ListTile(
                       title: Text(
@@ -1855,14 +1917,14 @@ class _POSPageState extends State<POSPage> {
                                             crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                             children: [
-                                              Textform(_accountName,"Account Name","Please enter your Account name",TextInputType.text),
+                                              Textform(_accountName,"Account Name","Please enter your Account name",TextInputType.text,false),
 
                                               SizedBox(height: 16),
-                                              Textform(_addressController,"Location","Please enter your POS Location",TextInputType.text),
+                                              Textform(_addressController,"Location","Please enter your POS Location",TextInputType.text,false),
                                               SizedBox(height: 16),
-                                              Textform(_fullNameController,"Contact Name","Please enter your full name",TextInputType.text),
+                                              Textform(_fullNameController,"Contact Name","Please enter your full name",TextInputType.text,false),
                                               SizedBox(height: 16),
-                                              Textform(_phoneNumberController,"Contact Phone No","Please enter your phone No",TextInputType.phone),
+                                              Textform(_phoneNumberController,"Contact Phone No","Please enter your phone No",TextInputType.phone,false),
                                               SizedBox(height: 16),
                                               Full_eleveted_width_button(btn_submit,Colors.blue.shade900,Colors.white,"Submit",insufficient_Funds?false:true),
 
@@ -1896,7 +1958,42 @@ class _POSPageState extends State<POSPage> {
                  height
                )
            ),
-
+            Visibility(
+                visible: show_pin_widget_for_new_user,
+                child: pin_widget(
+                    _new_operator_process,
+                    context,
+                    _trnx_pin_controller,
+                    "Transaction PIN",
+                    "Enter your transaction to complete",
+                    invalid_trnx_pin?false:true,
+                    "url",
+                    width,
+                    height
+                )
+            ),
+            Visibility(
+                visible: activate_new_terminal_pin,
+                child: pin_reset_widget(
+                    _terminal_activation,
+                    context,
+                    _trnx_pin_controller,
+                    new_pin_tittle,
+                    new_pin_msg,
+                    new_pin_err_msg,
+                    invalid_trnx_pin?false:true,
+                    width,
+                    height
+                )
+            ),
+            Visibility(
+              visible: show_user_alreadyExit,
+              child: user_alreadyExit(),
+            ),
+            Visibility(
+              visible: show_new_operator_added,
+              child: SuccessContainer(),
+            ),
            //Progress bar
             Visibility(
                 visible: show_preogress,
@@ -1912,7 +2009,7 @@ class _POSPageState extends State<POSPage> {
           ],
         ),
 
-      floatingActionButton: bool_terminal_request ?null:FloatingActionButton(
+      floatingActionButton: bool_terminal_request||hide_terminal_request ?null:FloatingActionButton(
         onPressed: () {
          // _requestPOS();
           setState(() {
@@ -1925,8 +2022,130 @@ class _POSPageState extends State<POSPage> {
       ),
     );
   }
-  void transaction_pin_function(String value){
+  Widget SuccessContainer() {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          show_new_operator_added = false;
+        });
+      },
+      child: Container(
+        color: Colors.black.withOpacity(0.5),
+        child: Center(
+          child: Material(
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.white,
+            child: Container(
+              height: MediaQuery.of(context).size.height / 3.4,
+              width: MediaQuery.of(context).size.width / 1.5,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "Success",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.blue.shade900,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Icon(
+                      Icons.check_circle,
+                      size: 100,
+                      color: Colors.blue.shade900,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    if(terminal_load_index)...[
+                      Text(
+                        "New Operator Added Successfully to "+posTerminals[terminal_index]['name'],
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.blue.shade900,
+                        ),
+                      ),
+                    ]
 
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  Widget user_alreadyExit() {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          show_user_alreadyExit = false;
+        });
+      },
+      child: Container(
+        color: Colors.black.withOpacity(0.5),
+        child: Center(
+          child: Material(
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.white,
+            child: Container(
+              height: MediaQuery.of(context).size.height / 3.4,
+              width: MediaQuery.of(context).size.width / 1.5,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "User Already Exit",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Icon(
+                      Icons.error,
+                      size: 100,
+                      color: Colors.red,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "User Already Exit please use different phone number",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  void transaction_pin_function(String value){
 if(value.length==4){
   if(value==trnx_pin){
     setState(() {
@@ -1960,12 +2179,158 @@ void btn_submit(){
       } else {}
     });
 }
-void btn_submit_new_user(){
-
+void btn_submit_new_user(bool action){
+    //                _new_user_f_name,_new_user_s_name,_new_user_phone,_new_user_pass,_new_user_confirm_pass
+  //                _new_user_notification,_passwordsMatch
+print("f Name= "+_new_user_f_name.text);
+if(_new_user_f_name.text.isEmpty){
+ setState(() {
+   _new_user_notification="Enter a first name";
+   action=false;
+ });
+}else{
+setState(() {
+  _new_user_notification="";
+  action=true;
+});
 }
-void btn_cancel_new_user(){
+}
+void btn_cancel_new_user(bool action){
   Navigator.of(context).pop();
 }
+void _new_operator_process(String value){
+
+  if(value.length==4){
+    if(value==trnx_pin){
+      setState(() {
+        show_preogress=true;
+        invalid_trnx_pin=false;
+        FocusScope.of(context).requestFocus(new FocusNode());
+
+        _new_operator_submit(_new_user_phone.text,_new_user_pass.text,_new_user_f_name.text,_new_user_s_name.text);
+         _trnx_pin_controller.clear();
+
+      });
+    }else{
+      setState(() {
+        invalid_trnx_pin=true;
+        _trnx_pin_controller.clear();
+      });
+    }
+    //_trnx_pin_controller.clear();
+
+  }
+
+}
+  void _terminal_activation(String value){
+
+    if(value.length==4){
+      if(value==trnx_pin && new_pin_counta==0){
+        setState(() {
+          default_pin_is_correct=true;
+          invalid_trnx_pin=false;
+          new_pin_msg="Select New Terminal Pin";
+         _trnx_pin_controller.clear();
+
+        });
+      }else{
+        if(default_pin_is_correct&&!confim_new_pin){
+          hold_new_pin=value;
+          setState(() {
+            invalid_trnx_pin=false;
+            confim_new_pin=true;
+            print("new pin is"+hold_new_pin);
+            new_pin_msg="Confirm New Terminal Pin";
+            _trnx_pin_controller.clear();
+          });
+
+        }else if(default_pin_is_correct&&confim_new_pin) {
+          hold_new_pin_confirmation=value;
+          print("confirm new pin"+hold_new_pin_confirmation);
+          if(hold_new_pin==hold_new_pin_confirmation){
+            print("muna wurin");
+           setState(() {
+             show_preogress=true;
+             FocusScope.of(context).requestFocus(new FocusNode());
+           });
+          }else{
+            setState(() {
+              new_pin_msg="Select New Terminal Pin";
+              confim_new_pin=false;
+              new_pin_err_msg="New And Confirm Pin mismatch";
+              invalid_trnx_pin=true;
+              _trnx_pin_controller.clear();
+            });
+          }
+        }else{
+          setState(() {
+            invalid_trnx_pin=true;
+            _trnx_pin_controller.clear();
+          });
+        }
+
+      }
+    }
+
+  }
+  Future _new_operator_submit(String operator_phone,String pass,String f_name,String s_name) async {
+    bool isUserXit = false;
+    int list_of_operators = posTerminals[terminal_index]['user'].length;
+    for (int x = 0; x < list_of_operators; x++) {
+      print(posTerminals[terminal_index]['user'][x]["f_name"]);
+      if (_new_user_phone.text == posTerminals[terminal_index]['user'][x]["phone"]) {
+          isUserXit = true;
+      }
+    }
+
+    if (isUserXit) {
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+      setState(() {
+        show_user_alreadyExit=true;
+      });
+    }else{
+    String status = "";
+    var url = "https://a2ctech.net/api/faspay/_new_terminal_operator.php";
+    var response;
+    response = await http.post(Uri.parse(url), body: {
+      //main_account 	tml_account_name 	location 	contact_name 	contact_phone
+      "phone": my_num,
+      "token": my_token,
+
+      "operator_phone": operator_phone,
+      "pass": pass,
+      "f_name": f_name,
+      "s_name": s_name,
+      "terminal_id": terminal_id,
+
+    });
+
+    var data = json.decode(response.body);
+    if (response.statusCode == 200) {
+      print(response.body);
+      if (data["status"] == "Done") {
+        setState(() {
+          // my_session();
+          fetch_terminals();
+         // Navigator.of(context).pop();
+          show_preogress=false;
+          show_new_operator_added=true;
+          terminal_index=terminal_index;
+          terminal_load_index=true;
+          hide_terminal_request=false;
+          status = data["status"];
+        });
+      } else {}
+      setState(() {
+
+      });
+    } else {
+      print(response.statusCode);
+    }
+  }
+  }
+
   Future _terminal_request_submit(String tml_account_name,String location,String contact_name,String contact_phone) async {
     show_preogress = true;
     var url = "https://a2ctech.net/api/faspay/_request_terminal.php";
@@ -2015,7 +2380,7 @@ void btn_cancel_new_user(){
       setState(() {
         my_num = phone!;
         my_token = tokn!;
-        fetchDataFromWeb();
+        fetch_terminals();
       });
     }
   }
@@ -2053,7 +2418,7 @@ void btn_cancel_new_user(){
           user_id=data["user_id"];
           terminal_price=double.parse(data["price_list"][1]["amount"]);
           trnx_pin=data["trnxPin"];
-
+print("trnx pin "+trnx_pin);
           if(hold_balance<terminal_price){
             insufficient_Funds=true;
           }
@@ -2066,10 +2431,7 @@ void btn_cancel_new_user(){
 
     }
   }
-
-//>>>>>>>>>>>>>>>>>>>
-
-  void fetchDataFromWeb() async {
+  void fetch_terminals() async {
     try {
       //*************************************************
       var url = "https://a2ctech.net/api/faspay/terminals.php";
@@ -2084,15 +2446,27 @@ void btn_cancel_new_user(){
         posTerminals = (json.decode(response.body) as List)
             .map((item) => item as Map<String, dynamic>)
             .toList();
+        print(data);
       } else {
         print(response.statusCode);
+       //>>>>>>>>>>>>>>>>>>>>>
+        for (int i = 0; i < posTerminals.length; i++) {
+          Map<String, dynamic> innerList = posTerminals[i];
+          print('Inner list $i:');
+          for (int j = 0; j < innerList.length; j++) {
+            //String name = innerList[j]['name'];
+           // int age = innerList[j]['age'];
+           // print('$name is $age years old.');
+          }
+        }
+        //.>>>>>>>>>>>>>>>>>>>>>>>>
       }
 //*********************************
     } catch (e) {
       print('Error occurred while fetching data: $e');
     }
   }
-//>>>>>>>>>>>>>>>>>>>
+
 }
 class Terminals{
   final String id;
