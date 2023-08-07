@@ -83,6 +83,7 @@ class _POSPageState extends State<POSPage> {
   String new_pin_err_msg="Invalid Default Pin";
   String hold_new_pin="";
   String hold_new_pin_confirmation="";
+  String succss_msg="New Operator Added Successfully to ";
 
 
   double terminal_price=0;
@@ -125,13 +126,15 @@ class _POSPageState extends State<POSPage> {
 
   void lockDevice(int id) {
     setState(() {
-      if (posTerminals[id]['isLocked'] == false) {
+      if (stringToBool( posTerminals[id]['isLocked']) == false) {
         setState(() {
-          posTerminals[id]['isLocked'] = true;
+          posTerminals[id]['isLocked'] = "true";
+          update_terminal_lock_status("true");
         });
-      } else if (posTerminals[id]['isLocked'] == true) {
+      } else{
         setState(() {
-          posTerminals[id]['isLocked'] = false;
+          posTerminals[id]['isLocked'] = "false";
+          update_terminal_lock_status("false");
         });
       }
     });
@@ -1159,15 +1162,23 @@ class _POSPageState extends State<POSPage> {
                       padding: EdgeInsets.zero,
                     ),
                     onPressed: () {
+                      terminal_index=index;
                       if(posTerminals[index]['status']=="Pending"){
                         print("new Activate");
                         setState((){
                           Navigator.of(context).pop();
+                          new_pin_tittle="Activate Your Terminal";
                           activate_new_terminal_pin=true;
                           hide_terminal_request=true;
                         });
                       }else{
-                        print("device is active");
+                        setState((){
+                          Navigator.of(context).pop();
+                          new_pin_tittle="Change Your Terminal PIN";
+                          new_pin_msg="Enter a Old Terminal PIN";
+                          activate_new_terminal_pin=true;
+                          hide_terminal_request=true;
+                        });
                       }
                       /*
                              Navigator.of(context).pop();
@@ -1203,6 +1214,7 @@ class _POSPageState extends State<POSPage> {
                       padding: EdgeInsets.zero,
                     ),
                     onPressed: () {
+                      terminal_index=index;
                       lockDevice(index);
                       Navigator.of(context).pop();
                       showDialog(
@@ -1215,7 +1227,7 @@ class _POSPageState extends State<POSPage> {
                               child: Column(
                                 children: [
                                   Icon(
-                                    posTerminals[index]['isLocked']
+                                    stringToBool( posTerminals[index]['isLocked'])
                                         ? Icons.lock
                                         : Icons.lock_open,
                                     size: 50,
@@ -1225,7 +1237,7 @@ class _POSPageState extends State<POSPage> {
                                     height: 10,
                                   ),
                                   Text(
-                                    posTerminals[index]['isLocked']
+                                    stringToBool( posTerminals[index]['isLocked'])
                                         ? "Device Locked"
                                         : "Device UnLocked",
                                     style: TextStyle(
@@ -1244,13 +1256,14 @@ class _POSPageState extends State<POSPage> {
                       children: [
                         ListTile(
                           leading: Icon(
-                            posTerminals[index]['isLocked']
+
+                    stringToBool( posTerminals[index]['isLocked'])
                                 ? Icons.lock_open
                                 : Icons.lock,
                             color: Colors.blue.shade900,
                           ),
                           title: Text(
-                            posTerminals[index]['isLocked']
+                            stringToBool( posTerminals[index]['isLocked'])
                                 ? 'Unlock Device'
                                 : 'Lock Device',
                             style: TextStyle(
@@ -1376,7 +1389,9 @@ class _POSPageState extends State<POSPage> {
       },
     );
   }
-
+  bool stringToBool(String value) {
+    return value.toLowerCase() == 'true';
+  }
   void _showPOS(String terminalName, int index,BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -2066,7 +2081,7 @@ class _POSPageState extends State<POSPage> {
                     ),
                     if(terminal_load_index)...[
                       Text(
-                        "New Operator Added Successfully to "+posTerminals[terminal_index]['name'],
+                        succss_msg+posTerminals[terminal_index]['name'],
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 12,
@@ -2223,9 +2238,9 @@ void _new_operator_process(String value){
 
 }
   void _terminal_activation(String value){
-
     if(value.length==4){
-      if(value==trnx_pin && new_pin_counta==0){
+      print("the pin is"+posTerminals[terminal_index]['terminal_pin'].toString());
+      if(value==posTerminals[terminal_index]['terminal_pin'] && new_pin_counta==0){
         setState(() {
           default_pin_is_correct=true;
           invalid_trnx_pin=false;
@@ -2252,6 +2267,11 @@ void _new_operator_process(String value){
            setState(() {
              show_preogress=true;
              FocusScope.of(context).requestFocus(new FocusNode());
+             activate_terminal(hold_new_pin);
+             _trnx_pin_controller.clear();
+             default_pin_is_correct=false;
+             confim_new_pin=false;
+
            });
           }else{
             setState(() {
@@ -2314,11 +2334,13 @@ void _new_operator_process(String value){
           // my_session();
           fetch_terminals();
          // Navigator.of(context).pop();
+          succss_msg="New Operator Added Successfully to ";
           show_preogress=false;
           show_new_operator_added=true;
           terminal_index=terminal_index;
           terminal_load_index=true;
           hide_terminal_request=false;
+          show_pin_widget_for_new_user=false;
           status = data["status"];
         });
       } else {}
@@ -2330,7 +2352,73 @@ void _new_operator_process(String value){
     }
   }
   }
+  Future activate_terminal(String pin) async {
+    show_preogress = true;
+    var url = "https://a2ctech.net/api/faspay/_terminal_activation.php";
+    var response;
+    response = await http.post(Uri.parse(url), body: {
+      //main_account 	tml_account_name 	location 	contact_name 	contact_phone
+      "phone": my_num,
+      "token": my_token,
+      "terminal": posTerminals[terminal_index]['terminal_id'],
+      "new_pin": pin,
+      "old_pin": posTerminals[terminal_index]['terminal_pin'],
+    });
 
+    var data = json.decode(response.body);
+    if (response.statusCode == 200) {
+      print(response.body);
+      if (data["status"] == "true") {
+        setState(() {
+          // my_session();
+          activate_new_terminal_pin=false;
+          show_preogress = false;
+          show_trnx_panel=false;
+          bool_terminal_request=false;
+          terminal_load_index=true;
+          succss_msg="Terminal Activation Successfully,";
+          show_new_operator_added=true;
+          fetch_terminals();
+
+        });
+      } else {}
+      setState(() {
+
+      });
+    } else {
+      print(response.statusCode);
+    }
+  }
+  Future update_terminal_lock_status(String lock) async {
+
+    var url = "https://a2ctech.net/api/faspay/terminal_lock_nd_unlock.php";
+    var response;
+    response = await http.post(Uri.parse(url), body: {
+      //main_account 	tml_account_name 	location 	contact_name 	contact_phone
+      "phone": my_num,
+      "token": my_token,
+      "terminal": posTerminals[terminal_index]['terminal_id'],
+      "lock_status": lock,
+
+    });
+
+    var data = json.decode(response.body);
+    if (response.statusCode == 200) {
+      print(response.body);
+      if (data["status"] == "true") {
+        setState(() {
+          // my_session();
+
+
+        });
+      } else {}
+      setState(() {
+
+      });
+    } else {
+      print(response.statusCode);
+    }
+  }
   Future _terminal_request_submit(String tml_account_name,String location,String contact_name,String contact_phone) async {
     show_preogress = true;
     var url = "https://a2ctech.net/api/faspay/_request_terminal.php";
@@ -2447,8 +2535,13 @@ print("trnx pin "+trnx_pin);
             .map((item) => item as Map<String, dynamic>)
             .toList();
         print(data);
+        for (int i = 0; i < posTerminals.length; i++) {
+          print("<<< terminal and pin "+data[i]["name"]+" "+data[i]["isLocked"]);
+        }
+
       } else {
         print(response.statusCode);
+
        //>>>>>>>>>>>>>>>>>>>>>
         for (int i = 0; i < posTerminals.length; i++) {
           Map<String, dynamic> innerList = posTerminals[i];
