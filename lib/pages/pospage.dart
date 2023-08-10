@@ -71,6 +71,9 @@ class _POSPageState extends State<POSPage> {
   bool default_pin_is_correct=false;
   bool confim_new_pin=false;
   bool activate_new_terminal_pin=false;
+  bool terminal_finish_load=false;
+  bool bool_enable_terminal_transfer=false;
+  bool transfer_status=false;
 
   String _errorMessage = '';
   String my_num = "", my_token = "";
@@ -84,6 +87,7 @@ class _POSPageState extends State<POSPage> {
   String hold_new_pin="";
   String hold_new_pin_confirmation="";
   String succss_msg="New Operator Added Successfully to ";
+  String transfer_action="No";
 
 
   double terminal_price=0;
@@ -1052,6 +1056,17 @@ class _POSPageState extends State<POSPage> {
   }
 
   void _managePOS(int index,BuildContext context) {
+    //transfer_status
+    if(posTerminals[index]['enable_transfer']=="Yes"){
+      setState(() {
+        transfer_status=true;
+      });
+    }else{
+      setState(() {
+        transfer_status=false;
+      });
+    }
+
     if(posTerminals[index]['status']=="Pending"){
       setState(() {
         terminal_status=false;
@@ -1297,84 +1312,23 @@ class _POSPageState extends State<POSPage> {
                           ),
                         ),
                         trailing: Switch(
+
                           activeColor: Colors.blue.shade900,
-                          value: _isTransferEnabled,
+                          value: transfer_status,
                           onChanged: (value) {
                             setState(
                               () {
-                                _isTransferEnabled = value;
+                                terminal_index=index;
+
+                                bool_enable_terminal_transfer = true;
                               },
                             );
                             if (value) {
                               Navigator.of(context).pop();
-                              _enterPIN(
-                                value,
-                                "Enable Transfer",
-                                "Please enter your transaction PIN to enable transfer on this device. Do note that once this is enabled, the device can be used to send money to third party users.",
-                                "Enable",
-                              );
+                              transfer_action="Yes";
                             } else {
-                              Navigator.of(context).pop();
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Center(
-                                        child: Text(
-                                          "Success",
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            color: Colors.blue.shade900,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      content: SizedBox(
-                                        height:
-                                            MediaQuery.of(context).size.height /
-                                                3.3,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        child: Column(
-                                          children: [
-                                            SizedBox(height: 15),
-                                            Icon(
-                                              Icons.check_circle,
-                                              color: Colors.blue.shade900,
-                                              size: 100,
-                                            ),
-                                            SizedBox(height: 15),
-                                            Text(
-                                              "Transfer has been disabled on this device",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.grey.shade600,
-                                                // fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            SizedBox(height: 15),
-                                            Align(
-                                              alignment: Alignment.centerRight,
-                                              child: TextButton(
-                                                onPressed: (() {
-                                                  Navigator.of(context).pop();
-                                                }),
-                                                child: Text(
-                                                  "Done",
-                                                  style: TextStyle(
-                                                    color: Colors.blue.shade900,
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  });
+                              transfer_action="No";
+                              Navigator.of(context).pop();;
                             }
                           },
                         ),
@@ -2001,6 +1955,24 @@ class _POSPageState extends State<POSPage> {
                     height
                 )
             ),
+            if(terminal_finish_load)...[
+              Visibility(
+                  visible: bool_enable_terminal_transfer,
+                  child: pin_widget(
+                      _enable_terminal_transfer,
+                      context,
+                      _trnx_pin_controller,
+                      "Transaction PIN",
+
+                      "Please enter your transaction PIN to enable transfer on "+posTerminals[terminal_index]['name']+". Do note that once this is enabled, the device can be used to send money to third party users.",
+                      invalid_trnx_pin?false:true,
+                      "url",
+                      width,
+                      height
+                  )
+              )
+            ],
+
             Visibility(
               visible: show_user_alreadyExit,
               child: user_alreadyExit(),
@@ -2213,6 +2185,7 @@ setState(() {
 void btn_cancel_new_user(bool action){
   Navigator.of(context).pop();
 }
+
 void _new_operator_process(String value){
 
   if(value.length==4){
@@ -2237,6 +2210,29 @@ void _new_operator_process(String value){
   }
 
 }
+  void _enable_terminal_transfer(String value){
+
+    if(value.length==4){
+      if(value==trnx_pin){
+        setState(() {
+          show_preogress=true;
+          invalid_trnx_pin=false;
+          FocusScope.of(context).requestFocus(new FocusNode());
+          _submit_enable_terminal_transfer(transfer_action);
+          _trnx_pin_controller.clear();
+
+        });
+      }else{
+        setState(() {
+          invalid_trnx_pin=true;
+          _trnx_pin_controller.clear();
+        });
+      }
+      //_trnx_pin_controller.clear();
+
+    }
+
+  }
   void _terminal_activation(String value){
     if(value.length==4){
       print("the pin is"+posTerminals[terminal_index]['terminal_pin'].toString());
@@ -2292,6 +2288,43 @@ void _new_operator_process(String value){
       }
     }
 
+  }
+  Future _submit_enable_terminal_transfer(String action) async {
+    show_preogress = true;
+    var url = "https://a2ctech.net/api/faspay/enable_terminal_transfer.php";
+    var response;
+    response = await http.post(Uri.parse(url), body: {
+      //main_account 	tml_account_name 	location 	contact_name 	contact_phone
+      "phone": my_num,
+      "token": my_token,
+      "action": action,
+      "terminal": posTerminals[terminal_index]['terminal_id'],
+
+    });
+
+    var data = json.decode(response.body);
+    if (response.statusCode == 200) {
+      print(response.body);
+      if (data["status"] == "true") {
+        setState(() {
+          // my_session();
+          bool_enable_terminal_transfer=false;
+          show_preogress = false;
+          show_trnx_panel=false;
+          bool_terminal_request=false;
+          terminal_load_index=true;
+          succss_msg="Terminal Activation Successfully,";
+          show_new_operator_added=true;
+          fetch_terminals();
+
+        });
+      } else {}
+      setState(() {
+
+      });
+    } else {
+      print(response.statusCode);
+    }
   }
   Future _new_operator_submit(String operator_phone,String pass,String f_name,String s_name) async {
     bool isUserXit = false;
@@ -2538,7 +2571,10 @@ print("trnx pin "+trnx_pin);
         for (int i = 0; i < posTerminals.length; i++) {
           print("<<< terminal and pin "+data[i]["name"]+" "+data[i]["isLocked"]);
         }
-
+        setState(() {
+          terminal_index=0;
+          terminal_finish_load=true;
+        });
       } else {
         print(response.statusCode);
 

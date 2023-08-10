@@ -1,5 +1,6 @@
 import 'package:faspay/pages/Splshscreen.dart';
 import 'package:faspay/pages/homepage.dart';
+import 'package:faspay/pages/otppage.dart';
 import 'package:faspay/pages/qr_result.dart';
 import 'package:faspay/pages/test.dart';
 import 'package:faspay/pages/transfer.dart';
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
         canvasColor: Color.fromARGB(255, 250, 252, 251),
       ),
       // home: CardPage(),
-      home: Splshscreen(
+      home: OtpPage(phoneNumber: '08036937928', isNewUser: true, cons_otp: '1122',
           //qr_coder: "qqqqqq",
           ),
     );

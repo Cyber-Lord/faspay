@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:faspay/pages/login.dart';
 import 'package:faspay/pages/registerScreen.dart';
+import 'package:faspay/pages/utils/reusable_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -10,10 +11,11 @@ class OtpPage extends StatefulWidget {
   const OtpPage({
     Key? key,
     required this.phoneNumber,
-    required this.isNewUser,
+    required this.isNewUser, required this.cons_otp,
   }) : super(key: key);
   final String phoneNumber;
   final bool isNewUser;
+  final String cons_otp;
 
   @override
   _OtpPageState createState() => _OtpPageState();
@@ -23,14 +25,23 @@ class _OtpPageState extends State<OtpPage> {
   List<TextEditingController> _controllers = [];
   final _formKey = GlobalKey<FormState>();
   Timer? _timer;
-  int _remainingSeconds = 60;
+  int _remainingSeconds = 10;
   String hold_otp = "";
+
+
   bool show_preogress = false;
   TextEditingController _oldPinController = TextEditingController();
   TextEditingController _newPinController = TextEditingController();
   TextEditingController _confirmPinController = TextEditingController();
+
+  TextEditingController otp_txt_in=TextEditingController();
+
   String _errorMessage = '';
   bool _isPinVisible = false;
+  bool invalid_trnx_pin=false;
+  bool is_otp_resend=false;
+
+  var size, height, width;
 
   @override
   void initState() {
@@ -99,6 +110,15 @@ class _OtpPageState extends State<OtpPage> {
 
   @override
   Widget build(BuildContext context) {
+    size = MediaQuery.of(context).size;
+    height = size.height;
+    width = size.width;
+    if(is_otp_resend){
+
+    }else{
+      hold_otp= widget.cons_otp;
+    }
+   //
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -117,82 +137,102 @@ class _OtpPageState extends State<OtpPage> {
         ),
         body: Stack(
           children: [
-            ListView(
-              children: [
-                Padding(
-                  padding:
+            Visibility(
+                visible: true,
+                child: SingleChildScrollView(
+                  child: otp_pin(
+                      _terminal_activation,
+                      context,
+                      otp_txt_in,
+                      "Verification Code",
+                      "A 4 digit code was sent to your mobile number, fill it below to continue.",
+                      invalid_trnx_pin?false:true,
+                      "",
+                      width,
+                      height,
+                      _remainingSeconds,
+                      btn_resend_otp
+                  ),
+                )
+            ),
+            Visibility(
+              visible: false,
+                child: ListView(
+                  children: [
+                    Padding(
+                      padding:
                       EdgeInsets.only(top: 20, left: 15, right: 15, bottom: 10),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              "A 6 digit code was sent to your mobile number, fill it below to continue.",
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey.shade700,
-                                // fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
                             Column(
                               mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                Text(
+                                  "A 6 digit code was sent to your mobile number, fill it below to continue.",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey.shade700,
+                                    // fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    _buildOtpDigitField(0),
-                                    _buildOtpDigitField(1),
-                                    _buildOtpDigitField(2),
-                                    _buildOtpDigitField(3),
-                                    _buildOtpDigitField(4),
-                                    _buildOtpDigitField(5),
+                                    Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        _buildOtpDigitField(0),
+                                        _buildOtpDigitField(1),
+                                        _buildOtpDigitField(2),
+                                        _buildOtpDigitField(3),
+                                        _buildOtpDigitField(4),
+                                        _buildOtpDigitField(5),
+                                      ],
+                                    ),
                                   ],
                                 ),
-                              ],
-                            ),
-                            SizedBox(height: 20),
-                            _remainingSeconds > 0
-                                ? Text(
-                                    'Resend again in $_remainingSeconds seconds',
+                                SizedBox(height: 20),
+                                _remainingSeconds > 0
+                                    ? Text(
+                                  'Resend again in $_remainingSeconds seconds',
+                                  style: TextStyle(
+                                    // fontWeight: FontWeight.bold,
+                                    color: Colors.red.shade900,
+                                  ),
+                                )
+                                    : ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.blue.shade900,
+                                  ),
+                                  onPressed: _resendOtp,
+                                  child: Text(
+                                    'Resend OTP',
                                     style: TextStyle(
-                                      // fontWeight: FontWeight.bold,
-                                      color: Colors.red.shade900,
-                                    ),
-                                  )
-                                : ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.blue.shade900,
-                                    ),
-                                    onPressed: _resendOtp,
-                                    child: Text(
-                                      'Resend OTP',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                            SizedBox(height: 20),
+                                ),
+                                SizedBox(height: 20),
+                              ],
+                            ),
+
+                            // Text(widget.phoneNumber),
                           ],
                         ),
-
-                        // Text(widget.phoneNumber),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-              ],
-            ),
+                  ],
+                ),),
             Visibility(
                 visible: show_preogress,
                 child: Container(
@@ -262,7 +302,15 @@ class _OtpPageState extends State<OtpPage> {
       ),
     );
   }
+void btn_resend_otp(){
+    setState(() {
+      resent_otp();
+      _remainingSeconds=10;
+      _startTimer();
+      print("otp is"+hold_otp);
 
+    });
+}
   bool _isOtpValid() {
     return _formKey.currentState?.validate() ?? false;
   }
@@ -291,11 +339,20 @@ class _OtpPageState extends State<OtpPage> {
 //print(data["token"]);
 
       setState(() {
+        is_otp_resend=true;
+        hold_otp=data["otp_code"].toString();
+        print("otp holder"+hold_otp);
         show_preogress = false;
       });
     }
   }
+  void _terminal_activation(String value){
+    if(value.length==4){
+print(value);
+otp_txt_in.clear();
+    }
 
+  }
   Future otp_verification() async {
     var url = "https://a2ctech.net/api/faspay/verify_otp.php";
     var response;

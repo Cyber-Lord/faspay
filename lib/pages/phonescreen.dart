@@ -22,9 +22,13 @@ class _PhoneScreenState extends State<PhoneScreen> {
   bool show_preogress = false;
   bool surgest_login = false;
   bool correct_pass_checker = false;
+
+
   final _formKey = GlobalKey<FormState>();
   String? _phoneNumber;
   String name = "";
+  String otp="";
+
   @override
   void initState() {
     super.initState();
@@ -310,6 +314,7 @@ class _PhoneScreenState extends State<PhoneScreen> {
         show_preogress = false;
         surgest_login = true;
       } else {
+        otp=data["otp_code"];
         goto_otp(context);
         show_preogress = false;
       }
@@ -336,7 +341,7 @@ class _PhoneScreenState extends State<PhoneScreen> {
       MaterialPageRoute(
           builder: (context) => OtpPage(
                 phoneNumber: _textEditingController.text,
-                isNewUser: true,
+                isNewUser: true, cons_otp: otp,
               )),
     );
   }

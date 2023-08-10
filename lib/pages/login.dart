@@ -218,6 +218,7 @@ class _LoginState extends State<Login> {
                         !_hasError
                             ? setState(() {
                                 _phoneNumberController.text = "";
+/*
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -227,6 +228,7 @@ class _LoginState extends State<Login> {
                                     ),
                                   ),
                                 );
+ */
                                 _hasError = false;
                                 _reseterrorMessage = "";
                               })

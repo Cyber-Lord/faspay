@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 
 typedef void MyCallback();
 typedef TextChangedCallback = void Function(String);
+typedef TextChangedCallback_int = void Function(int);
 typedef Textbtn_with_boo_p = void Function(bool);
 
 
@@ -208,6 +211,138 @@ Widget pin_widget(TextChangedCallback onTextChanged,BuildContext context, TextEd
     ),
   );
 }
+Widget otp_pin(TextChangedCallback onTextChanged,BuildContext context, TextEditingController pinController,
+    String title,String message,bool invalid_trnx_pin, var url,var width,var height,int counta,MyCallback btn_resend_otp) {
+
+
+
+  return Container(
+    color: Colors.white,
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Padding(
+          padding: EdgeInsets.all(40),
+          child: Material(
+            borderRadius: BorderRadius.circular(10),
+            child: Padding(
+              padding: EdgeInsets.all(20),
+              child: Container(
+                width: width,
+                child: Column(
+                  children: [
+                    Image.asset(
+                      "assets/images/otp_pix.png",
+                      height: height / 4,
+                    ),
+
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      title,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      message,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    PinPut(
+                      controller: pinController,
+                      // focusNode: focu,
+                      autofocus: true,
+                      keyboardAppearance: Brightness.light,
+                      obscureText: "*",
+                      onChanged: onTextChanged,
+                      textStyle: TextStyle(
+                          color: Colors.black,
+                          fontFamily: "Gilroy Bold",
+                          fontSize: height / 40),
+                      fieldsCount: 4,
+                      eachFieldWidth: width / 6.5,
+                      withCursor: false,
+                      submittedFieldDecoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.0),
+                          border: Border.all(color: Colors.blue))
+                          .copyWith(
+                          borderRadius: BorderRadius.circular(10.0),
+                          border: Border.all(color: Colors.blue)),
+                      selectedFieldDecoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.0),
+                          border: Border.all(color: Colors.blue)),
+                      followingFieldDecoration: BoxDecoration(
+                        border: Border.all(color: Colors.blue),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10.0),
+                      ).copyWith(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+
+                    if(!invalid_trnx_pin)...[
+                      Text(
+                        "Invalid Transaction PIN",
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.red),
+                      )
+                    ],
+                    //>>>>>>>>>>>>>>>>>>>>>>>>>
+
+                    counta > 0
+                        ? Text(
+                      'Resend again in $counta seconds',
+                      style: TextStyle(
+                        // fontWeight: FontWeight.bold,
+                        color: Colors.red.shade900,
+                      ),
+                    )
+                        : ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue.shade900,
+                      ),
+                      onPressed: btn_resend_otp,
+                      child: Text(
+                        'Resend OTP',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    //>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+                  ],
+                ),
+              ),
+            ),
+            color: Colors.white,
+          ),
+        ),
+      ],
+    ),
+  );
+}
 Widget pin_reset_widget(TextChangedCallback onTextChanged,BuildContext context, TextEditingController pinController,
     String title,String message,String error_msg,bool invalid_trnx_pin,var width,var height) {
   return Container(
@@ -313,5 +448,6 @@ Widget pin_reset_widget(TextChangedCallback onTextChanged,BuildContext context, 
     ),
   );
 }
+
 
 
