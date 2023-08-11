@@ -348,8 +348,20 @@ void btn_resend_otp(){
   }
   void _terminal_activation(String value){
     if(value.length==4){
-print(value);
-otp_txt_in.clear();
+      if(value==hold_otp){
+        setState(() {
+         // show_preogress=true;
+          invalid_trnx_pin=false;
+        //  FocusScope.of(context).requestFocus(new FocusNode());
+          otp_txt_in.clear();
+
+        });
+      }else{
+        setState(() {
+          invalid_trnx_pin=true;
+          otp_txt_in.clear();
+        });
+      }
     }
 
   }
