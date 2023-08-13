@@ -7,6 +7,9 @@ import 'package:faspay/pages/utils/reusable_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import 'SetPassword.dart';
+import 'SignUp.dart';
+
 class OtpPage extends StatefulWidget {
   const OtpPage({
     Key? key,
@@ -352,7 +355,7 @@ void btn_resend_otp(){
         setState(() {
          // show_preogress=true;
           invalid_trnx_pin=false;
-        //  FocusScope.of(context).requestFocus(new FocusNode());
+          navigate_to_setPass();
           otp_txt_in.clear();
 
         });
@@ -364,6 +367,15 @@ void btn_resend_otp(){
       }
     }
 
+  }
+  void navigate_to_setPass() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            Sign_up(phoneNumber: widget.phoneNumber,),
+      ),
+    );
   }
   Future otp_verification() async {
     var url = "https://a2ctech.net/api/faspay/verify_otp.php";
