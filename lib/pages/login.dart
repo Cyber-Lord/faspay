@@ -451,6 +451,7 @@ class _LoginState extends State<Login> {
   }
 
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
   void goto_dashboard(BuildContext context,String is_pen_set) {
     Navigator.pushReplacement(
       context,
@@ -480,6 +481,8 @@ class _LoginState extends State<Login> {
         //trnx_pin_active=data["trnx_pin_active"];
         goto_dashboard(context,data["trnx_pin_active"]);
         // _showToast(context,"Invalid Login Details");/
+      }else{
+        _showToast( context, "Invalid Password");
       }
     } else {
       print(response.statusCode);
@@ -497,7 +500,16 @@ class _LoginState extends State<Login> {
     final scaffold = ScaffoldMessenger.of(context);
     scaffold.showSnackBar(
       SnackBar(
-        content: Text(msg),
+        showCloseIcon: true,
+        closeIconColor: Colors.white,
+        backgroundColor: Colors.red,
+        content: Row(
+          children: [
+            Icon(Icons.error,color: Colors.white,),
+            SizedBox(width: 10,),
+            Text(msg)
+          ],
+        ),
         action:
             SnackBarAction(label: '', onPressed: scaffold.hideCurrentSnackBar),
       ),

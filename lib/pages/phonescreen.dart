@@ -314,7 +314,7 @@ class _PhoneScreenState extends State<PhoneScreen> {
         show_preogress = false;
         surgest_login = true;
       } else {
-        otp=data["otp_code"];
+        otp=data["otp_code"].toString();
         goto_otp(context);
         show_preogress = false;
       }

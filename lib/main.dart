@@ -41,9 +41,7 @@ class MyApp extends StatelessWidget {
         canvasColor: Color.fromARGB(255, 250, 252, 251),
       ),
       // home: CardPage(),
-      home: OtpPage(phoneNumber: '08036937928', isNewUser: true, cons_otp: '1122',
-          //qr_coder: "qqqqqq",
-          ),
+      home: Splshscreen(),
     );
   }
 //xxx bbc

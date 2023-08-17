@@ -28,7 +28,7 @@ class _OtpPageState extends State<OtpPage> {
   List<TextEditingController> _controllers = [];
   final _formKey = GlobalKey<FormState>();
   Timer? _timer;
-  int _remainingSeconds = 10;
+  int _remainingSeconds = 60;
   String hold_otp = "";
 
 
@@ -308,9 +308,9 @@ class _OtpPageState extends State<OtpPage> {
 void btn_resend_otp(){
     setState(() {
       resent_otp();
-      _remainingSeconds=10;
+      _remainingSeconds=60;
       _startTimer();
-      print("otp is"+hold_otp);
+     // print("otp is"+hold_otp);
 
     });
 }

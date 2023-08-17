@@ -38,12 +38,17 @@ Widget TextField_function(TextEditingController txt_field,String hint){
     ),
   );
 }
-Widget Textform(TextEditingController frm_id,String placeholder,String requirement_label,TextInputType input_fomart,bool isPassword){
+Widget Textform_sign_up(TextEditingController frm_id,String placeholder,String requirement_label,TextInputType input_fomart,bool isPassword,bool isvalidated){
   return TextFormField(
     controller: frm_id,
     keyboardType: input_fomart,
     obscureText: isPassword,
     decoration: InputDecoration(
+
+      focusedErrorBorder: OutlineInputBorder(
+        borderSide:
+        BorderSide(color: Colors.red),
+      ),
       enabledBorder: OutlineInputBorder(
         borderSide: BorderSide(
           color: Colors.blue.shade900,
@@ -53,6 +58,55 @@ Widget Textform(TextEditingController frm_id,String placeholder,String requireme
         borderSide:
         BorderSide(color: Colors.red),
       ),
+
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: Colors.blue.shade900,
+        ),
+      ),
+      labelStyle: TextStyle(
+        color: Colors.grey,
+        fontSize: 14,
+      ),
+      contentPadding:
+      EdgeInsets.symmetric(
+          vertical: 15.0,
+          horizontal: 15),
+      labelText: placeholder,
+    ),
+    validator: isvalidated?(value) {
+      if (value!.isEmpty) {
+        return requirement_label;
+      }
+      return null;
+    }:null,
+    onSaved: (value) {
+      // _fullName = value!;
+    },
+  );
+}
+
+Widget Textform(TextEditingController frm_id,String placeholder,String requirement_label,TextInputType input_fomart,bool isPassword){
+  return TextFormField(
+    controller: frm_id,
+    keyboardType: input_fomart,
+    obscureText: isPassword,
+    decoration: InputDecoration(
+
+      focusedErrorBorder: OutlineInputBorder(
+        borderSide:
+        BorderSide(color: Colors.red),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: Colors.blue.shade900,
+        ),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderSide:
+        BorderSide(color: Colors.red),
+      ),
+
       focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(
           color: Colors.blue.shade900,
@@ -299,7 +353,7 @@ Widget otp_pin(TextChangedCallback onTextChanged,BuildContext context, TextEditi
 
                     if(!invalid_trnx_pin)...[
                       Text(
-                        "Invalid Transaction PIN",
+                        "Invalid OTP",
                         style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
