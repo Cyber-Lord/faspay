@@ -166,6 +166,7 @@ class _Confirm_password extends State<Confirm_password> {
       "o_name": widget.oName,
       "nin": widget.nin,
       "pass": widget.new_pass,
+      "date_of_birth": widget.dob,
     });
 
     var data = json.decode(response.body);

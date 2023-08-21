@@ -1239,31 +1239,41 @@ class _CardPageState extends State<CardPage> {
           ),
           // set card pin
           if (finished_page_load == true) ...[
-            Visibility(
-              visible: show_card_activation_panel,
-              child: pin(
-                  context,
-                  set_new_pin,
-                  Variable.cardactivation,
-                  Variable.card_message,
-                  cardList[currentCardIndex].card_pin,
-                  Variable.set_card_pin_url),
-            ),
+            if(!check_card)...[
+
+            ]else...[
+              Visibility(
+                visible: show_card_activation_panel,
+                child: pin(
+                    context,
+                    set_new_pin,
+                    Variable.cardactivation,
+                    Variable.card_message,
+                    cardList[currentCardIndex].card_pin,
+                    Variable.set_card_pin_url),
+              ),
+            ]
+
           ],
 
           // change card pin
 
           if (finished_page_load == true) ...[
-            Visibility(
-              visible: change_card_pin,
-              child: pin(
-                  context,
-                  set_new_pin,
-                  Variable.reset_pin_title,
-                  Variable.reset_pin_info,
-                  cardList[currentCardIndex].card_pin,
-                  Variable.set_card_pin_url),
-            ),
+    if(!check_card)...[
+
+    ]else...[
+      Visibility(
+        visible: change_card_pin,
+        child: pin(
+            context,
+            set_new_pin,
+            Variable.reset_pin_title,
+            Variable.reset_pin_info,
+            cardList[currentCardIndex].card_pin,
+            Variable.set_card_pin_url),
+      ),
+      ]
+
           ],
 
           Visibility(
