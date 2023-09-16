@@ -39,8 +39,6 @@ print(widget.checkPin.toString()+" kala sak");
   }
 
   final List<Widget> _children = [
-
-
     Dashboard(),
     CardPage(),
     POSPage(),

@@ -344,7 +344,7 @@ void btn_resend_otp(){
       setState(() {
         is_otp_resend=true;
         hold_otp=data["otp_code"].toString();
-        print("otp holder"+hold_otp);
+        //print("otp holder"+hold_otp);
         show_preogress = false;
       });
     }
