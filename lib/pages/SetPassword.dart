@@ -111,13 +111,14 @@ class _SetPasswordState extends State<SetPassword> {
 
                              if (_formKey.currentState!.validate()) {
                                setState(() {
+                                 print(widget.dob+" this is my dte");
                                  navigate_to_setPass();
-                                 print("inccorec");
+                                // print("inccorec");
                                  _validPassword = true;
                                });
                              } else {
                                setState(() {
-                                 print("a dai dai ina");
+                              //   print("a dai dai ina");
                                  _validPassword = false;
                                });
                              }

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:faspay/pages/pospage.dart';
 
 import 'package:faspay/pages/cardpage.dart';
@@ -9,7 +11,7 @@ import 'package:faspay/pages/userprofile.dart';
 import 'package:flutter/material.dart';
 import 'package:faspay/pages/dashboard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:http/http.dart' as http;
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.phoneNumber, required this.token, required this.checkPin})
       : super(key: key);
@@ -27,6 +29,18 @@ class _HomePageState extends State<HomePage> {
   late String _email;
   late String _phoneNumber;
   late String _address;
+  //	mail 	phone 	f_name 	s_name 	o_name 	nin 	pass 	token 	qr_code 	op_date 	date_of_birth 	tier
+  late String mail;
+  late String f_name;
+  late String s_name;
+  late String o_name;
+  late String nin;
+  late String op_date;
+  late String date_of_birth;
+  late String tier;
+
+
+
   String trnx_pin_active="false";
 
   int _currentIndex = 0;
@@ -71,12 +85,12 @@ print(widget.checkPin.toString()+" kala sak");
                 context,
                 MaterialPageRoute(
                   builder: (context) => UserProfile(
-                    email: "John@doe.com",
-                    name: "John Doe",
+                    email: mail,
+                    name: f_name.toString()+" "+s_name.toString()+" "+o_name.toString(),
                     // tier: VerificationTier.basic,
                     tier: VerificationTier.advanced,
                     bvn: "1234567890",
-                    dob: "01/01/2000",
+                    dob: date_of_birth,
                     phoneNumber: my_num,
                   ),
                 ),
@@ -172,6 +186,7 @@ print(widget.checkPin.toString()+" kala sak");
     WidgetsFlutterBinding.ensureInitialized();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var phone = prefs.getString("phone");
+    var tokn = prefs.getString("token");
 //    trnx_pin_active=prefs.getString("trnx_pin_active")!;
     print("pem pem"+trnx_pin_active.toString()
     );
@@ -181,6 +196,7 @@ print(widget.checkPin.toString()+" kala sak");
       logout();
     } else {
       my_num = phone;
+      get_customer_details(phone, tokn);
     }
   }
 
@@ -191,6 +207,44 @@ print(widget.checkPin.toString()+" kala sak");
 
     goto_phone_screen(context);
   }
+  Future get_customer_details(phone, token) async {
+
+    FocusScope.of(context).requestFocus(new FocusNode());
+    var url = "https://a2ctech.net/api/faspay/profile_info.php";
+    var response;
+    response = await http.post(Uri.parse(url), body: {
+      "phone": phone,
+      "token": token,
+    });
+
+    var data = json.decode(response.body);
+    if (response.statusCode == 200) {
+      print(response.body);
+      if (data["status"] == "true") {
+        //	mail 	phone 	f_name 	s_name 	o_name 	nin 	pass 	token 	qr_code 	op_date 	date_of_birth 	tier
+setState(() {
+  mail = data["mail"];
+  f_name = data["f_name"];
+  s_name = data["s_name"];
+  o_name = data["o_name"];
+  nin = data["nin"];
+  op_date = data["op_date"];
+  date_of_birth = data["date_of_birth"];
+  tier = data["tier"];
+
+});
+
+      } else {
+
+       // logout();
+      }
+      setState(() {
+        //show_preogress = false;.
+      });
+    }
+  }
+
+
 
   void goto_phone_screen(BuildContext context) {
     Navigator.pushReplacement(

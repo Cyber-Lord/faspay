@@ -103,7 +103,7 @@ String err_msg="Select your date of birth";
                                     err_msg_bool=false;
                                     check_date_of_birth_value=true;
                                     print("date is "+selectedDate.toString());
-
+///
                                   });
                                 }),
                             SizedBox(height:10),
@@ -186,7 +186,7 @@ String err_msg="Select your date of birth";
       context,
       MaterialPageRoute(
         builder: (context) =>
-            SetPassword(phoneNumber: widget.phoneNumber, fName: _fName.text, sName: _sName.text, oName: _oName.text, nin: _nin.text, dob: _dob.text,),
+            SetPassword(phoneNumber: widget.phoneNumber, fName: _fName.text, sName: _sName.text, oName: _oName.text, nin: _nin.text, dob: selectedDate.toString(),),
       ),
     );
   }

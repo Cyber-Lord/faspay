@@ -1,4 +1,5 @@
 import 'package:faspay/pages/phonescreen.dart';
+import 'package:faspay/pages/testCamera.dart';
 import 'package:faspay/pages/upgradetierthreeform.dart';
 import 'package:faspay/pages/upgradetiertwoform.dart';
 import 'package:flutter/material.dart';
@@ -366,6 +367,7 @@ class _UserProfileState extends State<UserProfile> {
                     // elevation: 1,
                   ),
                   onPressed: () {
+
                     _changePIN(
                       context,
                       "Reset Password",
@@ -375,6 +377,16 @@ class _UserProfileState extends State<UserProfile> {
                       "Confirm New Password",
                       false,
                     );
+
+/*
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Camtest(
+
+                          )),
+                    );
+ */
                   },
                   child: Column(
                     children: [

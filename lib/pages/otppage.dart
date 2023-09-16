@@ -338,7 +338,7 @@ void btn_resend_otp(){
 
     var data = json.decode(response.body);
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
 //print(data["token"]);
 
       setState(() {
