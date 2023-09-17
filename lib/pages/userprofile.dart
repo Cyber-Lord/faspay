@@ -2,10 +2,11 @@ import 'package:faspay/pages/phonescreen.dart';
 import 'package:faspay/pages/testCamera.dart';
 import 'package:faspay/pages/upgradetierthreeform.dart';
 import 'package:faspay/pages/upgradetiertwoform.dart';
+import 'package:faspay/pages/upload_profile_pix.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum VerificationTier {
@@ -21,6 +22,9 @@ class UserProfile extends StatefulWidget {
   final String dob;
   final VerificationTier tier;
   final String phoneNumber;
+  final String nin;
+  final String kyc_status;
+  final String img_url;
 
   UserProfile(
       {required this.name,
@@ -28,7 +32,9 @@ class UserProfile extends StatefulWidget {
       required this.bvn,
       required this.dob,
       required this.tier,
-      required this.phoneNumber});
+      required this.phoneNumber,
+        required this.nin,
+        required this.kyc_status, required this.img_url});
 
   @override
   _UserProfileState createState() => _UserProfileState();
@@ -49,9 +55,16 @@ class _UserProfileState extends State<UserProfile> {
   String _errorMessage = '';
   bool _isPinVisible = false;
 
+  String img_url="";
+
   void initState() {
     super.initState();
     _getTierBadge();
+    if(widget.img_url==""){
+      img_url='https://a2ctech.net/api/faspay/pix/default_pix.png';
+    }else{
+      img_url=widget.img_url;
+    }
   }
 
   void _toggleBiometric(bool value) {
@@ -140,16 +153,26 @@ class _UserProfileState extends State<UserProfile> {
                 ),
                 Center(
                   child: GestureDetector(
-                    onTap: _editing ? _getImage : null,
+                   // onTap: _editing ? _getImage : null,
+                    onTap: (){
+                      Navigator.push( 
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => New_profile_pix(
+
+                        ),
+                      ),);
+
+                    },
                     child: Stack(
                       children: [
                         CircleAvatar(
                           radius: 50,
-                          backgroundImage:
-                              _image != null ? FileImage(_image) : null,
+                          backgroundImage:NetworkImage(img_url),
                           child: _image == null
                               ? Icon(Icons.camera_alt, size: 50)
                               : null,
+                          backgroundColor: Colors.white,
                         ),
                         Positioned(
                           right: 0,
@@ -203,15 +226,16 @@ class _UserProfileState extends State<UserProfile> {
                       fontSize: 14,
                       color: Colors.black,
                     ),
-                    labelText: 'Email',
+                    labelText: 'NIN',
                     prefixIcon: Icon(
-                      Icons.email,
+                      FontAwesomeIcons.idCard,
                       // color: Colors.blue.shade900,
                     ),
                   ),
                   keyboardType: TextInputType.emailAddress,
+
                   enabled: false,
-                  initialValue: widget.email,
+                  initialValue: widget.nin,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'Please enter your email';
@@ -219,6 +243,7 @@ class _UserProfileState extends State<UserProfile> {
                     return null;
                   },
                 ),
+
                 SizedBox(
                   height: 16,
                 ),
@@ -242,6 +267,34 @@ class _UserProfileState extends State<UserProfile> {
                 SizedBox(
                   height: 16,
                 ),
+                Visibility(
+                  visible: !isTier1,
+                    child:  TextFormField(
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
+                      decoration: InputDecoration(
+                        labelStyle: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                        ),
+                        labelText: 'Email',
+                        prefixIcon: Icon(
+                          Icons.email,
+                          // color: Colors.blue.shade900,
+                        ),
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                      enabled: false,
+                      initialValue: widget.email,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter your email';
+                        }
+                        return null;
+                      },
+                    ),),
                 Visibility(
                   child: TextFormField(
                     style: TextStyle(
@@ -285,49 +338,85 @@ class _UserProfileState extends State<UserProfile> {
                 SizedBox(
                   height: 16,
                 ),
-                TextButton(
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                    backgroundColor: Colors.grey.shade300,
-                    elevation: 1,
-                  ),
-                  onPressed: () {
-                    if (isTier1) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => UpgradePage()),
-                      );
-                    } else {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => TierThreeUpgradePage()),
-                      );
-                    }
-                  },
+                if(widget.kyc_status=="Pending")...[
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      backgroundColor: Colors.grey.shade300,
+                      elevation: 1,
+                    ),
+                    onPressed: (){
+
+                    },
                   child: Column(
-                    children: [
-                      ListTile(
-                        leading: Icon(
-                          Icons.verified_user,
-                          color: Colors.blue.shade900,
-                        ),
-                        title: Text(
-                          !isTier1 ? 'Upgrade Account' : 'Verify Account',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
+      children: [
+      ListTile(
+      leading: Icon(
+        FontAwesomeIcons.folder,
+        color: Colors.blue.shade900,
+      ),
+      title: Text(
+        "Under Review",
+        style: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+          color: Colors.blue.shade900,
+        ),
+      ),
+      trailing: Icon(
+        Icons.info,
+        color: Colors.blue.shade900,
+      ),
+    ),
+    ],
+    ),
+                  )
+                ]else...[
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      backgroundColor: Colors.grey.shade300,
+                      elevation: 1,
+                    ),
+                    onPressed: () {
+                      if (isTier1) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => UpgradePage()),
+                        );
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => TierThreeUpgradePage()),
+                        );
+                      }
+                    },
+                    child: Column(
+                      children: [
+                        ListTile(
+                          leading: Icon(
+                            Icons.verified_user,
+                            color: Colors.blue.shade900,
+                          ),
+                          title: Text(
+                            !isTier1 ? 'Upgrade Account' : 'Verify Account',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue.shade900,
+                            ),
+                          ),
+                          trailing: Icon(
+                            Icons.arrow_forward,
                             color: Colors.blue.shade900,
                           ),
                         ),
-                        trailing: Icon(
-                          Icons.arrow_forward,
-                          color: Colors.blue.shade900,
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
+                ],
+
                 Divider(
                   height: 2,
                   color: Colors.grey,

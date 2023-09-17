@@ -38,6 +38,8 @@ class _HomePageState extends State<HomePage> {
   late String op_date;
   late String date_of_birth;
   late String tier;
+  late String kyc_status;
+  late String img_url;
 
 
 
@@ -78,23 +80,60 @@ print(widget.checkPin.toString()+" kala sak");
           icon: Icon(Icons.person),
           color: Colors.white,
           onPressed: () {
+            bool t1=false;
             if(trnx_pin_active=="false"){
 
             }else{
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => UserProfile(
-                    email: mail,
-                    name: f_name.toString()+" "+s_name.toString()+" "+o_name.toString(),
-                    // tier: VerificationTier.basic,
-                    tier: VerificationTier.advanced,
-                    bvn: "1234567890",
-                    dob: date_of_birth,
-                    phoneNumber: my_num,
+              if(tier.toString()=="1"){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => UserProfile(
+                      email: mail,
+                      name: f_name.toString()+" "+s_name.toString()+" "+o_name.toString(),
+                      // tier: VerificationTier.basic,
+                      tier: VerificationTier.basic,
+                      bvn: "1234567890",
+                      dob: date_of_birth,
+                      phoneNumber: my_num, nin: nin,
+                      kyc_status: kyc_status, img_url:img_url,
+                    ),
                   ),
-                ),
-              );
+                );
+              }else if(tier.toString()=="2"){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => UserProfile(
+                      email: mail,
+                      name: f_name.toString()+" "+s_name.toString()+" "+o_name.toString(),
+                      // tier: VerificationTier.basic,
+                      tier: VerificationTier.intermediate,
+                      bvn: "1234567890",
+                      dob: date_of_birth,
+                      phoneNumber: my_num, nin: nin,
+                      kyc_status: kyc_status, img_url: img_url,
+                    ),
+                  ),
+                );
+              }else if(tier.toString()=="3"){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => UserProfile(
+                      email: mail,
+                      name: f_name.toString()+" "+s_name.toString()+" "+o_name.toString(),
+                      // tier: VerificationTier.basic,
+                      tier: VerificationTier.advanced,
+                      bvn: "1234567890",
+                      dob: date_of_birth,
+                      phoneNumber: my_num, nin: nin,
+                      kyc_status: kyc_status, img_url: img_url,
+                    ),
+                  ),
+                );
+              }
+
             }
 
           },
@@ -231,7 +270,8 @@ setState(() {
   op_date = data["op_date"];
   date_of_birth = data["date_of_birth"];
   tier = data["tier"];
-
+  kyc_status= data["kyc_status"];
+  img_url= data["img_url"];
 });
 
       } else {

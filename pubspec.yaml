@@ -64,6 +64,7 @@ dependencies:
   password_validated_field: ^0.0.3
   date_field: ^3.0.5
   face_camera: ^0.0.8
+  font_awesome_flutter: ^10.4.0
 
   
 
