@@ -155,7 +155,7 @@ class _UserProfileState extends State<UserProfile> {
                   child: GestureDetector(
                    // onTap: _editing ? _getImage : null,
                     onTap: (){
-                      Navigator.push( 
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => New_profile_pix(
